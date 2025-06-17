@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EcoWasteReporter</string>
+    <string name="welcome_title">ECOWASTE</string>
+    <string name="welcome_subtitle">REPORTER</string>
+    <string name="welcome_tagline">Keep Our City Clean Together</string>
+    <string name="lets_go">Lets Go</string>
 </resources>
