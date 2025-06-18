@@ -9,26 +9,27 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/white_rounded_container"
-            android:padding="24dp">
+            android:padding="32dp">
 
             <ImageView
                 android:id="@+id/logoImage"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:layout_marginTop="24dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="16dp"
                 android:src="@drawable/logo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +42,7 @@
                 android:layout_marginTop="16dp"
                 android:text="EcoWaste"
                 android:textColor="#4CAF50"
-                android:textSize="28sp"
+                android:textSize="32sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:text="Reporter"
                 android:textColor="#4CAF50"
-                android:textSize="24sp"
+                android:textSize="28sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/titleText" />
@@ -61,39 +62,39 @@
             <Button
                 android:id="@+id/citizenButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:backgroundTint="@color/gradient_start"
+                android:layout_height="60dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/green_rounded_button"
                 android:text="CITIZEN"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/subtitleText"
-                tools:layout_editor_absoluteX="24dp" />
+                tools:layout_editor_absoluteX="32dp" />
 
             <Button
                 android:id="@+id/cleanerButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="@color/gradient_start"
+                android:background="@drawable/green_rounded_button"
                 android:text="CLEANER"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@id/citizenButton"
-                tools:layout_editor_absoluteX="24dp" />
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/citizenButton" />
 
             <Button
                 android:id="@+id/continueButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:backgroundTint="@color/gradient_start"
+                android:layout_height="60dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/green_rounded_button"
                 android:text="CONTINUE"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cleanerButton"
-                tools:layout_editor_absoluteX="24dp" />
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/cleanerButton" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
