@@ -24,6 +24,7 @@
         <activity
             android:name=".SelectPage"
             android:exported="false" />
+        <activity android:name=".UserReg" />
     </application>
 
 </manifest>

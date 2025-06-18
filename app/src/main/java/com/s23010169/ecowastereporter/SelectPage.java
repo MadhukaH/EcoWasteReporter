@@ -1,6 +1,7 @@
 package com.s23010169.ecowastereporter;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -91,9 +92,7 @@ public class SelectPage extends AppCompatActivity {
             return;
         }
 
-        // TODO: Implement navigation to the next screen
-        // Intent intent = new Intent(SelectPage.this, NextActivity.class);
-        // intent.putExtra("SELECTED_ROLE", selectedRole);
-        // startActivity(intent);
+        Intent intent = new Intent(SelectPage.this, UserReg.class);
+        startActivity(intent);
     }
 } 
