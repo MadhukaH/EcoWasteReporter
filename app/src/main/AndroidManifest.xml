@@ -27,6 +27,7 @@
         <activity android:name=".UserReg" />
         <activity android:name=".UserLogin" />
         <activity android:name=".CleanerReg" />
+        <activity android:name=".CleanerLoginPage" />
     </application>
 
 </manifest>

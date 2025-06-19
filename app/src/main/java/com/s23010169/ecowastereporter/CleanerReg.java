@@ -158,7 +158,7 @@ public class CleanerReg extends AppCompatActivity {
     }
 
     private void navigateToLogin() {
-        Intent intent = new Intent(CleanerReg.this, UserLogin.class);
+        Intent intent = new Intent(CleanerReg.this, CleanerLoginPage.class);
         startActivity(intent);
         finish(); // Close registration activity
     }
