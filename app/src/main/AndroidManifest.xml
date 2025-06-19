@@ -25,6 +25,7 @@
             android:name=".SelectPage"
             android:exported="false" />
         <activity android:name=".UserReg" />
+        <activity android:name=".UserLogin" />
     </application>
 
 </manifest>
