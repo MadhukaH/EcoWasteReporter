@@ -2,65 +2,111 @@ package com.s23010169.ecowastereporter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class CleanerLoginPage extends AppCompatActivity {
-    private EditText serviceIdInput;
-    private EditText passwordInput;
-    private Button loginButton;
-    private TextView registerLink;
-    private TextView forgotPasswordText;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+public class CleanerLoginPage extends AppCompatActivity implements View.OnClickListener {
+    private TextInputLayout serviceIdLayout, passwordLayout;
+    private TextInputEditText serviceIdInput, passwordInput;
+    private MaterialButton loginButton;
+    private View registerLink, forgotPasswordText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cleaner_login);
 
-        // Initialize views
+        initializeViews();
+        setupClickListeners();
+    }
+
+    private void initializeViews() {
+        // Initialize TextInputLayouts
+        serviceIdLayout = findViewById(R.id.serviceIdInputLayout);
+        passwordLayout = findViewById(R.id.passwordInputLayout);
+
+        // Initialize EditTexts
         serviceIdInput = findViewById(R.id.serviceIdInput);
         passwordInput = findViewById(R.id.passwordInput);
+
+        // Initialize buttons and clickable views
         loginButton = findViewById(R.id.loginButton);
         registerLink = findViewById(R.id.registerLink);
         forgotPasswordText = findViewById(R.id.forgotPasswordText);
+    }
 
-        // Set click listeners
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String serviceId = serviceIdInput.getText().toString().trim();
-                String password = passwordInput.getText().toString().trim();
+    private void setupClickListeners() {
+        loginButton.setOnClickListener(this);
+        registerLink.setOnClickListener(this);
+        forgotPasswordText.setOnClickListener(this);
+    }
 
-                if (serviceId.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(CleanerLoginPage.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.loginButton) {
+            handleLogin();
+        } else if (v.getId() == R.id.registerLink) {
+            navigateToRegister();
+        } else if (v.getId() == R.id.forgotPasswordText) {
+            showFeatureComingSoon("Forgot Password");
+        }
+    }
 
-                // TODO: Implement login authentication
-                // For now, just show a toast message
-                Toast.makeText(CleanerLoginPage.this, "Login functionality to be implemented", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void handleLogin() {
+        // Reset errors
+        serviceIdLayout.setError(null);
+        passwordLayout.setError(null);
 
-        registerLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(CleanerLoginPage.this, CleanerReg.class));
-                finish();
-            }
-        });
+        // Get input values
+        String serviceId = serviceIdInput.getText().toString().trim();
+        String password = passwordInput.getText().toString().trim();
 
-        forgotPasswordText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: Implement forgot password functionality
-                Toast.makeText(CleanerLoginPage.this, "Forgot password functionality to be implemented", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Validate inputs
+        if (!validateInputs(serviceId, password)) {
+            return;
+        }
+
+        // TODO: Implement actual login logic here
+        // For now, just show a toast message
+        Toast.makeText(this, "Login functionality to be implemented", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean validateInputs(String serviceId, String password) {
+        boolean isValid = true;
+
+        if (TextUtils.isEmpty(serviceId)) {
+            serviceIdLayout.setError("Service ID is required");
+            isValid = false;
+        } else if (serviceId.length() < 4) {
+            serviceIdLayout.setError("Service ID must be at least 4 characters");
+            isValid = false;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            passwordLayout.setError("Password is required");
+            isValid = false;
+        } else if (password.length() < 6) {
+            passwordLayout.setError("Password must be at least 6 characters");
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    private void navigateToRegister() {
+        Intent intent = new Intent(this, CleanerReg.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void showFeatureComingSoon(String feature) {
+        Toast.makeText(this, feature + " coming soon", Toast.LENGTH_SHORT).show();
     }
 } 
