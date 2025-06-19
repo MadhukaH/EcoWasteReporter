@@ -26,6 +26,7 @@
             android:exported="false" />
         <activity android:name=".UserReg" />
         <activity android:name=".UserLogin" />
+        <activity android:name=".CleanerReg" />
     </application>
 
 </manifest>

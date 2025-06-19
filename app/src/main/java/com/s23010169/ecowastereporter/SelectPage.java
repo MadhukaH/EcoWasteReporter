@@ -92,7 +92,12 @@ public class SelectPage extends AppCompatActivity {
             return;
         }
 
-        Intent intent = new Intent(SelectPage.this, UserReg.class);
+        Intent intent;
+        if ("CITIZEN".equals(selectedRole)) {
+            intent = new Intent(SelectPage.this, UserReg.class);
+        } else {
+            intent = new Intent(SelectPage.this, CleanerReg.class);
+        }
         startActivity(intent);
     }
 } 
