@@ -1,102 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/welcome_gradient">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/white_rounded_container"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            android:src="@drawable/logo" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            android:text="EcoWaste\nReporter"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/emailEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/edit_text_background"
-            android:drawableStart="@drawable/ic_email"
-            android:drawablePadding="8dp"
-            android:drawableTint="#4CAF50"
-            android:hint="Enter Email"
-            android:inputType="textEmailAddress"
-            android:padding="12dp" />
-
-        <EditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/edit_text_background"
-            android:drawableStart="@drawable/ic_lock"
-            android:drawablePadding="8dp"
-            android:drawableTint="#4CAF50"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:padding="12dp" />
-
-        <TextView
-            android:id="@+id/forgotPasswordText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="24dp"
-            android:text="Forgot your password ?"
-            android:textColor="@android:color/darker_gray" />
-
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/green_rounded_button"
-            android:text="LOGIN"
-            android:textColor="@android:color/white" />
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/logo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Don't Have Account ? "
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp"
+                android:text="EcoWaste\nReporter"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Enter Email"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#4CAF50"
+                app:startIconDrawable="@drawable/ic_email"
+                app:startIconTint="#4CAF50">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="textEmailAddress"
+                    android:padding="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Password"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#4CAF50"
+                app:passwordToggleEnabled="true"
+                app:startIconDrawable="@drawable/ic_lock"
+                app:startIconTint="#4CAF50">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="textPassword"
+                    android:padding="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/forgotPasswordText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginBottom="24dp"
+                android:text="Forgot your password ?"
                 android:textColor="@android:color/darker_gray" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/green_rounded_button"
+                android:padding="12dp"
+                android:text="LOGIN"
+                android:textColor="@android:color/white"
+                app:cornerRadius="8dp" />
+
             <TextView
-                android:id="@+id/registerText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="REGISTER"
-                android:textColor="#4CAF50"
-                android:textStyle="bold" />
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:text="Or Login with"
+                android:textColor="@android:color/darker_gray" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/googleSignIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    app:strokeColor="#E0E0E0"
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_google" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/facebookSignIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    app:strokeColor="#E0E0E0"
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_facebook" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/twitterSignIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    app:strokeColor="#E0E0E0"
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_twitter_x" />
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Don't Have Account ? "
+                    android:textColor="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/registerText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="REGISTER"
+                    android:textColor="#4CAF50"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-
+    </androidx.cardview.widget.CardView>
 </RelativeLayout> 
