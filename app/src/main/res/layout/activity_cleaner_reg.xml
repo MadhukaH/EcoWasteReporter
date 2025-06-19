@@ -39,51 +39,88 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/nameEditText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/ic_person"
-                android:drawablePadding="8dp"
                 android:hint="Enter Name"
-                android:padding="12dp" />
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#4CAF50"
+                app:startIconDrawable="@drawable/ic_person"
+                app:startIconTint="#4CAF50">
 
-            <EditText
-                android:id="@+id/emailEditText"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:padding="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/ic_email"
-                android:drawablePadding="8dp"
                 android:hint="Enter Email"
-                android:inputType="textEmailAddress"
-                android:padding="12dp" />
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#4CAF50"
+                app:startIconDrawable="@drawable/ic_email"
+                app:startIconTint="#4CAF50">
 
-            <EditText
-                android:id="@+id/serviceIdEditText"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="textEmailAddress"
+                    android:padding="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/serviceIdInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/ic_person"
-                android:drawablePadding="8dp"
                 android:hint="Service ID"
-                android:padding="12dp" />
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#4CAF50"
+                app:startIconDrawable="@drawable/ic_person"
+                app:startIconTint="#4CAF50">
 
-            <EditText
-                android:id="@+id/passwordEditText"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/serviceIdEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:padding="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/ic_lock"
-                android:drawablePadding="8dp"
                 android:hint="Set Strong Password"
-                android:inputType="textPassword"
-                android:padding="12dp" />
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#4CAF50"
+                app:passwordToggleEnabled="true"
+                app:startIconDrawable="@drawable/ic_lock"
+                app:startIconTint="#4CAF50">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="textPassword"
+                    android:padding="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/registerButton"
@@ -111,7 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="LOGIN"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/gradient_start"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
