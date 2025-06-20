@@ -89,8 +89,8 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         }
 
         // TODO: Implement actual login logic here
-        // For now, just navigate to SelectPage
-        navigateToSelectPage();
+        // Navigate to PeopleHomePage
+        navigateToPeopleHomePage();
     }
 
     private boolean validateInputs(String email, String password) {
@@ -115,8 +115,8 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         return isValid;
     }
 
-    private void navigateToSelectPage() {
-        Intent intent = new Intent(this, SelectPage.class);
+    private void navigateToPeopleHomePage() {
+        Intent intent = new Intent(this, PeopleHomePage.class);
         startActivity(intent);
         finish();
     }

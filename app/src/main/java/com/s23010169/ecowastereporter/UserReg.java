@@ -129,12 +129,12 @@ public class UserReg extends AppCompatActivity {
         new android.os.Handler().postDelayed(() -> {
             // Registration successful
             showSuccessMessage();
-            navigateToLogin();
+            navigateToPeopleHomePage();
         }, 2000); // Simulated 2-second delay
     }
 
     private void showSuccessMessage() {
-        Toast.makeText(this, "Registration successful! Please login.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Registration successful!", Toast.LENGTH_LONG).show();
     }
 
     private void showError(String message) {
@@ -145,6 +145,12 @@ public class UserReg extends AppCompatActivity {
 
     private void navigateToLogin() {
         Intent intent = new Intent(UserReg.this, UserLogin.class);
+        startActivity(intent);
+        finish(); // Close registration activity
+    }
+
+    private void navigateToPeopleHomePage() {
+        Intent intent = new Intent(UserReg.this, PeopleHomePage.class);
         startActivity(intent);
         finish(); // Close registration activity
     }

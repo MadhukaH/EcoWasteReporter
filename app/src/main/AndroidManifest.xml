@@ -31,6 +31,7 @@
         <activity android:name=".ForgotPasswordPage" />
         <activity android:name=".VerificationCodePage" />
         <activity android:name=".NewPasswordPage" />
+        <activity android:name=".PeopleHomePage" />
     </application>
 
 </manifest>
