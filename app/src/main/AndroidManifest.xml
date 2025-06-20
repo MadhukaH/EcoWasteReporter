@@ -30,6 +30,7 @@
         <activity android:name=".CleanerLoginPage" />
         <activity android:name=".ForgotPasswordPage" />
         <activity android:name=".VerificationCodePage" />
+        <activity android:name=".NewPasswordPage" />
     </application>
 
 </manifest>
