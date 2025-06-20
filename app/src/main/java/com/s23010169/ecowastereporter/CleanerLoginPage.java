@@ -55,7 +55,7 @@ public class CleanerLoginPage extends AppCompatActivity implements View.OnClickL
         } else if (v.getId() == R.id.registerLink) {
             navigateToRegister();
         } else if (v.getId() == R.id.forgotPasswordText) {
-            showFeatureComingSoon("Forgot Password");
+            navigateToForgotPassword();
         }
     }
 
@@ -106,7 +106,8 @@ public class CleanerLoginPage extends AppCompatActivity implements View.OnClickL
         finish();
     }
 
-    private void showFeatureComingSoon(String feature) {
-        Toast.makeText(this, feature + " coming soon", Toast.LENGTH_SHORT).show();
+    private void navigateToForgotPassword() {
+        Intent intent = new Intent(this, ForgotPasswordPage.class);
+        startActivity(intent);
     }
 } 
