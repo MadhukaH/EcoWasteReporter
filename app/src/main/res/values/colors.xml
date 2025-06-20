@@ -5,4 +5,5 @@
     <color name="gradient_start">#1CB05C</color>
     <color name="gradient_end">#3DDC97</color>
     <color name="button_color">#206A4E</color>
+    <color name="green_500">#4CAF50</color>
 </resources>

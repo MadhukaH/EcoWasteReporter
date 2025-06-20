@@ -68,7 +68,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         } else if (v.getId() == R.id.twitterSignIn) {
             showFeatureComingSoon("X (Twitter) Sign In");
         } else if (v.getId() == R.id.forgotPasswordText) {
-            showFeatureComingSoon("Forgot Password");
+            navigateToForgotPassword();
         } else if (v.getId() == R.id.registerText) {
             navigateToRegister();
         }
@@ -125,6 +125,11 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         Intent intent = new Intent(this, UserReg.class);
         startActivity(intent);
         finish();
+    }
+
+    private void navigateToForgotPassword() {
+        Intent intent = new Intent(this, ForgotPasswordPage.class);
+        startActivity(intent);
     }
 
     private void showFeatureComingSoon(String feature) {

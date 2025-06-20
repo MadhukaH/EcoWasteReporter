@@ -28,6 +28,8 @@
         <activity android:name=".UserLogin" />
         <activity android:name=".CleanerReg" />
         <activity android:name=".CleanerLoginPage" />
+        <activity android:name=".ForgotPasswordPage" />
+        <activity android:name=".VerificationCodePage" />
     </application>
 
 </manifest>
