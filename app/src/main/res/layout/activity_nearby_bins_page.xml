@@ -36,26 +36,15 @@
                         android:id="@+id/backButton"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_close_clear_cancel"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:tint="@color/white"
                         android:padding="12dp"/>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Nearby Bins"
-                        android:textColor="@color/white"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:layout_marginStart="8dp"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/searchButton"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        app:icon="@android:drawable/ic_menu_search"
                         app:iconTint="@color/white"
                         android:insetLeft="0dp"
                         android:insetTop="0dp"
