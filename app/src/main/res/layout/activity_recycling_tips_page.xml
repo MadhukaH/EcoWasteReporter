@@ -29,6 +29,8 @@
                     android:layout_height="wrap_content"
                     android:text="♻️ Eco Tips"
                     android:textColor="@color/green"
+                    android:padding="20dp"
+                    android:textAlignment="center"
                     android:textSize="28sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp"/>
@@ -36,7 +38,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Learn how to recycle properly and make a difference"
                     android:textColor="#757575"
                     android:textSize="16sp"/>
             </LinearLayout>

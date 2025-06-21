@@ -44,6 +44,9 @@
         <activity
             android:name=".RecyclingTipsPage"
             android:exported="false" />
+        <activity
+            android:name=".ProfilePage"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -1,0 +1,108 @@
+package com.s23010169.ecowastereporter;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.button.MaterialButton;
+
+public class ProfilePage extends AppCompatActivity {
+    private TextView userName, userLevel, reportsCount, resolvedCount, pointsCount;
+    private MaterialCardView changePasswordLayout, performanceLayout, rewardsLayout;
+    private MaterialButton signOutButton;
+    private AppBarLayout appBarLayout;
+    private Toolbar toolbar;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile_page);
+
+        // Initialize views
+        initializeViews();
+        
+        // Setup toolbar
+        setupToolbar();
+        
+        // Set click listeners
+        setClickListeners();
+        
+        // Load user data
+        loadUserData();
+    }
+
+    private void initializeViews() {
+        userName = findViewById(R.id.userName);
+        userLevel = findViewById(R.id.userLevel);
+        reportsCount = findViewById(R.id.reportsCount);
+        resolvedCount = findViewById(R.id.resolvedCount);
+        pointsCount = findViewById(R.id.pointsCount);
+        
+        changePasswordLayout = findViewById(R.id.changePasswordLayout);
+        performanceLayout = findViewById(R.id.performanceLayout);
+        rewardsLayout = findViewById(R.id.rewardsLayout);
+        signOutButton = findViewById(R.id.signOutButton);
+        
+        appBarLayout = findViewById(R.id.appBarLayout);
+        toolbar = findViewById(R.id.toolbar);
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+    }
+
+    private void setClickListeners() {
+        changePasswordLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfilePage.this, ForgotPasswordPage.class);
+            startActivity(intent);
+        });
+
+        performanceLayout.setOnClickListener(v -> {
+            // TODO: Implement Performance Summary page navigation
+            // Intent intent = new Intent(ProfilePage.this, PerformanceSummaryPage.class);
+            // startActivity(intent);
+        });
+
+        rewardsLayout.setOnClickListener(v -> {
+            // TODO: Implement Rewards page navigation
+            // Intent intent = new Intent(ProfilePage.this, RewardsPage.class);
+            // startActivity(intent);
+        });
+
+        signOutButton.setOnClickListener(v -> {
+            // TODO: Implement sign out logic
+            Intent intent = new Intent(ProfilePage.this, SelectPage.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
+    }
+
+    private void loadUserData() {
+        // TODO: Load actual user data from database/preferences
+        userName.setText("Capt Price");
+        userLevel.setText("Level 3 • Eco Warrior");
+        reportsCount.setText("12");
+        resolvedCount.setText("8");
+        pointsCount.setText("350");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+} 

@@ -8,11 +8,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.imageview.ShapeableImageView;
 
 public class PeopleHomePage extends AppCompatActivity implements View.OnClickListener {
     private MaterialCardView reportWasteCard, viewMapCard, myReportsCard, recyclingTipsCard;
     private ExtendedFloatingActionButton reportFab;
     private NestedScrollView scrollView;
+    private ShapeableImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         recyclingTipsCard = findViewById(R.id.recyclingTipsCard);
         reportFab = findViewById(R.id.reportFab);
         scrollView = findViewById(R.id.scrollView);
+        profileImage = findViewById(R.id.profileImage);
     }
 
     private void setupClickListeners() {
@@ -39,6 +42,11 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         myReportsCard.setOnClickListener(this);
         recyclingTipsCard.setOnClickListener(this);
         reportFab.setOnClickListener(this);
+        
+        profileImage.setOnClickListener(v -> {
+            Intent intent = new Intent(PeopleHomePage.this, ProfilePage.class);
+            startActivity(intent);
+        });
     }
 
     private void setupScrollBehavior() {
