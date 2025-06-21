@@ -1,63 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="#FAFAFA">
 
-    <TextView
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/green"
-        android:padding="16dp"
-        android:text="♻️ Eco Tips"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
 
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <Button
-                android:id="@+id/btnAllTips"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="All Tips"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/tab_selector"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:orientation="vertical"
+                android:padding="16dp"
+                app:layout_collapseMode="parallax">
 
-            <Button
-                android:id="@+id/btnPlastic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Plastic"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/tab_selector"
-                style="?android:attr/buttonBarButtonStyle" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="♻️ Eco Tips"
+                    android:textColor="@color/green"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"/>
 
-            <Button
-                android:id="@+id/btnPaper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Paper"
-                android:background="@drawable/tab_selector"
-                style="?android:attr/buttonBarButtonStyle" />
-        </LinearLayout>
-    </HorizontalScrollView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Learn how to recycle properly and make a difference"
+                    android:textColor="#757575"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-    <ScrollView
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:background="@android:color/transparent"
+            app:tabBackground="@drawable/tab_selector"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="#757575"
+            app:tabIndicator="@null"
+            app:tabRippleColor="@null"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,10 +70,17 @@
             android:padding="16dp">
 
             <!-- Plastic Bottles Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/plasticCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:rippleColor="#1A000000"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -82,7 +93,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="🧴 Plastic Bottles"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="#1B5E20"/>
 
@@ -91,34 +102,47 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Remove caps and labels before recycling. Rinse bottles to remove food residue. Crush bottles to save space."
-                        android:textColor="#2E7D32"/>
+                        android:textColor="#2E7D32"
+                        android:textSize="16sp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="✅ Do: Clean thoroughly"
-                            android:textColor="#2E7D32"/>
+                            android:textColor="#2E7D32"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="❌ Don't: Leave caps on"
-                            android:textColor="#C62828"/>
+                            android:textColor="#C62828"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"/>
                     </LinearLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Paper & Cardboard Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/paperCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:rippleColor="#1A000000"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -131,7 +155,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="📦 Paper &amp; Cardboard"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="#E65100"/>
 
@@ -140,34 +164,47 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Keep paper dry and clean. Remove any plastic tape or staples. Flatten cardboard boxes."
-                        android:textColor="#F57C00"/>
+                        android:textColor="#F57C00"
+                        android:textSize="16sp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="✅ Do: Keep dry and flat"
-                            android:textColor="#F57C00"/>
+                            android:textColor="#F57C00"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="❌ Don't: Include wet paper"
-                            android:textColor="#C62828"/>
+                            android:textColor="#C62828"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"/>
                     </LinearLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Metal Cans Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/metalCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:rippleColor="#1A000000"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -180,7 +217,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="🥫 Metal Cans"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="#0D47A1"/>
 
@@ -189,28 +226,34 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Rinse cans to remove food residue. Labels can stay on. Aluminum and steel cans are both recyclable."
-                        android:textColor="#1976D2"/>
+                        android:textColor="#1976D2"
+                        android:textSize="16sp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="✅ Do: Rinse thoroughly"
-                            android:textColor="#1976D2"/>
+                            android:textColor="#1976D2"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="❌ Don't: Leave food inside"
-                            android:textColor="#C62828"/>
+                            android:textColor="#C62828"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"/>
                     </LinearLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-    </ScrollView>
-</LinearLayout> 
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout> 
