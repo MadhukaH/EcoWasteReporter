@@ -41,6 +41,9 @@
         <activity
             android:name=".MyReportPage"
             android:exported="false" />
+        <activity
+            android:name=".RecyclingTipsPage"
+            android:exported="false" />
     </application>
 
 </manifest>
