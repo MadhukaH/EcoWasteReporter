@@ -62,9 +62,9 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
 
     private void setupRecyclerView() {
         List<Action> actions = new ArrayList<>();
-        actions.add(new Action(R.drawable.ic_performance, "Route Map", () -> handleActionClick("Route Map")));
-        actions.add(new Action(R.drawable.ic_performance, "Mark Complete", () -> handleActionClick("Mark Complete")));
-        actions.add(new Action(R.drawable.ic_performance, "View Tasks", () -> handleActionClick("View Tasks")));
+        actions.add(new Action(R.drawable.ic_route_map, "Route Map", () -> handleActionClick("Route Map")));
+        actions.add(new Action(R.drawable.ic_mark_complete, "Mark Complete", () -> handleActionClick("Mark Complete")));
+        actions.add(new Action(R.drawable.ic_view_tasks, "View Tasks", () -> handleActionClick("View Tasks")));
         actions.add(new Action(R.drawable.ic_performance, "Performance", () -> handleActionClick("Performance")));
 
         ActionAdapter adapter = new ActionAdapter(this, actions, this);
