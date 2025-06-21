@@ -8,11 +8,11 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp"
-    app:strokeColor="@color/design_default_color_secondary"
+    app:strokeColor="@color/primary"
     app:strokeWidth="1dp"
     android:clickable="true"
     android:focusable="true"
-    app:rippleColor="@color/design_default_color_secondary"
+    app:rippleColor="@color/primary_light"
     android:stateListAnimator="@animator/card_state_list_anim">
 
     <LinearLayout
@@ -27,13 +27,13 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="16dp"
-            app:tint="@color/design_default_color_secondary" />
+            app:tint="@color/primary" />
 
         <TextView
             android:id="@+id/actionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
+            android:textColor="@color/primary_text"
             android:textSize="16sp"
             android:textStyle="bold" />
 
