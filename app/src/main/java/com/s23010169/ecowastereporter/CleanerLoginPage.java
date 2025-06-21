@@ -74,8 +74,16 @@ public class CleanerLoginPage extends AppCompatActivity implements View.OnClickL
         }
 
         // TODO: Implement actual login logic here
-        // For now, just show a toast message
-        Toast.makeText(this, "Login functionality to be implemented", Toast.LENGTH_SHORT).show();
+        // For now, simulate successful login and navigate to home page
+        loginButton.setEnabled(false);
+        loginButton.setText("Logging in...");
+
+        new android.os.Handler().postDelayed(() -> {
+            // Navigate to CleanerHomePage
+            Intent intent = new Intent(CleanerLoginPage.this, CleanerHomePage.class);
+            startActivity(intent);
+            finish();
+        }, 1500); // Simulated 1.5-second delay
     }
 
     private boolean validateInputs(String serviceId, String password) {

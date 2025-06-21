@@ -143,7 +143,10 @@ public class CleanerReg extends AppCompatActivity {
         new android.os.Handler().postDelayed(() -> {
             // Registration successful
             showSuccessMessage();
-            navigateToLogin();
+            // Navigate to CleanerHomePage
+            Intent intent = new Intent(CleanerReg.this, CleanerHomePage.class);
+            startActivity(intent);
+            finish();
         }, 2000); // Simulated 2-second delay
     }
 

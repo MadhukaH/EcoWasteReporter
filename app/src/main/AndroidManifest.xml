@@ -48,6 +48,9 @@
         <activity
             android:name=".ProfilePage"
             android:exported="false" />
+        <activity
+            android:name=".CleanerHomePage"
+            android:exported="false" />
     </application>
 
 </manifest>
