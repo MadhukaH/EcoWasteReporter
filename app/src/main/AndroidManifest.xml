@@ -35,6 +35,9 @@
         <activity
             android:name=".ReportWastePage"
             android:exported="false" />
+        <activity
+            android:name=".NearbyBinsPage"
+            android:exported="false" />
     </application>
 
 </manifest>
