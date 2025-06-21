@@ -66,7 +66,8 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(PeopleHomePage.this, NearbyBinsPage.class);
             startActivity(intent);
         } else if (id == R.id.myReportsCard) {
-            showFeatureMessage("My Reports");
+            Intent intent = new Intent(PeopleHomePage.this, MyReportPage.class);
+            startActivity(intent);
         } else if (id == R.id.recyclingTipsCard) {
             showFeatureMessage("Recycling Tips");
         }

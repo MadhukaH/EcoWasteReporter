@@ -17,4 +17,9 @@
     <!-- Secondary colors -->
     <color name="teal_200">#80CBC4</color>
     <color name="teal_700">#00796B</color>
+    
+    <!-- Report statuses -->
+    <color name="status_pending">#FFA000</color>
+    <color name="status_resolved">#4CAF50</color>
+    <color name="status_in_progress">#F44336</color>
 </resources>

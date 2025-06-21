@@ -16,7 +16,6 @@
             android:layout_height="match_parent"
             app:contentScrim="@color/green_500"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:title="Report Waste"
             app:expandedTitleMarginStart="24dp"
             app:expandedTitleMarginBottom="32dp"
             app:expandedTitleTextAppearance="@style/TextAppearance.MaterialComponents.Headline4">
@@ -45,7 +44,6 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:tint="@android:color/white" />
 
             </androidx.appcompat.widget.Toolbar>

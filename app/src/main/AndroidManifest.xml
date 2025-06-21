@@ -38,6 +38,9 @@
         <activity
             android:name=".NearbyBinsPage"
             android:exported="false" />
+        <activity
+            android:name=".MyReportPage"
+            android:exported="false" />
     </application>
 
 </manifest>
