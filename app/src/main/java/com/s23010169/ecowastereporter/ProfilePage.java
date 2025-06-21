@@ -1,16 +1,22 @@
 package com.s23010169.ecowastereporter;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.button.MaterialButton;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfilePage extends AppCompatActivity {
     private TextView userName, userLevel, reportsCount, resolvedCount, pointsCount;
@@ -18,6 +24,21 @@ public class ProfilePage extends AppCompatActivity {
     private MaterialButton signOutButton;
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
+    private CircleImageView profileImage;
+
+    private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                Uri imageUri = result.getData().getData();
+                if (imageUri != null) {
+                    profileImage.setImageURI(imageUri);
+                    // TODO: Upload the image to your backend server or save it locally
+                    Toast.makeText(this, "Profile photo updated!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +72,7 @@ public class ProfilePage extends AppCompatActivity {
         
         appBarLayout = findViewById(R.id.appBarLayout);
         toolbar = findViewById(R.id.toolbar);
+        profileImage = findViewById(R.id.profileImage);
     }
 
     private void setupToolbar() {
@@ -62,6 +84,11 @@ public class ProfilePage extends AppCompatActivity {
     }
 
     private void setClickListeners() {
+        profileImage.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickImage.launch(intent);
+        });
+
         changePasswordLayout.setOnClickListener(v -> {
             Intent intent = new Intent(ProfilePage.this, ForgotPasswordPage.class);
             startActivity(intent);
