@@ -108,6 +108,16 @@
                         android:textColor="#757575"
                         android:textSize="14sp"
                         android:fontFamily="sans-serif" />
+
+                    <TextView
+                        android:id="@+id/photoCountText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="No photos added"
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

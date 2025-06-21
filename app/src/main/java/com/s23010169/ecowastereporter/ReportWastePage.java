@@ -19,6 +19,8 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReportWastePage extends AppCompatActivity {
     private CardView photoContainer;
@@ -32,6 +34,10 @@ public class ReportWastePage extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private String selectedWasteType;
     private boolean isSubmitting = false;
+    private List<String> photoUris = new ArrayList<>(); // Store photo URIs
+    private TextView photoCountText; // To show number of photos added
+    private static final int MIN_DESCRIPTION_LENGTH = 20;
+    private static final int MIN_PHOTOS_REQUIRED = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,23 @@ public class ReportWastePage extends AppCompatActivity {
         getCurrentLocationButton = findViewById(R.id.getCurrentLocationButton);
         cameraFab = findViewById(R.id.cameraFab);
         appBarLayout = findViewById(R.id.appBarLayout);
+        photoCountText = findViewById(R.id.photoCountText);
+        
+        // Set initial photo count
+        updatePhotoCount();
+    }
+
+    private void updatePhotoCount() {
+        if (photoCountText != null) {
+            if (photoUris.isEmpty()) {
+                photoCountText.setText("No photos added");
+                photoCountText.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+            } else {
+                photoCountText.setText(String.format("%d photo%s added", 
+                    photoUris.size(), photoUris.size() == 1 ? "" : "s"));
+                photoCountText.setTextColor(ContextCompat.getColor(this, R.color.green_500));
+            }
+        }
     }
 
     private void setupSpinner() {
@@ -120,6 +143,7 @@ public class ReportWastePage extends AppCompatActivity {
             
             // TODO: Implement actual location fetching
             locationInput.setText("Fetching location...");
+            locationInput.setError(null); // Clear any previous errors
             
             v.postDelayed(() -> {
                 getCurrentLocationButton.setEnabled(true);
@@ -132,6 +156,26 @@ public class ReportWastePage extends AppCompatActivity {
         submitButton.setOnClickListener(v -> {
             if (!isSubmitting && validateInputs()) {
                 submitReport();
+            }
+        });
+
+        // Add text change listener for description to show remaining characters
+        descriptionInput.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+                int currentLength = s.length();
+                if (currentLength > 0 && currentLength < MIN_DESCRIPTION_LENGTH) {
+                    descriptionInput.setError(String.format("Minimum %d characters required (%d more needed)", 
+                        MIN_DESCRIPTION_LENGTH, MIN_DESCRIPTION_LENGTH - currentLength));
+                } else {
+                    descriptionInput.setError(null);
+                }
             }
         });
     }
@@ -163,7 +207,10 @@ public class ReportWastePage extends AppCompatActivity {
             .start();
 
         // TODO: Implement actual image picker
-        showSnackbar("Photo selection coming soon");
+        // For now, simulate adding a photo
+        photoUris.add("dummy_uri_" + System.currentTimeMillis());
+        updatePhotoCount();
+        showSnackbar("Photo added successfully");
     }
 
     private void animateSelection(View view) {
@@ -186,39 +233,45 @@ public class ReportWastePage extends AppCompatActivity {
 
     private boolean validateInputs() {
         boolean isValid = true;
+        View firstErrorView = null;
 
-        if (selectedWasteType == null) {
-            showSnackbar("Please select waste type");
-            wasteTypeSpinner.animate()
-                .translationX(20f)
-                .setDuration(100)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        wasteTypeSpinner.animate()
-                            .translationX(-20f)
-                            .setDuration(100)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    wasteTypeSpinner.animate()
-                                        .translationX(0f)
-                                        .setDuration(100)
-                                        .start();
-                                }
-                            })
-                            .start();
-                    }
-                })
-                .start();
+        // Validate photos
+        if (photoUris.size() < MIN_PHOTOS_REQUIRED) {
+            showSnackbar("Please add at least one photo");
+            photoContainer.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+            if (firstErrorView == null) firstErrorView = photoContainer;
             isValid = false;
         }
 
+        // Validate waste type
+        if (selectedWasteType == null) {
+            showSnackbar("Please select waste type");
+            wasteTypeSpinner.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+            if (firstErrorView == null) firstErrorView = wasteTypeSpinner;
+            isValid = false;
+        }
+
+        // Validate location
         String location = locationInput.getText().toString().trim();
         if (location.isEmpty() || location.equals("Fetching location...")) {
-            locationInput.setError("Please enter location");
+            locationInput.setError("Please enter a valid location");
             locationInput.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+            if (firstErrorView == null) firstErrorView = locationInput;
             isValid = false;
+        }
+
+        // Validate description
+        String description = descriptionInput.getText().toString().trim();
+        if (description.length() < MIN_DESCRIPTION_LENGTH) {
+            descriptionInput.setError(String.format("Please provide a detailed description (minimum %d characters)", MIN_DESCRIPTION_LENGTH));
+            descriptionInput.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+            if (firstErrorView == null) firstErrorView = descriptionInput;
+            isValid = false;
+        }
+
+        // Scroll to first error if any
+        if (firstErrorView != null) {
+            firstErrorView.requestFocus();
         }
 
         return isValid;
@@ -247,17 +300,17 @@ public class ReportWastePage extends AppCompatActivity {
             snackbar.show();
             
             // Clear form
+            photoUris.clear();
+            updatePhotoCount();
             locationInput.setText("");
             descriptionInput.setText("");
             wasteTypeSpinner.setSelection(0);
-            
-            // Return to previous screen after a short delay
-            submitButton.postDelayed(this::onBackPressed, 1500);
+            selectedWasteType = null;
         }, 2000);
     }
 
     private void showSnackbar(String message) {
-        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(submitButton, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
