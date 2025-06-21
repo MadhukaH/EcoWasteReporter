@@ -1,5 +1,6 @@
 package com.s23010169.ecowastereporter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -59,7 +60,8 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.reportWasteCard || id == R.id.reportFab) {
-            showFeatureMessage("Report Waste");
+            Intent intent = new Intent(PeopleHomePage.this, ReportWastePage.class);
+            startActivity(intent);
         } else if (id == R.id.viewMapCard) {
             showFeatureMessage("View Map");
         } else if (id == R.id.myReportsCard) {

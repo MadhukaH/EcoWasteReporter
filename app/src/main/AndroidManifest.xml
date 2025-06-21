@@ -32,6 +32,9 @@
         <activity android:name=".VerificationCodePage" />
         <activity android:name=".NewPasswordPage" />
         <activity android:name=".PeopleHomePage" />
+        <activity
+            android:name=".ReportWastePage"
+            android:exported="false" />
     </application>
 
 </manifest>
