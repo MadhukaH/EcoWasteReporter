@@ -27,7 +27,7 @@ public class ReportWastePage extends AppCompatActivity {
     private EditText descriptionInput;
     private MaterialButton submitButton;
     private ImageButton backButton;
-    private ImageButton getCurrentLocationButton;
+    private MaterialButton getCurrentLocationButton;
     private FloatingActionButton cameraFab;
     private AppBarLayout appBarLayout;
     private String selectedWasteType;
@@ -114,14 +114,16 @@ public class ReportWastePage extends AppCompatActivity {
         cameraFab.setOnClickListener(v -> showImagePickerOptions());
 
         getCurrentLocationButton.setOnClickListener(v -> {
-            getCurrentLocationButton.animate()
-                .rotation(360f)
-                .setDuration(1000)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
-                .start();
+            // Animate the button text and icon
+            getCurrentLocationButton.setEnabled(false);
+            getCurrentLocationButton.setText("Fetching...");
+            
             // TODO: Implement actual location fetching
             locationInput.setText("Fetching location...");
+            
             v.postDelayed(() -> {
+                getCurrentLocationButton.setEnabled(true);
+                getCurrentLocationButton.setText("Current");
                 locationInput.setText("Current Location");
                 showSnackbar("Location updated successfully");
             }, 1500);
@@ -165,19 +167,21 @@ public class ReportWastePage extends AppCompatActivity {
     }
 
     private void animateSelection(View view) {
-        view.animate()
-            .alpha(0.7f)
-            .setDuration(100)
-            .setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    view.animate()
-                        .alpha(1f)
-                        .setDuration(100)
-                        .start();
-                }
-            })
-            .start();
+        if (view != null) {
+            view.animate()
+                .alpha(0.7f)
+                .setDuration(100)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        view.animate()
+                            .alpha(1f)
+                            .setDuration(100)
+                            .start();
+                    }
+                })
+                .start();
+        }
     }
 
     private boolean validateInputs() {
@@ -211,7 +215,7 @@ public class ReportWastePage extends AppCompatActivity {
         }
 
         String location = locationInput.getText().toString().trim();
-        if (location.isEmpty()) {
+        if (location.isEmpty() || location.equals("Fetching location...")) {
             locationInput.setError("Please enter location");
             locationInput.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
             isValid = false;
@@ -224,57 +228,36 @@ public class ReportWastePage extends AppCompatActivity {
         isSubmitting = true;
         submitButton.setEnabled(false);
         
-        // Show progress animation
-        submitButton.setText("");
-        submitButton.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_popup_sync));
-        submitButton.getIcon().setTint(ContextCompat.getColor(this, android.R.color.white));
-        submitButton.getIcon().setAutoMirrored(true);
-        submitButton.getIcon().setVisible(true, true);
+        // Show progress state
+        String originalText = submitButton.getText().toString();
+        submitButton.setText("Submitting...");
         
-        submitButton.animate()
-            .rotation(360f)
-            .setDuration(1000)
-            .setInterpolator(new AccelerateDecelerateInterpolator())
-            .setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    // TODO: Implement actual report submission
-                    submitButton.postDelayed(() -> {
-                        Snackbar snackbar = Snackbar.make(submitButton, 
-                            "Report submitted successfully!", 
-                            Snackbar.LENGTH_LONG);
-                        snackbar.setAction("View", v -> {
-                            // TODO: Navigate to report details
-                        });
-                        snackbar.show();
-
-                        // Reset button state with animation
-                        submitButton.animate()
-                            .rotation(0f)
-                            .setDuration(300)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    submitButton.setIcon(null);
-                                    submitButton.setText("Submit Report");
-                                    submitButton.setEnabled(true);
-                                    isSubmitting = false;
-                                    
-                                    // Close the page with a slide animation
-                                    finishAfterTransition();
-                                }
-                            })
-                            .start();
-                    }, 1500);
-                }
-            })
-            .start();
+        // Simulate report submission
+        submitButton.postDelayed(() -> {
+            isSubmitting = false;
+            submitButton.setEnabled(true);
+            submitButton.setText(originalText);
+            
+            Snackbar snackbar = Snackbar.make(submitButton, 
+                "Report submitted successfully!", 
+                Snackbar.LENGTH_LONG);
+            snackbar.setAction("View", v -> {
+                // TODO: Navigate to report details
+            });
+            snackbar.show();
+            
+            // Clear form
+            locationInput.setText("");
+            descriptionInput.setText("");
+            wasteTypeSpinner.setSelection(0);
+            
+            // Return to previous screen after a short delay
+            submitButton.postDelayed(this::onBackPressed, 1500);
+        }, 2000);
     }
 
     private void showSnackbar(String message) {
-        Snackbar.make(submitButton, message, Snackbar.LENGTH_SHORT)
-            .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
-            .show();
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
