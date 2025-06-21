@@ -7,6 +7,8 @@
     <color name="button_color">#206A4E</color>
     <color name="green_500">#4CAF50</color>
     <color name="green">#4CAF50</color>
+    <color name="yellow">#FFC107</color>
+    <color name="red">#F44336</color>
     
     <!-- Primary colors -->
     <color name="purple_500">@color/green_500</color>
