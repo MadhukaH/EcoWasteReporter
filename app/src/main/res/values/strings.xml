@@ -1,7 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">EcoWasteReporter</string>
     <string name="welcome_title">ECOWASTE</string>
     <string name="welcome_subtitle">REPORTER</string>
     <string name="welcome_tagline">Keep Our City Clean Together</string>
     <string name="lets_go">Lets Go</string>
+    <string-array name="waste_types">
+        <item>Select waste type...</item>
+        <item>Organic waste</item>
+        <item>Agricultural waste</item>
+        <item>Construction and demolition waste</item>
+        <item>Electronic waste</item>
+        <item>Bulky waste</item>
+    </string-array>
 </resources>
