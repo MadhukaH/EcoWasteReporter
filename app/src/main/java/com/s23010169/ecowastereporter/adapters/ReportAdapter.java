@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.s23010169.ecowastereporter.R;
 import com.s23010169.ecowastereporter.models.Report;
@@ -37,23 +36,23 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         holder.timeText.setText(report.getTimeAgo());
         holder.statusText.setText(report.getStatus());
 
-        // Set status background color based on status
-        int backgroundColor;
+        // Set status background based on status
+        int backgroundResId;
         switch (report.getStatus().toLowerCase()) {
             case "pending":
-                backgroundColor = ContextCompat.getColor(context, R.color.status_pending);
+                backgroundResId = R.drawable.status_background_pending;
                 break;
             case "resolved":
-                backgroundColor = ContextCompat.getColor(context, R.color.status_resolved);
+                backgroundResId = R.drawable.status_background_resolved;
                 break;
             case "in progress":
-                backgroundColor = ContextCompat.getColor(context, R.color.status_in_progress);
+                backgroundResId = R.drawable.status_background_in_progress;
                 break;
             default:
-                backgroundColor = ContextCompat.getColor(context, R.color.green_500);
+                backgroundResId = R.drawable.status_background_pending;
                 break;
         }
-        holder.statusText.setBackgroundColor(backgroundColor);
+        holder.statusText.setBackgroundResource(backgroundResId);
     }
 
     @Override
