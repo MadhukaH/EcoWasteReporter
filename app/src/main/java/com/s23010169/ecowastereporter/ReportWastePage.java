@@ -189,134 +189,106 @@ public class ReportWastePage extends AppCompatActivity {
     }
 
     private void showImagePickerOptions() {
-        // Animate the photo container
-        photoContainer.animate()
-            .scaleX(0.95f)
-            .scaleY(0.95f)
-            .setDuration(100)
-            .setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    photoContainer.animate()
-                        .scaleX(1f)
-                        .scaleY(1f)
-                        .setDuration(100)
-                        .start();
-                }
-            })
-            .start();
-
-        // TODO: Implement actual image picker
-        // For now, simulate adding a photo
-        photoUris.add("dummy_uri_" + System.currentTimeMillis());
+        // TODO: Implement image picker functionality
+        // For now, just simulate adding a photo
+        photoUris.add("dummy_uri");
         updatePhotoCount();
         showSnackbar("Photo added successfully");
     }
 
     private void animateSelection(View view) {
-        if (view != null) {
-            view.animate()
-                .alpha(0.7f)
-                .setDuration(100)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        view.animate()
-                            .alpha(1f)
-                            .setDuration(100)
-                            .start();
-                    }
-                })
-                .start();
-        }
+        view.animate()
+            .scaleX(1.1f)
+            .scaleY(1.1f)
+            .setDuration(100)
+            .setInterpolator(new AccelerateDecelerateInterpolator())
+            .setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    view.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(100)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .start();
+                }
+            })
+            .start();
     }
 
     private boolean validateInputs() {
         boolean isValid = true;
-        View firstErrorView = null;
 
-        // Validate photos
-        if (photoUris.size() < MIN_PHOTOS_REQUIRED) {
-            showSnackbar("Please add at least one photo");
-            photoContainer.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
-            if (firstErrorView == null) firstErrorView = photoContainer;
-            isValid = false;
-        }
-
-        // Validate waste type
+        // Validate waste type selection
         if (selectedWasteType == null) {
-            showSnackbar("Please select waste type");
-            wasteTypeSpinner.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
-            if (firstErrorView == null) firstErrorView = wasteTypeSpinner;
+            showSnackbar("Please select a waste type");
             isValid = false;
         }
 
         // Validate location
         String location = locationInput.getText().toString().trim();
-        if (location.isEmpty() || location.equals("Fetching location...")) {
-            locationInput.setError("Please enter a valid location");
-            locationInput.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
-            if (firstErrorView == null) firstErrorView = locationInput;
+        if (location.isEmpty()) {
+            locationInput.setError("Location is required");
             isValid = false;
         }
 
         // Validate description
         String description = descriptionInput.getText().toString().trim();
         if (description.length() < MIN_DESCRIPTION_LENGTH) {
-            descriptionInput.setError(String.format("Please provide a detailed description (minimum %d characters)", MIN_DESCRIPTION_LENGTH));
-            descriptionInput.startAnimation(android.view.animation.AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
-            if (firstErrorView == null) firstErrorView = descriptionInput;
+            descriptionInput.setError(String.format("Minimum %d characters required", MIN_DESCRIPTION_LENGTH));
             isValid = false;
         }
 
-        // Scroll to first error if any
-        if (firstErrorView != null) {
-            firstErrorView.requestFocus();
+        // Validate photos
+        if (photoUris.size() < MIN_PHOTOS_REQUIRED) {
+            showSnackbar("Please add at least one photo");
+            isValid = false;
         }
 
         return isValid;
     }
 
     private void submitReport() {
+        if (isSubmitting) return;
         isSubmitting = true;
+
+        // Show loading state
         submitButton.setEnabled(false);
-        
-        // Show progress state
-        String originalText = submitButton.getText().toString();
         submitButton.setText("Submitting...");
-        
-        // Simulate report submission
-        submitButton.postDelayed(() -> {
+
+        // Create report data
+        String location = locationInput.getText().toString().trim();
+        String description = descriptionInput.getText().toString().trim();
+
+        // TODO: Create a Report object and save to database
+        // For now, simulate a network delay
+        new android.os.Handler().postDelayed(() -> {
             isSubmitting = false;
             submitButton.setEnabled(true);
-            submitButton.setText(originalText);
-            
-            Snackbar snackbar = Snackbar.make(submitButton, 
-                "Report submitted successfully!", 
-                Snackbar.LENGTH_LONG);
-            snackbar.setAction("View", v -> {
-                // TODO: Navigate to report details
-            });
-            snackbar.show();
-            
-            // Clear form
-            photoUris.clear();
-            updatePhotoCount();
-            locationInput.setText("");
-            descriptionInput.setText("");
-            wasteTypeSpinner.setSelection(0);
-            selectedWasteType = null;
+            submitButton.setText("Submit Report");
+
+            // Show success message and navigate back
+            showSnackbar("Report submitted successfully");
+            new android.os.Handler().postDelayed(this::navigateToMyReports, 1000);
         }, 2000);
     }
 
+    private void navigateToMyReports() {
+        Intent intent = new Intent(this, MyReportPage.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void showSnackbar(String message) {
-        Snackbar.make(submitButton, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onBackPressed() {
-        if (!isSubmitting) {
-            super.onBackPressed();
+        if (isSubmitting) {
+            showSnackbar("Please wait while submitting the report");
+            return;
         }
+        super.onBackPressed();
     }
 } 
