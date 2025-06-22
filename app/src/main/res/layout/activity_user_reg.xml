@@ -96,7 +96,7 @@
             android:id="@+id/passwordInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="16dp"
             android:hint="Set Strong Password"
             app:boxBackgroundColor="@android:color/transparent"
             app:boxStrokeColor="#4CAF50"
@@ -112,6 +112,54 @@
                 android:background="@drawable/edit_text_background"
                 android:inputType="textPassword"
                 android:maxLines="1"
+                android:padding="16dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phoneInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Enter Phone Number"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:boxStrokeColor="#4CAF50"
+            app:hintTextColor="#4CAF50"
+            app:startIconDrawable="@drawable/ic_person"
+            app:startIconTint="#4CAF50">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phoneInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_background"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:padding="16dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addressInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:hint="Enter Address"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:boxStrokeColor="#4CAF50"
+            app:hintTextColor="#4CAF50"
+            app:startIconDrawable="@drawable/ic_person"
+            app:startIconTint="#4CAF50">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addressInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_background"
+                android:inputType="textPostalAddress"
+                android:maxLines="3"
                 android:padding="16dp"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />

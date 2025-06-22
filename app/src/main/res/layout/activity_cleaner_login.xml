@@ -49,23 +49,27 @@
                 android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/serviceIdInputLayout"
+                android:id="@+id/emailInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:hint="Service ID"
+                android:hint="Enter Email"
                 app:boxBackgroundColor="@android:color/transparent"
                 app:boxStrokeColor="#4CAF50"
                 app:hintTextColor="#4CAF50"
-                app:startIconDrawable="@drawable/ic_person"
-                app:startIconTint="@color/gradient_start">
+                app:startIconDrawable="@drawable/ic_email"
+                app:startIconTint="#4CAF50">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/serviceIdInput"
+                    android:id="@+id/emailInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_background"
-                    android:padding="12dp" />
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -73,13 +77,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:hint="Password"
+                android:hint="Enter Password"
                 app:boxBackgroundColor="@android:color/transparent"
                 app:boxStrokeColor="#4CAF50"
                 app:hintTextColor="#4CAF50"
                 app:passwordToggleEnabled="true"
                 app:startIconDrawable="@drawable/ic_lock"
-                app:startIconTint="@color/gradient_start">
+                app:startIconTint="#4CAF50">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordInput"
@@ -87,7 +91,10 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_background"
                     android:inputType="textPassword"
-                    android:padding="12dp" />
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView

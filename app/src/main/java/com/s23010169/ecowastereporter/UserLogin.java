@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 
 public class UserLogin extends AppCompatActivity implements View.OnClickListener {
     private TextInputLayout emailLayout, passwordLayout;
@@ -20,11 +21,15 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
     private MaterialButton loginButton;
     private CardView googleSignIn, facebookSignIn, twitterSignIn;
     private View forgotPasswordText, registerText;
+    private CitizenDatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_login);
+
+        // Initialize database helper
+        databaseHelper = new CitizenDatabaseHelper(this);
 
         initializeViews();
         setupClickListeners();
@@ -88,9 +93,15 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
             return;
         }
 
-        // TODO: Implement actual login logic here
-        // Navigate to PeopleHomePage
-        navigateToPeopleHomePage();
+        // Check credentials in database
+        if (databaseHelper.checkCitizen(email, password)) {
+            // Login successful
+            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+            navigateToPeopleHomePage();
+        } else {
+            // Login failed
+            Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean validateInputs(String email, String password) {
@@ -106,9 +117,6 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
 
         if (TextUtils.isEmpty(password)) {
             passwordLayout.setError("Password is required");
-            isValid = false;
-        } else if (password.length() < 6) {
-            passwordLayout.setError("Password must be at least 6 characters");
             isValid = false;
         }
 

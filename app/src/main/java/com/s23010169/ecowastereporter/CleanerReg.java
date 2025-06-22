@@ -13,18 +13,23 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.s23010169.ecowastereporter.models.CleanerDatabaseHelper;
 
 public class CleanerReg extends AppCompatActivity {
     // UI Components
-    private TextInputLayout nameInputLayout, emailInputLayout, serviceIdInputLayout, passwordInputLayout;
-    private EditText nameEditText, emailEditText, serviceIdEditText, passwordEditText;
+    private TextInputLayout nameInputLayout, emailInputLayout, areaInputLayout, experienceInputLayout, passwordInputLayout, phoneInputLayout;
+    private EditText nameEditText, emailEditText, areaEditText, experienceEditText, passwordEditText, phoneEditText;
     private Button registerButton;
     private TextView loginLink;
+    private CleanerDatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cleaner_reg);
+
+        // Initialize database helper
+        databaseHelper = new CleanerDatabaseHelper(this);
 
         initializeViews();
         setupClickListeners();
@@ -34,14 +39,18 @@ public class CleanerReg extends AppCompatActivity {
         // Initialize TextInputLayouts
         nameInputLayout = findViewById(R.id.nameInputLayout);
         emailInputLayout = findViewById(R.id.emailInputLayout);
-        serviceIdInputLayout = findViewById(R.id.serviceIdInputLayout);
+        areaInputLayout = findViewById(R.id.areaInputLayout);
+        experienceInputLayout = findViewById(R.id.experienceInputLayout);
         passwordInputLayout = findViewById(R.id.passwordInputLayout);
+        phoneInputLayout = findViewById(R.id.phoneInputLayout);
 
         // Initialize EditTexts
         nameEditText = nameInputLayout.getEditText();
         emailEditText = emailInputLayout.getEditText();
-        serviceIdEditText = serviceIdInputLayout.getEditText();
+        areaEditText = areaInputLayout.getEditText();
+        experienceEditText = experienceInputLayout.getEditText();
         passwordEditText = passwordInputLayout.getEditText();
+        phoneEditText = phoneInputLayout.getEditText();
 
         registerButton = findViewById(R.id.registerButton);
         loginLink = findViewById(R.id.loginLink);
@@ -59,19 +68,21 @@ public class CleanerReg extends AppCompatActivity {
         // Get input values and trim whitespace
         String name = nameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
-        String serviceId = serviceIdEditText.getText().toString().trim();
+        String area = areaEditText.getText().toString().trim();
+        String experience = experienceEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
+        String phone = phoneEditText.getText().toString().trim();
 
         // Validate all fields
-        if (!validateFields(name, email, serviceId, password)) {
+        if (!validateFields(name, email, area, experience, password, phone)) {
             return;
         }
 
         // If all validations pass, proceed with registration
-        performRegistration(name, email, serviceId, password);
+        performRegistration(name, email, area, experience, password, phone);
     }
 
-    private boolean validateFields(String name, String email, String serviceId, String password) {
+    private boolean validateFields(String name, String email, String area, String experience, String password, String phone) {
         boolean isValid = true;
 
         if (TextUtils.isEmpty(name)) {
@@ -90,18 +101,25 @@ public class CleanerReg extends AppCompatActivity {
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInputLayout.setError("Please enter a valid email address");
             isValid = false;
+        } else if (databaseHelper.checkEmail(email)) {
+            emailInputLayout.setError("Email already exists");
+            isValid = false;
         } else {
             emailInputLayout.setError(null);
         }
 
-        if (TextUtils.isEmpty(serviceId)) {
-            serviceIdInputLayout.setError("Service ID is required");
-            isValid = false;
-        } else if (serviceId.length() < 6) {
-            serviceIdInputLayout.setError("Service ID must be at least 6 characters");
+        if (TextUtils.isEmpty(area)) {
+            areaInputLayout.setError("Area is required");
             isValid = false;
         } else {
-            serviceIdInputLayout.setError(null);
+            areaInputLayout.setError(null);
+        }
+
+        if (TextUtils.isEmpty(experience)) {
+            experienceInputLayout.setError("Experience is required");
+            isValid = false;
+        } else {
+            experienceInputLayout.setError(null);
         }
 
         if (TextUtils.isEmpty(password)) {
@@ -117,6 +135,16 @@ public class CleanerReg extends AppCompatActivity {
             passwordInputLayout.setError(null);
         }
 
+        if (TextUtils.isEmpty(phone)) {
+            phoneInputLayout.setError("Phone number is required");
+            isValid = false;
+        } else if (!Patterns.PHONE.matcher(phone).matches()) {
+            phoneInputLayout.setError("Please enter a valid phone number");
+            isValid = false;
+        } else {
+            phoneInputLayout.setError(null);
+        }
+
         return isValid;
     }
 
@@ -129,25 +157,28 @@ public class CleanerReg extends AppCompatActivity {
     private void clearErrors() {
         nameInputLayout.setError(null);
         emailInputLayout.setError(null);
-        serviceIdInputLayout.setError(null);
+        areaInputLayout.setError(null);
+        experienceInputLayout.setError(null);
         passwordInputLayout.setError(null);
+        phoneInputLayout.setError(null);
     }
 
-    private void performRegistration(String name, String email, String serviceId, String password) {
+    private void performRegistration(String name, String email, String area, String experience, String password, String phone) {
         // Show loading state
         registerButton.setEnabled(false);
         registerButton.setText("Registering...");
 
-        // TODO: Implement actual registration logic here (e.g., API call, database operation)
-        // For now, we'll simulate a registration process
-        new android.os.Handler().postDelayed(() -> {
+        // Add cleaner to database
+        long result = databaseHelper.addCleaner(name, email, password, phone, area, experience);
+
+        if (result != -1) {
             // Registration successful
             showSuccessMessage();
-            // Navigate to CleanerHomePage
-            Intent intent = new Intent(CleanerReg.this, CleanerHomePage.class);
-            startActivity(intent);
-            finish();
-        }, 2000); // Simulated 2-second delay
+            navigateToLogin();
+        } else {
+            // Registration failed
+            showError("Registration failed. Please try again.");
+        }
     }
 
     private void showSuccessMessage() {

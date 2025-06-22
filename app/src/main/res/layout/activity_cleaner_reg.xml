@@ -72,20 +72,23 @@
                 app:startIconTint="#4CAF50">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/emailEditText"
+                    android:id="@+id/emailInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_background"
                     android:inputType="textEmailAddress"
-                    android:padding="12dp" />
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/serviceIdInputLayout"
+                android:id="@+id/phoneInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:hint="Service ID"
+                android:hint="Enter Phone Number"
                 app:boxBackgroundColor="@android:color/transparent"
                 app:boxStrokeColor="#4CAF50"
                 app:hintTextColor="#4CAF50"
@@ -93,11 +96,63 @@
                 app:startIconTint="#4CAF50">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/serviceIdEditText"
+                    android:id="@+id/phoneInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_background"
-                    android:padding="12dp" />
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/areaInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Enter Work Area"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#4CAF50"
+                app:startIconDrawable="@drawable/ic_route_map"
+                app:startIconTint="#4CAF50">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/areaInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/experienceInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Enter Years of Experience"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#4CAF50"
+                app:hintTextColor="#4CAF50"
+                app:startIconDrawable="@drawable/ic_performance"
+                app:startIconTint="#4CAF50">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/experienceInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -114,12 +169,15 @@
                 app:startIconTint="#4CAF50">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/passwordEditText"
+                    android:id="@+id/passwordInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_background"
                     android:inputType="textPassword"
-                    android:padding="12dp" />
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

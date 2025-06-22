@@ -13,18 +13,23 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 
 public class UserReg extends AppCompatActivity {
     // UI Components
-    private TextInputLayout nameInputLayout, emailInputLayout, passwordInputLayout;
-    private EditText nameEditText, emailEditText, passwordEditText;
+    private TextInputLayout nameInputLayout, emailInputLayout, passwordInputLayout, phoneInputLayout, addressInputLayout;
+    private EditText nameEditText, emailEditText, passwordEditText, phoneEditText, addressEditText;
     private Button registerButton;
     private TextView loginText;
+    private CitizenDatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_reg);
+
+        // Initialize database helper
+        databaseHelper = new CitizenDatabaseHelper(this);
 
         initializeViews();
         setupClickListeners();
@@ -35,11 +40,15 @@ public class UserReg extends AppCompatActivity {
         nameInputLayout = findViewById(R.id.nameInputLayout);
         emailInputLayout = findViewById(R.id.emailInputLayout);
         passwordInputLayout = findViewById(R.id.passwordInputLayout);
+        phoneInputLayout = findViewById(R.id.phoneInputLayout);
+        addressInputLayout = findViewById(R.id.addressInputLayout);
 
         // Initialize EditTexts
         nameEditText = nameInputLayout.getEditText();
         emailEditText = emailInputLayout.getEditText();
         passwordEditText = passwordInputLayout.getEditText();
+        phoneEditText = phoneInputLayout.getEditText();
+        addressEditText = addressInputLayout.getEditText();
 
         registerButton = findViewById(R.id.registerButton);
         loginText = findViewById(R.id.loginText);
@@ -58,17 +67,19 @@ public class UserReg extends AppCompatActivity {
         String name = nameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
+        String phone = phoneEditText.getText().toString().trim();
+        String address = addressEditText.getText().toString().trim();
 
         // Validate all fields
-        if (!validateFields(name, email, password)) {
+        if (!validateFields(name, email, password, phone, address)) {
             return;
         }
 
         // If all validations pass, proceed with registration
-        performRegistration(name, email, password);
+        performRegistration(name, email, password, phone, address);
     }
 
-    private boolean validateFields(String name, String email, String password) {
+    private boolean validateFields(String name, String email, String password, String phone, String address) {
         boolean isValid = true;
 
         if (TextUtils.isEmpty(name)) {
@@ -87,6 +98,9 @@ public class UserReg extends AppCompatActivity {
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInputLayout.setError("Please enter a valid email address");
             isValid = false;
+        } else if (databaseHelper.checkEmail(email)) {
+            emailInputLayout.setError("Email already exists");
+            isValid = false;
         } else {
             emailInputLayout.setError(null);
         }
@@ -104,6 +118,23 @@ public class UserReg extends AppCompatActivity {
             passwordInputLayout.setError(null);
         }
 
+        if (TextUtils.isEmpty(phone)) {
+            phoneInputLayout.setError("Phone number is required");
+            isValid = false;
+        } else if (!Patterns.PHONE.matcher(phone).matches()) {
+            phoneInputLayout.setError("Please enter a valid phone number");
+            isValid = false;
+        } else {
+            phoneInputLayout.setError(null);
+        }
+
+        if (TextUtils.isEmpty(address)) {
+            addressInputLayout.setError("Address is required");
+            isValid = false;
+        } else {
+            addressInputLayout.setError(null);
+        }
+
         return isValid;
     }
 
@@ -117,20 +148,26 @@ public class UserReg extends AppCompatActivity {
         nameInputLayout.setError(null);
         emailInputLayout.setError(null);
         passwordInputLayout.setError(null);
+        phoneInputLayout.setError(null);
+        addressInputLayout.setError(null);
     }
 
-    private void performRegistration(String name, String email, String password) {
+    private void performRegistration(String name, String email, String password, String phone, String address) {
         // Show loading state
         registerButton.setEnabled(false);
         registerButton.setText("Registering...");
 
-        // TODO: Implement actual registration logic here (e.g., API call, database operation)
-        // For now, we'll simulate a registration process
-        new android.os.Handler().postDelayed(() -> {
+        // Add user to database
+        long result = databaseHelper.addCitizen(name, email, password, phone, address);
+
+        if (result != -1) {
             // Registration successful
             showSuccessMessage();
             navigateToPeopleHomePage();
-        }, 2000); // Simulated 2-second delay
+        } else {
+            // Registration failed
+            showError("Registration failed. Please try again.");
+        }
     }
 
     private void showSuccessMessage() {

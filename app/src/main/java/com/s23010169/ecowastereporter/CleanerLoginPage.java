@@ -3,6 +3,7 @@ package com.s23010169.ecowastereporter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
@@ -11,17 +12,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.s23010169.ecowastereporter.models.CleanerDatabaseHelper;
 
 public class CleanerLoginPage extends AppCompatActivity implements View.OnClickListener {
-    private TextInputLayout serviceIdLayout, passwordLayout;
-    private TextInputEditText serviceIdInput, passwordInput;
+    private TextInputLayout emailLayout, passwordLayout;
+    private TextInputEditText emailInput, passwordInput;
     private MaterialButton loginButton;
     private View registerLink, forgotPasswordText;
+    private CleanerDatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cleaner_login);
+
+        // Initialize database helper
+        databaseHelper = new CleanerDatabaseHelper(this);
 
         initializeViews();
         setupClickListeners();
@@ -29,11 +35,11 @@ public class CleanerLoginPage extends AppCompatActivity implements View.OnClickL
 
     private void initializeViews() {
         // Initialize TextInputLayouts
-        serviceIdLayout = findViewById(R.id.serviceIdInputLayout);
+        emailLayout = findViewById(R.id.emailInputLayout);
         passwordLayout = findViewById(R.id.passwordInputLayout);
 
         // Initialize EditTexts
-        serviceIdInput = findViewById(R.id.serviceIdInput);
+        emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
 
         // Initialize buttons and clickable views
@@ -61,51 +67,58 @@ public class CleanerLoginPage extends AppCompatActivity implements View.OnClickL
 
     private void handleLogin() {
         // Reset errors
-        serviceIdLayout.setError(null);
+        emailLayout.setError(null);
         passwordLayout.setError(null);
 
         // Get input values
-        String serviceId = serviceIdInput.getText().toString().trim();
+        String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
 
         // Validate inputs
-        if (!validateInputs(serviceId, password)) {
+        if (!validateInputs(email, password)) {
             return;
         }
 
-        // TODO: Implement actual login logic here
-        // For now, simulate successful login and navigate to home page
+        // Disable login button and show loading state
         loginButton.setEnabled(false);
         loginButton.setText("Logging in...");
 
-        new android.os.Handler().postDelayed(() -> {
-            // Navigate to CleanerHomePage
-            Intent intent = new Intent(CleanerLoginPage.this, CleanerHomePage.class);
-            startActivity(intent);
-            finish();
-        }, 1500); // Simulated 1.5-second delay
+        // Check credentials in database
+        if (databaseHelper.checkCleaner(email, password)) {
+            // Login successful
+            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+            navigateToCleanerHomePage();
+        } else {
+            // Login failed
+            Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+            loginButton.setEnabled(true);
+            loginButton.setText("LOGIN");
+        }
     }
 
-    private boolean validateInputs(String serviceId, String password) {
+    private boolean validateInputs(String email, String password) {
         boolean isValid = true;
 
-        if (TextUtils.isEmpty(serviceId)) {
-            serviceIdLayout.setError("Service ID is required");
+        if (TextUtils.isEmpty(email)) {
+            emailLayout.setError("Email is required");
             isValid = false;
-        } else if (serviceId.length() < 4) {
-            serviceIdLayout.setError("Service ID must be at least 4 characters");
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailLayout.setError("Please enter a valid email address");
             isValid = false;
         }
 
         if (TextUtils.isEmpty(password)) {
             passwordLayout.setError("Password is required");
             isValid = false;
-        } else if (password.length() < 6) {
-            passwordLayout.setError("Password must be at least 6 characters");
-            isValid = false;
         }
 
         return isValid;
+    }
+
+    private void navigateToCleanerHomePage() {
+        Intent intent = new Intent(this, CleanerHomePage.class);
+        startActivity(intent);
+        finish();
     }
 
     private void navigateToRegister() {
