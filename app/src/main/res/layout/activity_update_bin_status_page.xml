@@ -102,20 +102,22 @@
                             android:src="@drawable/ic_route_map"
                             app:tint="@color/primary"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Main Street Corner"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginStart="12dp"/>
-                    </LinearLayout>
-
-                    <TextView
+                                            <TextView
+                        android:id="@+id/locationText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bin ID: MSC-001 • Task ID: #T2024-156"
+                        android:text="Main Street Corner"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginStart="12dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/taskDetailsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bin ID: MSC-001 • Task ID: #T2024-156"
                         android:textSize="14sp"
                         android:textColor="@color/text_secondary"
                         android:layout_marginTop="8dp"

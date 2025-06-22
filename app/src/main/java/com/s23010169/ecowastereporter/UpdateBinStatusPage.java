@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +27,7 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
     private CardView photoUploadCard;
     private RecyclerView taskSelectorRecyclerView;
     private TaskSelectorAdapter taskAdapter;
+    private TextView locationText, taskDetailsText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
         btnCompleteTask = findViewById(R.id.btnCompleteTask);
         photoUploadCard = findViewById(R.id.photoUploadCard);
         taskSelectorRecyclerView = findViewById(R.id.taskSelectorRecyclerView);
+        locationText = findViewById(R.id.locationText);
+        taskDetailsText = findViewById(R.id.taskDetailsText);
     }
 
     private void setupToolbar() {
@@ -70,6 +74,9 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
         taskAdapter = new TaskSelectorAdapter(this, tasks, this);
         taskSelectorRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         taskSelectorRecyclerView.setAdapter(taskAdapter);
+
+        // Set initial task
+        onTaskSelected(tasks.get(0), 0);
     }
 
     private void setupClickListeners() {
@@ -98,7 +105,13 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
 
     @Override
     public void onTaskSelected(Task task, int position) {
-        // Update UI based on selected task
-        Toast.makeText(this, "Selected task: " + task.getTaskId(), Toast.LENGTH_SHORT).show();
+        // Update location card with selected task details
+        locationText.setText(task.getLocation());
+        taskDetailsText.setText(String.format("Task ID: %s • %s", task.getTaskId(), task.getDescription()));
+        
+        // Update toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Mark as Cleaned - " + task.getLocation());
+        }
     }
 } 
