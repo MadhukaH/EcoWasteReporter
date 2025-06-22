@@ -51,6 +51,9 @@
         <activity
             android:name=".CleanerHomePage"
             android:exported="false" />
+        <activity
+            android:name=".ViewTasksPage"
+            android:exported="false" />
     </application>
 
 </manifest>

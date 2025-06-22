@@ -7,7 +7,6 @@
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
-    <color name="divider">#BDBDBD</color>
     <color name="success_green">#4CAF50</color>
     <color name="error_red">#F44336</color>
     <color name="warning_yellow">#FFC107</color>
@@ -30,7 +29,22 @@
     <color name="teal_700">#00796B</color>
     
     <!-- Report statuses -->
-    <color name="status_pending">#FFA000</color>
+    <color name="status_pending">#FFC107</color>
     <color name="status_resolved">#4CAF50</color>
     <color name="status_in_progress">#F44336</color>
+    
+    <!-- Task Priority Colors -->
+    <color name="priority_high">#FF4D4D</color>
+    <color name="priority_medium">#FFA726</color>
+    <color name="priority_low">#66BB6A</color>
+    
+    <!-- UI Colors -->
+    <color name="background_main">#F5F6FA</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="text_primary">#2C3E50</color>
+    <color name="text_secondary">#7F8C8D</color>
+    <color name="divider">#EEEEEE</color>
+    <color name="tab_indicator">#1E88E5</color>
+    <color name="button_primary">#1E88E5</color>
+    <color name="button_success">#43A047</color>
 </resources>

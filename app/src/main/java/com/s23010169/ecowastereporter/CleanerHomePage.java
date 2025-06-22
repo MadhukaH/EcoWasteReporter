@@ -144,7 +144,8 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
 
     private void showTasksList() {
         showToast("Opening tasks list...");
-        // TODO: Implement tasks list view
+        Intent intent = new Intent(this, ViewTasksPage.class);
+        startActivity(intent);
     }
 
     private void showPerformanceStats() {
