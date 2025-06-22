@@ -18,6 +18,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.s23010169.ecowastereporter.adapters.ActionAdapter;
 import com.s23010169.ecowastereporter.models.Action;
+import com.s23010169.ecowastereporter.models.Cleaner;
+import com.s23010169.ecowastereporter.models.CleanerDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +31,26 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
     private LinearProgressIndicator taskProgress;
     private ExtendedFloatingActionButton startRouteButton;
     private ImageView notificationIcon, profileIcon;
+    private CleanerDatabaseHelper databaseHelper;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cleaner_home_page);
 
+        // Get email from intent
+        userEmail = getIntent().getStringExtra("email");
+        
+        // Initialize database helper
+        databaseHelper = new CleanerDatabaseHelper(this);
+
         initializeViews();
         setupToolbar();
         setupRecyclerView();
         setupClickListeners();
         updateTaskProgress();
+        displayCleanerName();
     }
 
     private void initializeViews() {
@@ -51,6 +62,15 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
         startRouteButton = findViewById(R.id.startRouteButton);
         notificationIcon = findViewById(R.id.notificationIcon);
         profileIcon = findViewById(R.id.profileIcon);
+    }
+
+    private void displayCleanerName() {
+        if (userEmail != null) {
+            Cleaner cleaner = databaseHelper.getCleanerByEmail(userEmail);
+            if (cleaner != null) {
+                cleanerName.setText(cleaner.getName() + "! 👋");
+            }
+        }
     }
 
     private void setupToolbar() {

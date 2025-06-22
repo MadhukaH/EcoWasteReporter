@@ -174,7 +174,7 @@ public class CleanerReg extends AppCompatActivity {
         if (result != -1) {
             // Registration successful
             showSuccessMessage();
-            navigateToLogin();
+            navigateToCleanerHomePage(email);
         } else {
             // Registration failed
             showError("Registration failed. Please try again.");
@@ -182,7 +182,7 @@ public class CleanerReg extends AppCompatActivity {
     }
 
     private void showSuccessMessage() {
-        Toast.makeText(this, "Registration successful! Please login.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Registration successful!", Toast.LENGTH_LONG).show();
     }
 
     private void showError(String message) {
@@ -193,6 +193,13 @@ public class CleanerReg extends AppCompatActivity {
 
     private void navigateToLogin() {
         Intent intent = new Intent(CleanerReg.this, CleanerLoginPage.class);
+        startActivity(intent);
+        finish(); // Close registration activity
+    }
+
+    private void navigateToCleanerHomePage(String email) {
+        Intent intent = new Intent(CleanerReg.this, CleanerHomePage.class);
+        intent.putExtra("email", email);
         startActivity(intent);
         finish(); // Close registration activity
     }

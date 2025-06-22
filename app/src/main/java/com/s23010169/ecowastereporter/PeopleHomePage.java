@@ -3,27 +3,40 @@ package com.s23010169.ecowastereporter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.s23010169.ecowastereporter.models.Citizen;
+import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 
 public class PeopleHomePage extends AppCompatActivity implements View.OnClickListener {
     private MaterialCardView reportWasteCard, viewMapCard, myReportsCard, recyclingTipsCard;
     private ExtendedFloatingActionButton reportFab;
     private NestedScrollView scrollView;
     private ShapeableImageView profileImage;
+    private TextView welcomeText;
+    private CitizenDatabaseHelper databaseHelper;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_home_page);
 
+        // Get email from intent
+        userEmail = getIntent().getStringExtra("email");
+        
+        // Initialize database helper
+        databaseHelper = new CitizenDatabaseHelper(this);
+
         initializeViews();
         setupClickListeners();
         setupScrollBehavior();
+        displayUserName();
     }
 
     private void initializeViews() {
@@ -34,6 +47,16 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         reportFab = findViewById(R.id.reportFab);
         scrollView = findViewById(R.id.scrollView);
         profileImage = findViewById(R.id.profileImage);
+        welcomeText = findViewById(R.id.welcomeText);
+    }
+
+    private void displayUserName() {
+        if (userEmail != null) {
+            Citizen citizen = databaseHelper.getCitizenByEmail(userEmail);
+            if (citizen != null) {
+                welcomeText.setText("Hello, " + citizen.getName() + "! 👋");
+            }
+        }
     }
 
     private void setupClickListeners() {

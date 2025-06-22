@@ -117,6 +117,7 @@ public class CleanerLoginPage extends AppCompatActivity implements View.OnClickL
 
     private void navigateToCleanerHomePage() {
         Intent intent = new Intent(this, CleanerHomePage.class);
+        intent.putExtra("email", emailInput.getText().toString().trim());
         startActivity(intent);
         finish();
     }

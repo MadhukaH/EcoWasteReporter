@@ -125,6 +125,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
 
     private void navigateToPeopleHomePage() {
         Intent intent = new Intent(this, PeopleHomePage.class);
+        intent.putExtra("email", emailEditText.getText().toString().trim());
         startActivity(intent);
         finish();
     }

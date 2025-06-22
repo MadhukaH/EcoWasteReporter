@@ -188,6 +188,7 @@ public class UserReg extends AppCompatActivity {
 
     private void navigateToPeopleHomePage() {
         Intent intent = new Intent(UserReg.this, PeopleHomePage.class);
+        intent.putExtra("email", emailEditText.getText().toString().trim());
         startActivity(intent);
         finish(); // Close registration activity
     }
