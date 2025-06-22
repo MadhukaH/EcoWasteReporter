@@ -30,12 +30,14 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.s23010169.ecowastereporter.models.Report;
+import com.s23010169.ecowastereporter.adapters.PhotoPreviewAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -76,6 +78,10 @@ public class ReportWastePage extends AppCompatActivity {
     private ActivityResultLauncher<Intent> pickImageLauncher;
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
 
+    private RecyclerView photoPreviewRecyclerView;
+    private PhotoPreviewAdapter photoPreviewAdapter;
+    private View addPhotoContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +110,7 @@ public class ReportWastePage extends AppCompatActivity {
                         Uri contentUri = FileProvider.getUriForFile(this,
                             "com.s23010169.ecowastereporter.fileprovider", f);
                         photoUris.add(contentUri);
+                        photoPreviewAdapter.updatePhotos(photoUris);
                         updatePhotoCount();
                         showSnackbar("Photo captured successfully");
                     }
@@ -119,6 +126,7 @@ public class ReportWastePage extends AppCompatActivity {
                     Uri selectedImage = result.getData().getData();
                     if (selectedImage != null) {
                         photoUris.add(selectedImage);
+                        photoPreviewAdapter.updatePhotos(photoUris);
                         updatePhotoCount();
                         showSnackbar("Photo selected successfully");
                     }
@@ -157,9 +165,44 @@ public class ReportWastePage extends AppCompatActivity {
         cameraFab = findViewById(R.id.cameraFab);
         appBarLayout = findViewById(R.id.appBarLayout);
         photoCountText = findViewById(R.id.photoCountText);
+        photoPreviewRecyclerView = findViewById(R.id.photoPreviewRecyclerView);
+        addPhotoContainer = findViewById(R.id.addPhotoContainer);
+        
+        // Setup photo preview RecyclerView
+        setupPhotoPreviewRecyclerView();
         
         // Set initial photo count
         updatePhotoCount();
+    }
+
+    private void setupPhotoPreviewRecyclerView() {
+        photoPreviewRecyclerView.setLayoutManager(
+            new androidx.recyclerview.widget.LinearLayoutManager(
+                this, 
+                androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, 
+                false
+            )
+        );
+        
+        photoPreviewAdapter = new PhotoPreviewAdapter(photoUris, position -> {
+            // Handle photo deletion
+            photoUris.remove(position);
+            photoPreviewAdapter.updatePhotos(photoUris);
+            updatePhotoPreviewVisibility();
+            updatePhotoCount();
+        });
+        
+        photoPreviewRecyclerView.setAdapter(photoPreviewAdapter);
+    }
+
+    private void updatePhotoPreviewVisibility() {
+        if (photoUris.isEmpty()) {
+            photoPreviewRecyclerView.setVisibility(View.GONE);
+            addPhotoContainer.setVisibility(View.VISIBLE);
+        } else {
+            photoPreviewRecyclerView.setVisibility(View.VISIBLE);
+            addPhotoContainer.setVisibility(View.GONE);
+        }
     }
 
     private void updatePhotoCount() {
@@ -172,6 +215,7 @@ public class ReportWastePage extends AppCompatActivity {
                     photoUris.size(), photoUris.size() == 1 ? "" : "s"));
                 photoCountText.setTextColor(ContextCompat.getColor(this, R.color.green_500));
             }
+            updatePhotoPreviewVisibility();
         }
     }
 
