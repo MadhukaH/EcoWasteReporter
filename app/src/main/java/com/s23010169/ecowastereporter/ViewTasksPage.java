@@ -116,7 +116,7 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
                 case 2: // Route
                     currentDisplayedTasks.addAll(allTasks);
                     Collections.sort(currentDisplayedTasks, 
-                        (t1, t2) -> Double.compare(t1.getDistance(), t2.getDistance()));
+                        (t1, t2) -> Double.compare(t1.getEstimatedDistance(), t2.getEstimatedDistance()));
                     break;
             }
             
