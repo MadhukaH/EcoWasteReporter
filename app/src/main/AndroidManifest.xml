@@ -54,6 +54,9 @@
         <activity
             android:name=".ViewTasksPage"
             android:exported="false" />
+        <activity
+            android:name=".UpdateBinStatusPage"
+            android:exported="false" />
     </application>
 
 </manifest>

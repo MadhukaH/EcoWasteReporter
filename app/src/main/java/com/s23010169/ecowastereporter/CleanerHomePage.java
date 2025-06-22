@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.s23010169.ecowastereporter.UpdateBinStatusPage;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -138,8 +139,8 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
     }
 
     private void showMarkComplete() {
-        showToast("Opening task completion form...");
-        // TODO: Implement task completion
+        Intent intent = new Intent(this, UpdateBinStatusPage.class);
+        startActivity(intent);
     }
 
     private void showTasksList() {

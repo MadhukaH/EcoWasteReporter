@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mark as Cleaned"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:padding="16dp"
+            android:background="@color/green"
+            android:gravity="center"/>
+
+        <!-- Illustration Image -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="380dp"
+            android:src="@drawable/mark"
+            android:layout_marginTop="24dp"
+            android:scaleType="fitCenter"/>
+
+        <!-- Location Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardBackgroundColor="#EBF3FF"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_route_map"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Main Street Corner"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bin ID: MSC-001 • Task ID: #T2024-156"
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Photo Upload Section -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/photoUploadCard"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="#F5F5F5">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_refresh"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add completion photo"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(Optional)"
+                    android:textSize="12sp"
+                    android:textColor="#666666"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Cleaning Status -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cleaning Status"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"/>
+
+        <RadioButton
+            android:id="@+id/radioFullyCleaned"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fully Cleaned"
+            android:checked="true"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Additional Notes -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Additional Notes"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"/>
+
+        <EditText
+            android:id="@+id/editTextNotes"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="Any issues or observations..."
+            android:gravity="top"
+            android:padding="12dp"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp">
+
+            <Button
+                android:id="@+id/btnSaveDraft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save Draft"
+                android:textColor="#666666"
+                android:backgroundTint="#F5F5F5"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnCompleteTask"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Complete Task"
+                android:backgroundTint="@color/green"/>
+        </LinearLayout>
+
+        <!-- Time Info -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Started: 9:25 AM • Duration: 16 min"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
+
+    </LinearLayout>
+</ScrollView> 
