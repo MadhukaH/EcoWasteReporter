@@ -108,10 +108,5 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
         // Update location card with selected task details
         locationText.setText(task.getLocation());
         taskDetailsText.setText(String.format("Task ID: %s • %s", task.getTaskId(), task.getDescription()));
-        
-        // Update toolbar title
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Mark as Cleaned - " + task.getLocation());
-        }
     }
 } 
