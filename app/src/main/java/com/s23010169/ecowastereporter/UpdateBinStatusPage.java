@@ -58,6 +58,7 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("");
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
