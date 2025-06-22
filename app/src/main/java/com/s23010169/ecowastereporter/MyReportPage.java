@@ -20,6 +20,7 @@ import com.s23010169.ecowastereporter.adapters.ReportAdapter;
 import com.s23010169.ecowastereporter.models.Report;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class MyReportPage extends AppCompatActivity {
@@ -131,7 +132,7 @@ public class MyReportPage extends AppCompatActivity {
 
         List<Report> searchResults = allReports.stream()
             .filter(report -> 
-                report.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                report.getWasteType().toLowerCase().contains(query.toLowerCase()) ||
                 report.getLocation().toLowerCase().contains(query.toLowerCase()) ||
                 report.getReportId().toLowerCase().contains(query.toLowerCase()))
             .collect(Collectors.toList());
@@ -157,9 +158,32 @@ public class MyReportPage extends AppCompatActivity {
 
     private void initializeSampleData() {
         allReports = new ArrayList<>();
-        allReports.add(new Report("Overflowing Bin", "Main Street Corner", "#1234", "2 days ago", "Pending"));
-        allReports.add(new Report("Illegal Dumping", "Park Area", "#1231", "5 days ago", "Resolved"));
-        allReports.add(new Report("Broken Bin", "Shopping Mall", "#1228", "1 week ago", "In Progress"));
+        
+        // Create sample reports with the new Report model structure
+        Report report1 = new Report();
+        report1.setWasteType("Overflowing Bin");
+        report1.setLocation("Main Street Corner");
+        report1.setReportId(UUID.randomUUID().toString().substring(0, 4));
+        report1.setTimestamp(System.currentTimeMillis() - (2 * 24 * 60 * 60 * 1000)); // 2 days ago
+        report1.setStatus("Pending");
+        
+        Report report2 = new Report();
+        report2.setWasteType("Illegal Dumping");
+        report2.setLocation("Park Area");
+        report2.setReportId(UUID.randomUUID().toString().substring(0, 4));
+        report2.setTimestamp(System.currentTimeMillis() - (5 * 24 * 60 * 60 * 1000)); // 5 days ago
+        report2.setStatus("Resolved");
+        
+        Report report3 = new Report();
+        report3.setWasteType("Broken Bin");
+        report3.setLocation("Shopping Mall");
+        report3.setReportId(UUID.randomUUID().toString().substring(0, 4));
+        report3.setTimestamp(System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)); // 1 week ago
+        report3.setStatus("In Progress");
+        
+        allReports.add(report1);
+        allReports.add(report2);
+        allReports.add(report3);
     }
 
     private void filterReports(int tabPosition) {

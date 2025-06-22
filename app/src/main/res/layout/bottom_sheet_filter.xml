@@ -9,6 +9,35 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Add Photo"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cameraButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Take Photo"
+        android:textAllCaps="false"
+        app:icon="@android:drawable/ic_menu_camera"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/galleryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose from Gallery"
+        android:textAllCaps="false"
+        app:icon="@android:drawable/ic_menu_gallery"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Filter Bins"
         android:textSize="20sp"
         android:textStyle="bold"

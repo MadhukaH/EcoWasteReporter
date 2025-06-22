@@ -9,15 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.s23010169.ecowastereporter.R;
 import com.s23010169.ecowastereporter.models.Report;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportViewHolder> {
     private List<Report> reports;
     private Context context;
+    private final SimpleDateFormat dateFormat;
 
     public ReportAdapter(Context context, List<Report> reports) {
         this.context = context;
         this.reports = reports;
+        this.dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
     }
 
     @NonNull
@@ -30,10 +35,14 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     @Override
     public void onBindViewHolder(@NonNull ReportViewHolder holder, int position) {
         Report report = reports.get(position);
-        holder.titleText.setText(report.getTitle());
+        holder.titleText.setText(report.getWasteType());
         holder.locationText.setText(report.getLocation());
         holder.reportIdText.setText("Report ID: " + report.getReportId());
-        holder.timeText.setText(report.getTimeAgo());
+        
+        // Format timestamp
+        String timeAgo = dateFormat.format(new Date(report.getTimestamp()));
+        holder.timeText.setText(timeAgo);
+        
         holder.statusText.setText(report.getStatus());
 
         // Set status background based on status
