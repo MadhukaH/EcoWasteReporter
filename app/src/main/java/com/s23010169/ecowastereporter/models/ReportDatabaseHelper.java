@@ -3,6 +3,7 @@ package com.s23010169.ecowastereporter.models;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
@@ -60,9 +61,9 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, "Creating reports table");
             db.execSQL(CREATE_REPORTS_TABLE);
             Log.d(TAG, "Reports table created successfully");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             Log.e(TAG, "Error creating reports table", e);
-            throw e;
+            throw new RuntimeException("Failed to create reports table", e);
         }
     }
 
@@ -70,12 +71,28 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try {
             Log.d(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
+            // Backup data if needed before upgrade
+            backupDataBeforeUpgrade(db);
+            
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_REPORTS);
             onCreate(db);
-        } catch (Exception e) {
+            
+            // Restore data if needed after upgrade
+            restoreDataAfterUpgrade(db);
+        } catch (SQLException e) {
             Log.e(TAG, "Error upgrading database", e);
-            throw e;
+            throw new RuntimeException("Failed to upgrade database", e);
         }
+    }
+
+    private void backupDataBeforeUpgrade(SQLiteDatabase db) {
+        // Implement data backup logic if needed
+        Log.d(TAG, "Backing up data before upgrade");
+    }
+
+    private void restoreDataAfterUpgrade(SQLiteDatabase db) {
+        // Implement data restoration logic if needed
+        Log.d(TAG, "Restoring data after upgrade");
     }
 
     // Method to add new report

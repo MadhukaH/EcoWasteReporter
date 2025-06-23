@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -348,7 +351,13 @@ public class ReportWastePage extends AppCompatActivity {
 
     private void fetchCurrentLocation() {
         if (!checkLocationPermissions()) {
-            showSnackbar("Location permissions not granted");
+            showSnackbar("Location permissions are required to get your current location");
+            requestLocationPermissions();
+            return;
+        }
+
+        if (!isLocationEnabled()) {
+            showLocationSettingsDialog();
             return;
         }
 
@@ -372,23 +381,52 @@ public class ReportWastePage extends AppCompatActivity {
 
                     @Override
                     public void onProviderDisabled(@NonNull String provider) {
-                        showSnackbar("Please enable GPS");
-                        getCurrentLocationButton.setEnabled(true);
-                        getCurrentLocationButton.setText("Current");
+                        showSnackbar("Please enable GPS in settings");
+                        resetLocationUI();
                     }
 
                     @Override
-                    public void onProviderEnabled(@NonNull String provider) {}
+                    public void onProviderEnabled(@NonNull String provider) {
+                        showSnackbar("GPS enabled, retrying location fetch");
+                        fetchCurrentLocation();
+                    }
 
                     @Override
                     public void onStatusChanged(String provider, int status, Bundle extras) {}
                 }
             );
         } catch (SecurityException e) {
-            showSnackbar("Error accessing location");
-            getCurrentLocationButton.setEnabled(true);
-            getCurrentLocationButton.setText("Current");
+            Log.e("Location", "Error accessing location", e);
+            showSnackbar("Error accessing location services");
+            resetLocationUI();
         }
+    }
+
+    private boolean isLocationEnabled() {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+               locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    private void showLocationSettingsDialog() {
+        new AlertDialog.Builder(this)
+            .setTitle("Enable Location")
+            .setMessage("Location services are required to get your current location. Would you like to enable them?")
+            .setPositiveButton("Open Settings", (dialog, which) -> {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            })
+            .setNegativeButton("Cancel", (dialog, which) -> {
+                resetLocationUI();
+                dialog.dismiss();
+            })
+            .setCancelable(false)
+            .show();
+    }
+
+    private void resetLocationUI() {
+        getCurrentLocationButton.setEnabled(true);
+        getCurrentLocationButton.setText("Current");
+        locationInput.setText("");
     }
 
     private void updateLocationUI(Location location) {
