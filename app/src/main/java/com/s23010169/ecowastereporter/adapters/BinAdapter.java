@@ -76,11 +76,11 @@ public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
 
             int colorResId;
             if (bin.getFillPercentage() < 40) {
-                colorResId = R.color.green;
+                colorResId = R.color.success_green;
             } else if (bin.getFillPercentage() < 80) {
-                colorResId = R.color.yellow;
+                colorResId = R.color.warning_yellow;
             } else {
-                colorResId = R.color.red;
+                colorResId = R.color.error_red;
             }
             statusIndicator.setBackgroundTintList(ContextCompat.getColorStateList(context, colorResId));
         }

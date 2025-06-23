@@ -1,50 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Primary Theme Colors -->
     <color name="primary">#4CAF50</color>
     <color name="primary_dark">#388E3C</color>
     <color name="primary_light">#C8E6C9</color>
     <color name="accent">#8BC34A</color>
+    <color name="purple_500">@color/green_500</color>
+    <color name="purple_700">#388E3C</color>
+    <color name="teal_200">#80CBC4</color>
+    <color name="teal_700">#00796B</color>
+
+    <!-- Text Colors -->
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
+    <color name="text_primary">#2C3E50</color>
+    <color name="text_secondary">#7F8C8D</color>
+
+    <!-- Basic Colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
     <color name="icons">#FFFFFF</color>
+
+    <!-- Status Colors -->
+    <color name="status_pending">#FFA000</color>
+    <color name="status_in_progress">#1976D2</color>
+    <color name="status_resolved">#388E3C</color>
+
+    <!-- Feedback Colors -->
     <color name="success_green">#4CAF50</color>
     <color name="error_red">#F44336</color>
     <color name="warning_yellow">#FFC107</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="gradient_start">#1CB05C</color>
-    <color name="gradient_end">#3DDC97</color>
-    <color name="button_color">#206A4E</color>
-    <color name="green_500">#4CAF50</color>
-    <color name="green">#4CAF50</color>
-    <color name="yellow">#FFC107</color>
-    <color name="red">#F44336</color>
-    
-    <!-- Primary colors -->
-    <color name="purple_500">@color/green_500</color>
-    <color name="purple_700">#388E3C</color>
-    
-    <!-- Secondary colors -->
-    <color name="teal_200">#80CBC4</color>
-    <color name="teal_700">#00796B</color>
-    
-    <!-- Report statuses -->
-    <color name="status_pending">#FFC107</color>
-    <color name="status_resolved">#4CAF50</color>
-    <color name="status_in_progress">#F44336</color>
-    
-    <!-- Task Priority Colors -->
+
+    <!-- Priority Colors -->
     <color name="priority_high">#FF4D4D</color>
     <color name="priority_medium">#FFA726</color>
     <color name="priority_low">#66BB6A</color>
-    
+
     <!-- UI Colors -->
     <color name="background_main">#F5F6FA</color>
     <color name="card_background">#FFFFFF</color>
-    <color name="text_primary">#2C3E50</color>
-    <color name="text_secondary">#7F8C8D</color>
     <color name="divider">#EEEEEE</color>
     <color name="tab_indicator">#1E88E5</color>
     <color name="button_primary">#1E88E5</color>
     <color name="button_success">#43A047</color>
+
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#1CB05C</color>
+    <color name="gradient_end">#3DDC97</color>
+    <color name="button_color">#206A4E</color>
+
+    <!-- Green Palette -->
+    <color name="green">#4CAF50</color>
+    <color name="green_50">#E8F5E9</color>
+    <color name="green_100">#C8E6C9</color>
+    <color name="green_200">#A5D6A7</color>
+    <color name="green_300">#81C784</color>
+    <color name="green_400">#66BB6A</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="green_600">#43A047</color>
+    <color name="green_700">#388E3C</color>
+    <color name="green_800">#2E7D32</color>
+    <color name="green_900">#1B5E20</color>
+
+    <!-- Red Palette -->
+    <color name="red">#F44336</color>
+    <color name="red_50">#FFEBEE</color>
+    <color name="red_100">#FFCDD2</color>
+    <color name="red_200">#EF9A9A</color>
+    <color name="red_300">#E57373</color>
+    <color name="red_400">#EF5350</color>
+    <color name="red_500">#F44336</color>
+    <color name="red_600">#E53935</color>
+    <color name="red_700">#D32F2F</color>
+    <color name="red_800">#C62828</color>
+    <color name="red_900">#B71C1C</color>
+
+    <!-- Gray Palette -->
+    <color name="gray_50">#FAFAFA</color>
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_400">#BDBDBD</color>
+    <color name="gray_500">#9E9E9E</color>
+    <color name="gray_600">#757575</color>
+    <color name="gray_700">#616161</color>
+    <color name="gray_800">#424242</color>
+    <color name="gray_900">#212121</color>
 </resources>

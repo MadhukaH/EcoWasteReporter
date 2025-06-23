@@ -85,10 +85,24 @@ public class ReportWastePage extends AppCompatActivity {
     private PhotoPreviewAdapter photoPreviewAdapter;
     private View addPhotoContainer;
 
+    private boolean isEditing = false;
+    private String editingReportId = null;
+    private ReportDatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_waste_page);
+
+        // Initialize database helper
+        dbHelper = new ReportDatabaseHelper(this);
+
+        // Check if we're editing an existing report
+        if (getIntent().hasExtra("REPORT_ID") && getIntent().getBooleanExtra("IS_EDITING", false)) {
+            isEditing = true;
+            editingReportId = getIntent().getStringExtra("REPORT_ID");
+            loadExistingReport();
+        }
 
         // Initialize activity result launchers
         initializeActivityResultLaunchers();
@@ -100,6 +114,12 @@ public class ReportWastePage extends AppCompatActivity {
         setupSpinner();
         setupClickListeners();
         setupAppBarBehavior();
+
+        // Update UI for editing mode
+        if (isEditing) {
+            submitButton.setText("Update Report");
+            setTitle("Edit Report");
+        }
     }
 
     private void initializeActivityResultLaunchers() {
@@ -547,6 +567,50 @@ public class ReportWastePage extends AppCompatActivity {
         return isValid;
     }
 
+    private void loadExistingReport() {
+        new Thread(() -> {
+            List<Report> reports = dbHelper.getAllReports();
+            Report reportToEdit = null;
+            for (Report report : reports) {
+                if (report.getReportId().equals(editingReportId)) {
+                    reportToEdit = report;
+                    break;
+                }
+            }
+
+            if (reportToEdit != null) {
+                Report finalReport = reportToEdit;
+                runOnUiThread(() -> {
+                    // Set waste type in spinner
+                    String[] wasteTypes = getResources().getStringArray(R.array.waste_types);
+                    for (int i = 0; i < wasteTypes.length; i++) {
+                        if (wasteTypes[i].equals(finalReport.getWasteType())) {
+                            wasteTypeSpinner.setSelection(i);
+                            break;
+                        }
+                    }
+
+                    // Set location and description
+                    locationInput.setText(finalReport.getLocation());
+                    descriptionInput.setText(finalReport.getDescription());
+
+                    // Set photos
+                    if (finalReport.getPhotoUris() != null) {
+                        photoUris.clear();
+                        photoUris.addAll(finalReport.getPhotoUris());
+                        photoPreviewAdapter.updatePhotos(photoUris);
+                        updatePhotoCount();
+                    }
+
+                    // Set location coordinates
+                    currentLocation = new Location("");
+                    currentLocation.setLatitude(finalReport.getLatitude());
+                    currentLocation.setLongitude(finalReport.getLongitude());
+                });
+            }
+        }).start();
+    }
+
     private void submitReport() {
         if (!validateInputs()) {
             return;
@@ -559,17 +623,21 @@ public class ReportWastePage extends AppCompatActivity {
         try {
             isSubmitting = true;
             submitButton.setEnabled(false);
-            submitButton.setText("Submitting...");
+            submitButton.setText(isEditing ? "Updating..." : "Submitting...");
 
-            // Create a new report object
+            // Create or update report object
             Report report = new Report();
-            report.setReportId(UUID.randomUUID().toString().substring(0, 8)); // Generate a unique ID
+            if (isEditing) {
+                report.setReportId(editingReportId);
+            } else {
+                report.setReportId(UUID.randomUUID().toString().substring(0, 8));
+            }
             report.setWasteType(selectedWasteType);
             report.setLocation(locationInput.getText().toString().trim());
             report.setDescription(descriptionInput.getText().toString().trim());
-            report.setPhotoUris(new ArrayList<>(photoUris)); // Create a new ArrayList to avoid reference issues
+            report.setPhotoUris(new ArrayList<>(photoUris));
             report.setTimestamp(System.currentTimeMillis());
-            report.setStatus("Pending");
+            report.setStatus(isEditing ? "Updated" : "Pending");
 
             if (currentLocation != null) {
                 report.setLatitude(currentLocation.getLatitude());
@@ -579,28 +647,33 @@ public class ReportWastePage extends AppCompatActivity {
             // Save report to database in a background thread
             new Thread(() -> {
                 try {
-                    ReportDatabaseHelper dbHelper = new ReportDatabaseHelper(this);
-                    long result = dbHelper.addReport(report);
+                    long result;
+                    if (isEditing) {
+                        // Delete old report and add updated one
+                        dbHelper.deleteReport(editingReportId);
+                        result = dbHelper.addReport(report);
+                    } else {
+                        result = dbHelper.addReport(report);
+                    }
 
                     // Update UI on the main thread
                     runOnUiThread(() -> {
                         if (result != -1) {
-                            showSnackbar("Report submitted successfully");
+                            showSnackbar(isEditing ? "Report updated successfully" : "Report submitted successfully");
                             navigateToMyReports();
                         } else {
-                            showSnackbar("Failed to submit report");
+                            showSnackbar(isEditing ? "Failed to update report" : "Failed to submit report");
                             submitButton.setEnabled(true);
-                            submitButton.setText("Submit Report");
+                            submitButton.setText(isEditing ? "Update Report" : "Submit Report");
                         }
                         isSubmitting = false;
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
-                    // Update UI on the main thread
                     runOnUiThread(() -> {
                         showSnackbar("Error: " + e.getMessage());
                         submitButton.setEnabled(true);
-                        submitButton.setText("Submit Report");
+                        submitButton.setText(isEditing ? "Update Report" : "Submit Report");
                         isSubmitting = false;
                     });
                 }
@@ -610,7 +683,7 @@ public class ReportWastePage extends AppCompatActivity {
             e.printStackTrace();
             showSnackbar("Error: " + e.getMessage());
             submitButton.setEnabled(true);
-            submitButton.setText("Submit Report");
+            submitButton.setText(isEditing ? "Update Report" : "Submit Report");
             isSubmitting = false;
         }
     }
