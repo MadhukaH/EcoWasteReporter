@@ -126,7 +126,7 @@
             app:boxBackgroundColor="@android:color/transparent"
             app:boxStrokeColor="#4CAF50"
             app:hintTextColor="#4CAF50"
-            app:startIconDrawable="@drawable/ic_person"
+            app:startIconDrawable="@drawable/ic_phone"
             app:startIconTint="#4CAF50">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -150,7 +150,7 @@
             app:boxBackgroundColor="@android:color/transparent"
             app:boxStrokeColor="#4CAF50"
             app:hintTextColor="#4CAF50"
-            app:startIconDrawable="@drawable/ic_person"
+            app:startIconDrawable="@drawable/ic_location"
             app:startIconTint="#4CAF50">
 
             <com.google.android.material.textfield.TextInputEditText
