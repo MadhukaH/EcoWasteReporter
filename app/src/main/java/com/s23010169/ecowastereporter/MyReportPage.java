@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.tabs.TabLayout;
 import com.s23010169.ecowastereporter.adapters.ReportAdapter;
 import com.s23010169.ecowastereporter.models.Report;
+import com.s23010169.ecowastereporter.models.ReportDatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,7 +45,6 @@ public class MyReportPage extends AppCompatActivity {
 
         initializeViews();
         setupRecyclerView();
-        initializeSampleData();
         setupListeners();
         updateEmptyState();
     }
@@ -145,45 +145,25 @@ public class MyReportPage extends AppCompatActivity {
         loadingProgressBar.setVisibility(View.VISIBLE);
         reportsRecyclerView.setVisibility(View.GONE);
 
-        // Simulate network delay
-        reportsRecyclerView.postDelayed(() -> {
-            initializeSampleData();
-            filterReports(tabLayout.getSelectedTabPosition());
-            loadingProgressBar.setVisibility(View.GONE);
-            reportsRecyclerView.setVisibility(View.VISIBLE);
-            swipeRefreshLayout.setRefreshing(false);
-            updateEmptyState();
-        }, 1000);
+        // Load reports from database
+        new Thread(() -> {
+            ReportDatabaseHelper dbHelper = new ReportDatabaseHelper(this);
+            allReports = dbHelper.getAllReports();
+
+            runOnUiThread(() -> {
+                filterReports(tabLayout.getSelectedTabPosition());
+                loadingProgressBar.setVisibility(View.GONE);
+                reportsRecyclerView.setVisibility(View.VISIBLE);
+                swipeRefreshLayout.setRefreshing(false);
+                updateEmptyState();
+            });
+        }).start();
     }
 
-    private void initializeSampleData() {
-        allReports = new ArrayList<>();
-        
-        // Create sample reports with the new Report model structure
-        Report report1 = new Report();
-        report1.setWasteType("Overflowing Bin");
-        report1.setLocation("Main Street Corner");
-        report1.setReportId(UUID.randomUUID().toString().substring(0, 4));
-        report1.setTimestamp(System.currentTimeMillis() - (2 * 24 * 60 * 60 * 1000)); // 2 days ago
-        report1.setStatus("Pending");
-        
-        Report report2 = new Report();
-        report2.setWasteType("Illegal Dumping");
-        report2.setLocation("Park Area");
-        report2.setReportId(UUID.randomUUID().toString().substring(0, 4));
-        report2.setTimestamp(System.currentTimeMillis() - (5 * 24 * 60 * 60 * 1000)); // 5 days ago
-        report2.setStatus("Resolved");
-        
-        Report report3 = new Report();
-        report3.setWasteType("Broken Bin");
-        report3.setLocation("Shopping Mall");
-        report3.setReportId(UUID.randomUUID().toString().substring(0, 4));
-        report3.setTimestamp(System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)); // 1 week ago
-        report3.setStatus("In Progress");
-        
-        allReports.add(report1);
-        allReports.add(report2);
-        allReports.add(report3);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshReports(); // Reload reports when returning to this page
     }
 
     private void filterReports(int tabPosition) {

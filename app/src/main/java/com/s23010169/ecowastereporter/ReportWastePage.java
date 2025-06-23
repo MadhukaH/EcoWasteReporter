@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.s23010169.ecowastereporter.models.Report;
+import com.s23010169.ecowastereporter.models.ReportDatabaseHelper;
 import com.s23010169.ecowastereporter.adapters.PhotoPreviewAdapter;
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 public class ReportWastePage extends AppCompatActivity {
     private CardView photoContainer;
@@ -545,31 +548,71 @@ public class ReportWastePage extends AppCompatActivity {
     }
 
     private void submitReport() {
-        isSubmitting = true;
-        submitButton.setEnabled(false);
-        submitButton.setText("Submitting...");
-
-        // Create a report object with all the data
-        Report report = new Report();
-        report.setWasteType(selectedWasteType);
-        report.setLocation(locationInput.getText().toString());
-        report.setDescription(descriptionInput.getText().toString());
-        if (currentLocation != null) {
-            report.setLatitude(currentLocation.getLatitude());
-            report.setLongitude(currentLocation.getLongitude());
+        if (!validateInputs()) {
+            return;
         }
-        report.setPhotoUris(new ArrayList<>(photoUris));
-        report.setTimestamp(System.currentTimeMillis());
 
-        // TODO: Save report to database (to be implemented later)
-        // For now, just simulate a successful submission
-        new android.os.Handler().postDelayed(() -> {
-            isSubmitting = false;
+        if (isSubmitting) {
+            return;
+        }
+
+        try {
+            isSubmitting = true;
+            submitButton.setEnabled(false);
+            submitButton.setText("Submitting...");
+
+            // Create a new report object
+            Report report = new Report();
+            report.setReportId(UUID.randomUUID().toString().substring(0, 8)); // Generate a unique ID
+            report.setWasteType(selectedWasteType);
+            report.setLocation(locationInput.getText().toString().trim());
+            report.setDescription(descriptionInput.getText().toString().trim());
+            report.setPhotoUris(new ArrayList<>(photoUris)); // Create a new ArrayList to avoid reference issues
+            report.setTimestamp(System.currentTimeMillis());
+            report.setStatus("Pending");
+
+            if (currentLocation != null) {
+                report.setLatitude(currentLocation.getLatitude());
+                report.setLongitude(currentLocation.getLongitude());
+            }
+
+            // Save report to database in a background thread
+            new Thread(() -> {
+                try {
+                    ReportDatabaseHelper dbHelper = new ReportDatabaseHelper(this);
+                    long result = dbHelper.addReport(report);
+
+                    // Update UI on the main thread
+                    runOnUiThread(() -> {
+                        if (result != -1) {
+                            showSnackbar("Report submitted successfully");
+                            navigateToMyReports();
+                        } else {
+                            showSnackbar("Failed to submit report");
+                            submitButton.setEnabled(true);
+                            submitButton.setText("Submit Report");
+                        }
+                        isSubmitting = false;
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // Update UI on the main thread
+                    runOnUiThread(() -> {
+                        showSnackbar("Error: " + e.getMessage());
+                        submitButton.setEnabled(true);
+                        submitButton.setText("Submit Report");
+                        isSubmitting = false;
+                    });
+                }
+            }).start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showSnackbar("Error: " + e.getMessage());
             submitButton.setEnabled(true);
             submitButton.setText("Submit Report");
-            showSnackbar("Report submitted successfully");
-            navigateToMyReports();
-        }, 1500);
+            isSubmitting = false;
+        }
     }
 
     private void navigateToMyReports() {
@@ -579,7 +622,14 @@ public class ReportWastePage extends AppCompatActivity {
     }
 
     private void showSnackbar(String message) {
-        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show();
+        // Make sure we show the snackbar on the main thread
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
+        } else {
+            runOnUiThread(() -> {
+                Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
+            });
+        }
     }
 
     @Override
