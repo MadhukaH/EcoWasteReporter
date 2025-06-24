@@ -35,6 +35,12 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
     private String userEmail;
 
     @Override
+    public void onBackPressed() {
+        // Prevent going back to login/registration screens
+        moveTaskToBack(true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cleaner_home_page);
