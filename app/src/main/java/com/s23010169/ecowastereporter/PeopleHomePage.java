@@ -14,7 +14,7 @@ import com.s23010169.ecowastereporter.models.Citizen;
 import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 
 public class PeopleHomePage extends AppCompatActivity implements View.OnClickListener {
-    private MaterialCardView reportWasteCard, viewMapCard, myReportsCard, recyclingTipsCard, performanceCard;
+    private MaterialCardView reportWasteCard, viewMapCard, myReportsCard, recyclingTipsCard;
     private ExtendedFloatingActionButton reportFab;
     private NestedScrollView scrollView;
     private ShapeableImageView profileImage;
@@ -50,7 +50,6 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         viewMapCard = findViewById(R.id.viewMapCard);
         myReportsCard = findViewById(R.id.myReportsCard);
         recyclingTipsCard = findViewById(R.id.recyclingTipsCard);
-        performanceCard = findViewById(R.id.performanceCard);
         reportFab = findViewById(R.id.reportFab);
         scrollView = findViewById(R.id.scrollView);
         profileImage = findViewById(R.id.profileImage);
@@ -71,7 +70,6 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         viewMapCard.setOnClickListener(this);
         myReportsCard.setOnClickListener(this);
         recyclingTipsCard.setOnClickListener(this);
-        performanceCard.setOnClickListener(this);
         reportFab.setOnClickListener(this);
         
         profileImage.setOnClickListener(v -> {
@@ -109,9 +107,6 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
             startActivity(intent);
         } else if (id == R.id.recyclingTipsCard) {
             Intent intent = new Intent(PeopleHomePage.this, RecyclingTipsPage.class);
-            startActivity(intent);
-        } else if (id == R.id.performanceCard) {
-            Intent intent = new Intent(PeopleHomePage.this, PerformanceSummaryPage.class);
             startActivity(intent);
         }
     }
