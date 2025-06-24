@@ -68,6 +68,9 @@
             android:name=".RecyclingTipsPage"
             android:exported="false" />
         <activity
+            android:name=".PerformanceSummaryPage"
+            android:exported="false" />
+        <activity
             android:name=".ProfilePage"
             android:exported="false" />
         <activity

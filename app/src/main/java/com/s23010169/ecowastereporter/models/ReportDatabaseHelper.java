@@ -239,4 +239,107 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
             }
         }
     }
+
+    // Method to get total reports count
+    public int getTotalReportsCount() {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = this.getReadableDatabase();
+            cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_REPORTS, null);
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            }
+            return 0;
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting total reports count", e);
+            return 0;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+    }
+
+    // Method to get resolved reports count
+    public int getResolvedReportsCount() {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = this.getReadableDatabase();
+            cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_REPORTS + 
+                               " WHERE " + COLUMN_STATUS + " = ?", 
+                               new String[]{"Resolved"});
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            }
+            return 0;
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting resolved reports count", e);
+            return 0;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+    }
+
+    // Method to get recent reports with limit
+    public List<Report> getRecentReports(int limit) {
+        List<Report> reports = new ArrayList<>();
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+
+        try {
+            db = this.getReadableDatabase();
+            String selectQuery = "SELECT * FROM " + TABLE_REPORTS + 
+                               " ORDER BY " + COLUMN_TIMESTAMP + " DESC" +
+                               " LIMIT " + limit;
+            cursor = db.rawQuery(selectQuery, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    Report report = new Report();
+                    report.setReportId(cursor.getString(cursor.getColumnIndex(COLUMN_REPORT_ID)));
+                    report.setWasteType(cursor.getString(cursor.getColumnIndex(COLUMN_WASTE_TYPE)));
+                    report.setLocation(cursor.getString(cursor.getColumnIndex(COLUMN_LOCATION)));
+                    report.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
+                    report.setLatitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LATITUDE)));
+                    report.setLongitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LONGITUDE)));
+                    
+                    String photoUrisJson = cursor.getString(cursor.getColumnIndex(COLUMN_PHOTO_URIS));
+                    try {
+                        Type type = new TypeToken<List<Uri>>(){}.getType();
+                        List<Uri> photoUris = gson.fromJson(photoUrisJson, type);
+                        report.setPhotoUris(photoUris != null ? photoUris : new ArrayList<>());
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error parsing photo URIs JSON", e);
+                        report.setPhotoUris(new ArrayList<>());
+                    }
+                    
+                    report.setTimestamp(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMESTAMP)));
+                    report.setStatus(cursor.getString(cursor.getColumnIndex(COLUMN_STATUS)));
+                    
+                    reports.add(report);
+                } while (cursor.moveToNext());
+            }
+            return reports;
+        } catch (Exception e) {
+            Log.e(TAG, "Error fetching recent reports", e);
+            return new ArrayList<>();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+    }
 } 
