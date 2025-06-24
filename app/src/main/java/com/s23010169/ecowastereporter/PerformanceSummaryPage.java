@@ -61,7 +61,6 @@ public class PerformanceSummaryPage extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
@@ -136,14 +135,5 @@ public class PerformanceSummaryPage extends AppCompatActivity {
         ReportAdapter adapter = new ReportAdapter(this, recentReports);
         recentActivityRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         recentActivityRecyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 } 

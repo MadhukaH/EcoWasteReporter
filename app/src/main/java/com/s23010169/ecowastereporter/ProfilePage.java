@@ -95,9 +95,8 @@ public class ProfilePage extends AppCompatActivity {
         });
 
         performanceLayout.setOnClickListener(v -> {
-            // TODO: Implement Performance Summary page navigation
-            // Intent intent = new Intent(ProfilePage.this, PerformanceSummaryPage.class);
-            // startActivity(intent);
+            Intent intent = new Intent(ProfilePage.this, PerformanceSummaryPage.class);
+            startActivity(intent);
         });
 
         rewardsLayout.setOnClickListener(v -> {
