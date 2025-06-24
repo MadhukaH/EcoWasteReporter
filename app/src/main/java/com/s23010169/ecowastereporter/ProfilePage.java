@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,7 +81,7 @@ public class ProfilePage extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
 
@@ -100,9 +102,8 @@ public class ProfilePage extends AppCompatActivity {
         });
 
         rewardsLayout.setOnClickListener(v -> {
-            // TODO: Implement Rewards page navigation
-            // Intent intent = new Intent(ProfilePage.this, RewardsPage.class);
-            // startActivity(intent);
+            Intent intent = new Intent(ProfilePage.this, LevelsRewardsPage.class);
+            startActivity(intent);
         });
 
         signOutButton.setOnClickListener(v -> {

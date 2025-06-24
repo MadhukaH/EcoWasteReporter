@@ -82,6 +82,12 @@
         <activity
             android:name=".UpdateBinStatusPage"
             android:exported="false" />
+        <activity
+            android:name=".PeoplePage"
+            android:exported="false" />
+        <activity
+            android:name=".LevelsRewardsPage"
+            android:exported="false" />
     </application>
 
 </manifest>
