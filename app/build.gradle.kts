@@ -14,6 +14,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Set the Maps API key from gradle.properties
+        resValue("string", "maps_api_key", project.property("MAPS_API_KEY").toString())
     }
 
     buildTypes {
