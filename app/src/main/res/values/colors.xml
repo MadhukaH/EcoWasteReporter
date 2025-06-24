@@ -86,4 +86,10 @@
     <color name="gray_700">#616161</color>
     <color name="gray_800">#424242</color>
     <color name="gray_900">#212121</color>
+
+    <!-- New Colors -->
+    <color name="pink_500">#E91E63</color>
+    <color name="purple_50">#F3E5F5</color>
+    <color name="pink_50">#FCE4EC</color>
+    <color name="blue_50">#E3F2FD</color>
 </resources>
