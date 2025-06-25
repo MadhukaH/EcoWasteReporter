@@ -35,6 +35,13 @@ captures/
 # IntelliJ
 *.iml
 .idea/
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.DS_Store
 
 # Keystore files
 *.jks
@@ -49,9 +56,6 @@ google-services.json
 
 # Sensitive configuration files
 app/src/main/res/values/secrets.xml
-
-# Version control
-vcs.xml
 
 # lint
 lint/intermediates/
