@@ -22,9 +22,4 @@
         <item name="android:textColorSecondary">@color/secondary_text</item>
         <item name="android:windowBackground">@color/white</item>
     </style>
-
-    <style name="CircleImageView" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
 </resources>

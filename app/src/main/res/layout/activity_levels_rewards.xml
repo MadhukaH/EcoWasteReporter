@@ -9,21 +9,24 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/profile_header_gradient">
+        android:background="@android:color/white"
+        android:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:navigationIconTint="#1B1B1B">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Levels &amp; Rewards"
-                android:textColor="@android:color/white"
+                android:text="@string/levels_and_rewards"
+                android:textColor="#1B1B1B"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"/>
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -31,21 +34,22 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            app:tabTextColor="@android:color/white"
-            app:tabSelectedTextColor="@android:color/white"
-            app:tabIndicatorColor="@android:color/white"
-            app:tabMode="fixed">
+            android:background="@android:color/white"
+            app:tabTextColor="#757575"
+            app:tabSelectedTextColor="#1B1B1B"
+            app:tabIndicatorColor="@color/green_500"
+            app:tabMode="fixed"
+            app:tabGravity="fill">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Level Progress" />
+                android:text="@string/level_progress" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rewards Store" />
+                android:text="@string/rewards_store" />
 
         </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -54,7 +58,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="16dp"
+        android:paddingTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -62,19 +68,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Level Progress Section -->
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
             <!-- Level Info Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/levelInfoCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#E0E0E0"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -89,14 +91,15 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
-                        <ImageView
+                        <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/levelIcon"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:padding="16dp"
                             android:src="@drawable/ic_rewards"
-                            android:padding="12dp"
                             android:background="@drawable/circle_background"
-                            app:tint="@color/green_500" />
+                            app:tint="@color/green_500"
+                            app:shapeAppearanceOverlay="@style/CircleImageView" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -109,35 +112,40 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Level 3"
-                                android:textSize="24sp"
+                                android:textSize="28sp"
                                 android:textStyle="bold"
-                                android:textColor="#1B1B1B" />
+                                android:textColor="#1B1B1B"
+                                android:fontFamily="sans-serif-medium" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Keep up the great work!"
-                                android:textSize="14sp"
-                                android:textColor="#757575" />
+                                android:text="@string/eco_warrior"
+                                android:textSize="16sp"
+                                android:textColor="#757575"
+                                android:fontFamily="sans-serif-medium" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Progress to Next Level"
+                        android:text="@string/progress_to_next_level"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#1B1B1B"
-                        android:layout_marginTop="24dp" />
+                        android:layout_marginTop="32dp"
+                        android:fontFamily="sans-serif-medium" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/levelProgress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         app:trackCornerRadius="8dp"
-                        app:trackThickness="8dp" />
+                        app:trackThickness="12dp"
+                        app:indicatorColor="@color/green_500"
+                        app:trackColor="#E0E0E0" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -152,7 +160,8 @@
                             android:layout_weight="1"
                             android:text="2450 XP"
                             android:textColor="#757575"
-                            android:textSize="12sp" />
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium" />
 
                         <TextView
                             android:id="@+id/xpToNext"
@@ -160,8 +169,9 @@
                             android:layout_height="wrap_content"
                             android:text="550 XP needed"
                             android:textColor="@color/green_500"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-medium" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -178,39 +188,45 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="#E0E0E0">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp"
+                        android:padding="20dp"
                         android:gravity="center">
 
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:padding="12dp"
                             android:src="@drawable/ic_rewards"
-                            android:padding="4dp"
-                            app:tint="@color/green_500" />
+                            android:background="@drawable/circle_background"
+                            app:tint="@color/green_500"
+                            app:shapeAppearanceOverlay="@style/CircleImageView" />
 
                         <TextView
                             android:id="@+id/totalPoints"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="15,680"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             android:textStyle="bold"
                             android:textColor="@color/green_500"
-                            android:layout_marginTop="8dp" />
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="sans-serif-medium" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Total Points"
-                            android:textSize="12sp"
-                            android:textColor="#757575" />
+                            android:text="@string/total_points"
+                            android:textSize="14sp"
+                            android:textColor="#757575"
+                            android:fontFamily="sans-serif-medium" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -219,44 +235,68 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="#E0E0E0">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp"
+                        android:padding="20dp"
                         android:gravity="center">
 
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:padding="12dp"
                             android:src="@drawable/ic_performance"
-                            android:padding="4dp"
-                            app:tint="@color/green_500" />
+                            android:background="@drawable/circle_background"
+                            app:tint="@color/green_500"
+                            app:shapeAppearanceOverlay="@style/CircleImageView" />
 
                         <TextView
                             android:id="@+id/streakCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="7"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             android:textStyle="bold"
                             android:textColor="@color/green_500"
-                            android:layout_marginTop="8dp" />
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="sans-serif-medium" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Day Streak"
-                            android:textSize="12sp"
-                            android:textColor="#757575" />
+                            android:text="@string/day_streak"
+                            android:textSize="14sp"
+                            android:textColor="#757575"
+                            android:fontFamily="sans-serif-medium" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Rewards Grid -->
+            <!-- Achievements Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recent_achievements"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1B1B1B"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="sans-serif-medium" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/achievementsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:clipToPadding="false" />
+
+            <!-- Rewards RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rewardsRecyclerView"
                 android:layout_width="match_parent"

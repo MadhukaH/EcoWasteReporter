@@ -24,4 +24,7 @@
     <string name="xp_needed">%d XP needed</string>
     <string name="current_xp">%d XP</string>
     <string name="level_format">Level %d</string>
+    <string name="levels_and_rewards">Levels &amp; Rewards</string>
+    <string name="eco_warrior">Eco Warrior</string>
+    <string name="recent_achievements">Recent Achievements</string>
 </resources>

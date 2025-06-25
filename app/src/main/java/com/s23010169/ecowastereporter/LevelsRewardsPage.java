@@ -1,12 +1,15 @@
 package com.s23010169.ecowastereporter;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.tabs.TabLayout;
@@ -19,6 +22,7 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
     private TabLayout tabLayout;
     private View levelInfoCard;
     private RecyclerView rewardsRecyclerView;
+    private RecyclerView achievementsRecyclerView;
     private TextView levelTitle, currentXp, xpToNext, totalPoints, streakCount;
     private LinearProgressIndicator levelProgress;
     private RewardAdapter rewardAdapter;
@@ -40,12 +44,15 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         setupTabLayout();
         loadUserData();
         setupRewardsRecyclerView();
+        setupAchievementsRecyclerView();
+        animateProgress();
     }
 
     private void initializeViews() {
         tabLayout = findViewById(R.id.tabLayout);
         levelInfoCard = findViewById(R.id.levelInfoCard);
         rewardsRecyclerView = findViewById(R.id.rewardsRecyclerView);
+        achievementsRecyclerView = findViewById(R.id.achievementsRecyclerView);
         levelTitle = findViewById(R.id.levelTitle);
         currentXp = findViewById(R.id.currentXp);
         xpToNext = findViewById(R.id.xpToNext);
@@ -60,6 +67,7 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle(""); // Clear the title as we're using a custom TextView
         }
     }
 
@@ -86,8 +94,16 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         streakCount.setText(String.valueOf(streakValue));
 
         // Set progress
+        levelProgress.setMax(100);
+        levelProgress.setProgress(0); // Start at 0 for animation
+    }
+
+    private void animateProgress() {
         int progress = (currentXpValue * 100) / xpToNextValue;
-        levelProgress.setProgress(progress);
+        ObjectAnimator animation = ObjectAnimator.ofInt(levelProgress, "progress", 0, progress);
+        animation.setDuration(1500);
+        animation.setInterpolator(new DecelerateInterpolator());
+        animation.start();
     }
 
     private void setupRewardsRecyclerView() {
@@ -95,6 +111,13 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         rewardAdapter = new RewardAdapter(this, rewards, totalPointsValue, this);
         rewardsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         rewardsRecyclerView.setAdapter(rewardAdapter);
+    }
+
+    private void setupAchievementsRecyclerView() {
+        // TODO: Create Achievement model and adapter
+        achievementsRecyclerView.setLayoutManager(
+            new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        // achievementsRecyclerView.setAdapter(achievementAdapter);
     }
 
     private List<Reward> getMockRewards() {
@@ -113,9 +136,11 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
     private void updateUI(int tabPosition) {
         if (tabPosition == 0) { // Level Progress
             levelInfoCard.setVisibility(View.VISIBLE);
+            achievementsRecyclerView.setVisibility(View.VISIBLE);
             rewardsRecyclerView.setVisibility(View.GONE);
         } else { // Rewards Store
             levelInfoCard.setVisibility(View.GONE);
+            achievementsRecyclerView.setVisibility(View.GONE);
             rewardsRecyclerView.setVisibility(View.VISIBLE);
         }
     }
