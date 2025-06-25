@@ -11,4 +11,17 @@
         <item>Illegal Dumping</item>
         <item>Broken Bin</item>
     </string-array>
+    <string name="points_format">%d points</string>
+    <string name="claim_reward">Claim Reward</string>
+    <string name="claimed">✓ Claimed</string>
+    <string name="insufficient_points">Insufficient Points</string>
+    <string name="level_progress">Level Progress</string>
+    <string name="rewards_store">Rewards Store</string>
+    <string name="progress_to_next_level">Progress to Next Level</string>
+    <string name="keep_up_work">Keep up the great work!</string>
+    <string name="total_points">Total Points</string>
+    <string name="day_streak">Day Streak</string>
+    <string name="xp_needed">%d XP needed</string>
+    <string name="current_xp">%d XP</string>
+    <string name="level_format">Level %d</string>
 </resources>

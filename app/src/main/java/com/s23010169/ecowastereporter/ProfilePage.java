@@ -100,9 +100,8 @@ public class ProfilePage extends AppCompatActivity {
         });
 
         rewardsLayout.setOnClickListener(v -> {
-            // TODO: Implement Rewards page navigation
-            // Intent intent = new Intent(ProfilePage.this, RewardsPage.class);
-            // startActivity(intent);
+            Intent intent = new Intent(ProfilePage.this, LevelsRewardsPage.class);
+            startActivity(intent);
         });
 
         signOutButton.setOnClickListener(v -> {
