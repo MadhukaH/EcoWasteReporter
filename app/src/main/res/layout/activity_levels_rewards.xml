@@ -147,6 +147,33 @@
                         app:indicatorColor="@color/green_500"
                         app:trackColor="#E0E0E0" />
 
+                    <!-- Next Level and Points to Next Level -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:id="@+id/nextLevelLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Next Level: Eco Master"
+                            android:textColor="#1B1B1B"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/pointsToNextLevelLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="  |  550 points needed"
+                            android:textColor="#757575"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium" />
+                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -248,10 +275,10 @@
                         android:gravity="center">
 
                         <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="58dp"
+                            android:layout_height="58dp"
                             android:padding="12dp"
-                            android:src="@drawable/ic_performance"
+                            android:src="@drawable/daystark"
                             android:background="@drawable/circle_background"
                             app:tint="@color/green_500"
                             app:shapeAppearanceOverlay="@style/CircleImageView" />

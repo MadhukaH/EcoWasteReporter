@@ -55,7 +55,7 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_rewards"
+                android:src="@drawable/coin"
                 app:tint="@color/green_500"
                 android:layout_marginEnd="4dp"/>
 
