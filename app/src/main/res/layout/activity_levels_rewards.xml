@@ -95,10 +95,10 @@
                             android:id="@+id/levelIcon"
                             android:layout_width="72dp"
                             android:layout_height="72dp"
-                            android:padding="16dp"
-                            android:src="@drawable/ic_rewards"
+                            android:padding="8dp"
+                            android:src="@drawable/coin"
                             android:background="@drawable/circle_background"
-                            app:tint="@color/green_500"
+                            app:tint="@null"
                             app:shapeAppearanceOverlay="@style/CircleImageView" />
 
                         <LinearLayout
@@ -203,10 +203,10 @@
                         <com.google.android.material.imageview.ShapeableImageView
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:padding="12dp"
-                            android:src="@drawable/ic_rewards"
+                            android:padding="6dp"
+                            android:src="@drawable/coin"
                             android:background="@drawable/circle_background"
-                            app:tint="@color/green_500"
+                            app:tint="@null"
                             app:shapeAppearanceOverlay="@style/CircleImageView" />
 
                         <TextView
