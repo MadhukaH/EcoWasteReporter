@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.tabs.TabLayout;
+import com.s23010169.ecowastereporter.adapters.LevelAdapter;
 import com.s23010169.ecowastereporter.adapters.RewardAdapter;
+import com.s23010169.ecowastereporter.models.Level;
 import com.s23010169.ecowastereporter.models.Reward;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +25,14 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
     private View levelInfoCard;
     private RecyclerView rewardsRecyclerView;
     private RecyclerView achievementsRecyclerView;
+    private RecyclerView levelProgressionRecyclerView;
     private TextView levelTitle, currentXp, xpToNext, totalPoints, streakCount;
     private LinearProgressIndicator levelProgress;
     private RewardAdapter rewardAdapter;
+    private LevelAdapter levelAdapter;
 
     // Mock user data - In a real app, this would come from a database
-    private final int userLevel = 12;
+    private final int userLevel = 3; // Current level (1-6)
     private final int currentXpValue = 2450;
     private final int xpToNextValue = 3000;
     private final int totalPointsValue = 15680;
@@ -43,6 +47,7 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         setupToolbar();
         setupTabLayout();
         loadUserData();
+        setupLevelProgressionRecyclerView();
         setupRewardsRecyclerView();
         setupAchievementsRecyclerView();
         animateProgress();
@@ -53,6 +58,7 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         levelInfoCard = findViewById(R.id.levelInfoCard);
         rewardsRecyclerView = findViewById(R.id.rewardsRecyclerView);
         achievementsRecyclerView = findViewById(R.id.achievementsRecyclerView);
+        levelProgressionRecyclerView = findViewById(R.id.levelProgressionRecyclerView);
         levelTitle = findViewById(R.id.levelTitle);
         currentXp = findViewById(R.id.currentXp);
         xpToNext = findViewById(R.id.xpToNext);
@@ -87,7 +93,9 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
     }
 
     private void loadUserData() {
-        levelTitle.setText(getString(R.string.level_format, userLevel));
+        // Get current level info
+        Level currentLevel = getCurrentLevel();
+        levelTitle.setText(currentLevel.getTitle());
         currentXp.setText(getString(R.string.current_xp, currentXpValue));
         xpToNext.setText(getString(R.string.xp_needed, xpToNextValue - currentXpValue));
         totalPoints.setText(String.valueOf(totalPointsValue));
@@ -96,6 +104,52 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         // Set progress
         levelProgress.setMax(100);
         levelProgress.setProgress(0); // Start at 0 for animation
+    }
+
+    private Level getCurrentLevel() {
+        List<Level> levels = getLevels();
+        for (Level level : levels) {
+            if (level.getLevelNumber() == userLevel) {
+                return level;
+            }
+        }
+        return levels.get(0); // Fallback to first level
+    }
+
+    private void setupLevelProgressionRecyclerView() {
+        List<Level> levels = getLevels();
+        levelAdapter = new LevelAdapter(this, levels);
+        levelProgressionRecyclerView.setLayoutManager(
+            new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        levelProgressionRecyclerView.setAdapter(levelAdapter);
+        
+        // Add animation to the level progression
+        levelProgressionRecyclerView.setLayoutAnimation(
+            android.view.animation.AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_fall_down));
+    }
+
+    private List<Level> getLevels() {
+        List<Level> levels = new ArrayList<>();
+        
+        // Level 1 - Green Seed 🌱
+        levels.add(new Level(1, getString(R.string.level_1_title), getString(R.string.level_1_description), "🌱", 0, true, userLevel == 1));
+        
+        // Level 2 - Eco Explorer 🧭
+        levels.add(new Level(2, getString(R.string.level_2_title), getString(R.string.level_2_description), "🧭", 50, userLevel >= 2, userLevel == 2));
+        
+        // Level 3 - Recycle Rookie ♻️
+        levels.add(new Level(3, getString(R.string.level_3_title), getString(R.string.level_3_description), "♻️", 150, userLevel >= 3, userLevel == 3));
+        
+        // Level 4 - Waste Warrior 🛡️
+        levels.add(new Level(4, getString(R.string.level_4_title), getString(R.string.level_4_description), "🛡️", 300, userLevel >= 4, userLevel == 4));
+        
+        // Level 5 - Clean-Up Champion 🏆
+        levels.add(new Level(5, getString(R.string.level_5_title), getString(R.string.level_5_description), "🏆", 500, userLevel >= 5, userLevel == 5));
+        
+        // Level 6 - Planet Protector 🌍
+        levels.add(new Level(6, getString(R.string.level_6_title), getString(R.string.level_6_description), "🌍", 1000, userLevel >= 6, userLevel == 6));
+        
+        return levels;
     }
 
     private void animateProgress() {
@@ -122,24 +176,26 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
 
     private List<Reward> getMockRewards() {
         List<Reward> rewards = new ArrayList<>();
-        rewards.add(new Reward(1, "Coffee Voucher", 500, "voucher", "☕", false));
-        rewards.add(new Reward(2, "Premium Badge", 1000, "badge", "⭐", true));
-        rewards.add(new Reward(3, "Team Lunch", 2000, "experience", "🍽️", false));
-        rewards.add(new Reward(4, "Extra Day Off", 5000, "time", "🏖️", false));
-        rewards.add(new Reward(5, "Tech Gadget", 8000, "item", "📱", false));
-        rewards.add(new Reward(6, "Learning Course", 1500, "education", "📚", false));
-        rewards.add(new Reward(7, "Gym Membership", 3000, "health", "💪", false));
-        rewards.add(new Reward(8, "Movie Tickets", 800, "entertainment", "🎬", false));
+        rewards.add(new Reward(1, "Eco Coffee Cup", 500, "item", "☕", false));
+        rewards.add(new Reward(2, "Recycling Badge", 1000, "badge", "♻️", true));
+        rewards.add(new Reward(3, "Tree Planting Day", 2000, "experience", "🌳", false));
+        rewards.add(new Reward(4, "Eco Workshop", 5000, "education", "📚", false));
+        rewards.add(new Reward(5, "Solar Charger", 8000, "item", "☀️", false));
+        rewards.add(new Reward(6, "Beach Cleanup", 1500, "experience", "🏖️", false));
+        rewards.add(new Reward(7, "Eco Water Bottle", 3000, "item", "💧", false));
+        rewards.add(new Reward(8, "Green Energy Credits", 800, "credits", "⚡", false));
         return rewards;
     }
 
     private void updateUI(int tabPosition) {
         if (tabPosition == 0) { // Level Progress
             levelInfoCard.setVisibility(View.VISIBLE);
+            levelProgressionRecyclerView.setVisibility(View.VISIBLE);
             achievementsRecyclerView.setVisibility(View.VISIBLE);
             rewardsRecyclerView.setVisibility(View.GONE);
         } else { // Rewards Store
             levelInfoCard.setVisibility(View.GONE);
+            levelProgressionRecyclerView.setVisibility(View.GONE);
             achievementsRecyclerView.setVisibility(View.GONE);
             rewardsRecyclerView.setVisibility(View.VISIBLE);
         }

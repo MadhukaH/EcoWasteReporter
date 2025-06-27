@@ -27,4 +27,22 @@
     <string name="levels_and_rewards">Levels &amp; Rewards</string>
     <string name="eco_warrior">Eco Warrior</string>
     <string name="recent_achievements">Recent Achievements</string>
+    
+    <!-- New Level System Strings -->
+    <string name="level_1_title">Green Seed</string>
+    <string name="level_1_description">Begin your journey</string>
+    <string name="level_2_title">Eco Explorer</string>
+    <string name="level_2_description">Discover and report</string>
+    <string name="level_3_title">Recycle Rookie</string>
+    <string name="level_3_description">Learn recycling basics</string>
+    <string name="level_4_title">Waste Warrior</string>
+    <string name="level_4_description">Fight against waste</string>
+    <string name="level_5_title">Clean-Up Champion</string>
+    <string name="level_5_description">Lead by example</string>
+    <string name="level_6_title">Planet Protector</string>
+    <string name="level_6_description">Guardian of Earth</string>
+    <string name="level_progression_title">Your Eco Journey</string>
+    <string name="current_level_indicator">Current Level</string>
+    <string name="next_level_indicator">Next Level</string>
+    <string name="points_needed">%d points needed</string>
 </resources>
