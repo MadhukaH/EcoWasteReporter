@@ -209,18 +209,39 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/eco_level_progression_background"
-                android:padding="16dp"
-                android:layout_marginBottom="24dp">
+                android:padding="24dp"
+                android:layout_marginBottom="24dp"
+                android:elevation="4dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/level_progression_title"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#1B1B1B"
-                    android:layout_marginBottom="16dp"
-                    android:fontFamily="sans-serif-medium" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/level_progression_title"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="#1B1B1B"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6 Levels"
+                        android:textSize="14sp"
+                        android:textColor="#757575"
+                        android:background="@drawable/level_count_badge"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="6dp"
+                        android:fontFamily="sans-serif-medium" />
+
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/levelProgressionRecyclerView"

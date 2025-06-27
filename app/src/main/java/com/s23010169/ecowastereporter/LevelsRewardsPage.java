@@ -123,9 +123,23 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
             new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         levelProgressionRecyclerView.setAdapter(levelAdapter);
         
-        // Add animation to the level progression
+        // Add professional animation to the level progression
         levelProgressionRecyclerView.setLayoutAnimation(
-            android.view.animation.AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_fall_down));
+            android.view.animation.AnimationUtils.loadLayoutAnimation(this, R.anim.level_layout_animation));
+        
+        // Add item decoration for better spacing
+        levelProgressionRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(android.graphics.Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                int position = parent.getChildAdapterPosition(view);
+                if (position == 0) {
+                    outRect.left = 16;
+                }
+                if (position == levels.size() - 1) {
+                    outRect.right = 16;
+                }
+            }
+        });
     }
 
     private List<Level> getLevels() {

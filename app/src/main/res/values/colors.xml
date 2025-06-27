@@ -103,4 +103,15 @@
 
     <!-- Blue Palette -->
     <color name="blue_500">#2196F3</color>
+    
+    <!-- Professional UI Colors -->
+    <color name="premium_gold">#FFD700</color>
+    <color name="premium_silver">#C0C0C0</color>
+    <color name="premium_bronze">#CD7F32</color>
+    <color name="shadow_light">#20000000</color>
+    <color name="shadow_medium">#40000000</color>
+    <color name="shadow_dark">#60000000</color>
+    <color name="glass_white">#F8FFFFFF</color>
+    <color name="glass_blue">#F8E3F2FD</color>
+    <color name="glass_green">#F8E8F5E8</color>
 </resources>
