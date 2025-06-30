@@ -160,8 +160,8 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
     }
 
     private void showRouteMap() {
-        showToast("Opening route map...");
-        // TODO: Implement route map view
+        Intent intent = new Intent(this, RouteMapPage.class);
+        startActivity(intent);
     }
 
     private void showMarkComplete() {
