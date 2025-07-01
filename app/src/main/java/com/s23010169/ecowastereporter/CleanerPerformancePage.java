@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.button.MaterialButton;
 import com.s23010169.ecowastereporter.models.Task;
 import com.s23010169.ecowastereporter.models.CleanerDatabaseHelper;
 
@@ -26,6 +27,8 @@ public class CleanerPerformancePage extends AppCompatActivity {
     private TextView tvEfficiencyRate;
     private RecyclerView rvRecentActivities;
     private ExtendedFloatingActionButton fabStartTask;
+    private View emptyStateLayout;
+    private MaterialButton btnStartNewTask;
     private CleanerDatabaseHelper dbHelper;
 
     @Override
@@ -61,6 +64,8 @@ public class CleanerPerformancePage extends AppCompatActivity {
         tvEfficiencyRate = findViewById(R.id.tvEfficiencyRate);
         rvRecentActivities = findViewById(R.id.rvRecentActivities);
         fabStartTask = findViewById(R.id.fabStartTask);
+        emptyStateLayout = findViewById(R.id.emptyStateLayout);
+        btnStartNewTask = findViewById(R.id.btnStartNewTask);
         
         // Set up RecyclerView
         rvRecentActivities.setLayoutManager(new LinearLayoutManager(this));
@@ -91,14 +96,14 @@ public class CleanerPerformancePage extends AppCompatActivity {
 
     private void loadRecentActivities() {
         // TODO: Load actual recent activities from database
-        // For now, leaving this empty as it requires an adapter implementation
+        // For now, showing empty state
+        rvRecentActivities.setVisibility(View.GONE);
+        emptyStateLayout.setVisibility(View.VISIBLE);
     }
 
     private void setupClickListeners() {
-        fabStartTask.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ViewTasksPage.class);
-            startActivity(intent);
-        });
+        fabStartTask.setOnClickListener(v -> startNewTask());
+        btnStartNewTask.setOnClickListener(v -> startNewTask());
 
         // Show/hide FAB on scroll
         rvRecentActivities.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -111,6 +116,11 @@ public class CleanerPerformancePage extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void startNewTask() {
+        Intent intent = new Intent(this, ViewTasksPage.class);
+        startActivity(intent);
     }
 
     private void animateNumber(final TextView textView, int start, int end, long duration) {
