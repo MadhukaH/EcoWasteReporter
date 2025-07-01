@@ -176,8 +176,8 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
     }
 
     private void showPerformanceStats() {
-        showToast("Opening performance statistics...");
-        // TODO: Implement performance stats view
+        Intent intent = new Intent(this, CleanerPerformancePage.class);
+        startActivity(intent);
     }
 
     private void showToast(String message) {

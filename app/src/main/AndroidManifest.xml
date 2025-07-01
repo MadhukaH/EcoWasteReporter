@@ -89,6 +89,9 @@
             android:name=".LevelsRewardsPage"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"/>
+        <activity
+            android:name=".CleanerPerformancePage"
+            android:exported="false" />
     </application>
 
 </manifest>
