@@ -107,6 +107,7 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
             Task task = new Task(location, priority, binFullPercentage, additionalInfo, estimatedDistance, estimatedTime);
             task.setDescription(description);
             task.setStatus(status);
+            task.setReportId(report.getReportId());
             tasks.add(task);
         }
         return tasks;
@@ -187,6 +188,14 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
             if (task == null) {
                 handleError("Cannot mark null task as done", new IllegalArgumentException());
                 return;
+            }
+
+            // Update the report status in the database if this task is linked to a report
+            if (task.getReportId() != null) {
+                int updated = reportDatabaseHelper.updateReportStatus(task.getReportId(), "Resolved");
+                if (updated > 0) {
+                    Toast.makeText(this, "Report marked as resolved!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             // Remove from both lists to maintain consistency

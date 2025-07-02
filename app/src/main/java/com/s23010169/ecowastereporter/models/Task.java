@@ -11,6 +11,7 @@ public class Task {
     private double estimatedDistance;
     private int estimatedTime;
     private String formattedDistance;
+    private String reportId;
 
     // Constructor for task selector
     public Task(String taskId, String location, String description, String status, String formattedDistance) {
@@ -121,5 +122,13 @@ public class Task {
 
     public String getBinDetails() {
         return String.format("Bin %d%% Full • %s", binFullPercentage, additionalInfo);
+    }
+
+    public String getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(String reportId) {
+        this.reportId = reportId;
     }
 } 
