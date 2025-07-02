@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.s23010169.ecowastereporter.adapters.TaskAdapter;
+import com.s23010169.ecowastereporter.models.Report;
+import com.s23010169.ecowastereporter.models.ReportDatabaseHelper;
 import com.s23010169.ecowastereporter.models.Task;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
     private List<Task> allTasks;
     private List<Task> currentDisplayedTasks;
     private FloatingActionButton refreshFab;
+    private ReportDatabaseHelper reportDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,9 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
         taskAdapter = new TaskAdapter(currentDisplayedTasks, this);
         tasksRecyclerView.setAdapter(taskAdapter);
 
+        // Initialize ReportDatabaseHelper
+        reportDatabaseHelper = new ReportDatabaseHelper(this);
+
         // Load initial data
         loadTasks();
 
@@ -78,18 +84,31 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
 
     private void loadTasks() {
         try {
-            allTasks = createSampleTasks();
+            allTasks = fetchTasksFromReports();
             filterTasks(tabLayout.getSelectedTabPosition());
         } catch (Exception e) {
             handleError("Error loading tasks", e);
         }
     }
 
-    private List<Task> createSampleTasks() {
+    private List<Task> fetchTasksFromReports() {
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task("Main Street Corner", "HIGH", 95, "2 citizen reports", 0.3, 15));
-        tasks.add(new Task("City Park Entrance", "MED", 78, "Scheduled cleaning", 0.8, 10));
-        tasks.add(new Task("Shopping Mall", "LOW", 45, "Routine check", 1.2, 8));
+        List<Report> reports = reportDatabaseHelper.getAllReports();
+        for (Report report : reports) {
+            // Map report fields to Task fields
+            String location = report.getLocation();
+            String description = report.getDescription();
+            String status = report.getStatus();
+            String priority = "HIGH"; // You can set logic to determine priority based on report fields
+            int binFullPercentage = 100; // Default or calculate if you have this info
+            String additionalInfo = report.getWasteType();
+            double estimatedDistance = 0.0; // You can calculate based on cleaner location if available
+            int estimatedTime = 10; // Default or calculate
+            Task task = new Task(location, priority, binFullPercentage, additionalInfo, estimatedDistance, estimatedTime);
+            task.setDescription(description);
+            task.setStatus(status);
+            tasks.add(task);
+        }
         return tasks;
     }
 
