@@ -60,6 +60,10 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:padding="4dp"
+                            android:src="@drawable/profile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             app:tint="@android:color/white" />
                     </LinearLayout>
                 </RelativeLayout>
@@ -130,12 +134,7 @@
                                 android:text="Ready for today's cleaning tasks"
                                 android:textColor="@android:color/darker_gray" />
                         </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/profile"
-                            android:scaleType="centerCrop"/>
+                        
                     </LinearLayout>
 
                     <ImageView

@@ -155,7 +155,8 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
     }
 
     private void navigateToProfile() {
-        Intent intent = new Intent(this, ProfilePage.class);
+        Intent intent = new Intent(this, CleanerProfilePage.class);
+        intent.putExtra("email", userEmail);
         startActivity(intent);
     }
 
