@@ -25,6 +25,8 @@ public class ProfilePage extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
     private CircleImageView profileImage;
+    private String userEmail;
+    private com.s23010169.ecowastereporter.models.CitizenDatabaseHelper databaseHelper;
 
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
@@ -44,6 +46,11 @@ public class ProfilePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
+
+        // Get email from intent
+        userEmail = getIntent().getStringExtra("email");
+        // Initialize database helper
+        databaseHelper = new com.s23010169.ecowastereporter.models.CitizenDatabaseHelper(this);
 
         // Initialize views
         initializeViews();
@@ -114,8 +121,16 @@ public class ProfilePage extends AppCompatActivity {
     }
 
     private void loadUserData() {
-        // TODO: Load actual user data from database/preferences
-        userName.setText("Capt Price");
+        if (userEmail != null) {
+            com.s23010169.ecowastereporter.models.Citizen citizen = databaseHelper.getCitizenByEmail(userEmail);
+            if (citizen != null) {
+                userName.setText(citizen.getName());
+            } else {
+                userName.setText("Unknown User");
+            }
+        } else {
+            userName.setText("Unknown User");
+        }
         userLevel.setText("Level 3 • Eco Warrior");
         reportsCount.setText("12");
         resolvedCount.setText("8");

@@ -74,6 +74,7 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         
         profileImage.setOnClickListener(v -> {
             Intent intent = new Intent(PeopleHomePage.this, ProfilePage.class);
+            intent.putExtra("email", userEmail);
             startActivity(intent);
         });
     }
