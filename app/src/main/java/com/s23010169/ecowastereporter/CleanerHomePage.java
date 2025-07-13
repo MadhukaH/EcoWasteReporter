@@ -167,12 +167,14 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
 
     private void showMarkComplete() {
         Intent intent = new Intent(this, UpdateBinStatusPage.class);
+        intent.putExtra("email", userEmail);
         startActivity(intent);
     }
 
     private void showTasksList() {
         showToast("Opening tasks list...");
         Intent intent = new Intent(this, ViewTasksPage.class);
+        intent.putExtra("email", userEmail);
         startActivity(intent);
     }
 

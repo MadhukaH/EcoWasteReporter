@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.s23010169.ecowastereporter.adapters.TaskAdapter;
+import com.s23010169.ecowastereporter.models.Cleaner;
+import com.s23010169.ecowastereporter.models.CleanerDatabaseHelper;
 import com.s23010169.ecowastereporter.models.Report;
 import com.s23010169.ecowastereporter.models.ReportDatabaseHelper;
 import com.s23010169.ecowastereporter.models.Task;
@@ -20,6 +22,7 @@ import com.s23010169.ecowastereporter.models.Task;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTaskActionListener {
     private RecyclerView tasksRecyclerView;
@@ -30,11 +33,16 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
     private List<Task> currentDisplayedTasks;
     private FloatingActionButton refreshFab;
     private ReportDatabaseHelper reportDatabaseHelper;
+    private Random random = new Random();
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_tasks_page);
+
+        // Get user email from intent
+        userEmail = getIntent().getStringExtra("email");
 
         // Initialize views
         tasksRecyclerView = findViewById(R.id.tasksRecyclerView);
@@ -47,6 +55,19 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+        
+        // Set toolbar title with cleaner name if available
+        if (userEmail != null) {
+            try {
+                CleanerDatabaseHelper cleanerDb = new CleanerDatabaseHelper(this);
+                Cleaner cleaner = cleanerDb.getCleanerByEmail(userEmail);
+                if (cleaner != null) {
+                    getSupportActionBar().setTitle("Tasks - " + cleaner.getName());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         // Initialize task lists
@@ -94,23 +115,124 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
     private List<Task> fetchTasksFromReports() {
         List<Task> tasks = new ArrayList<>();
         List<Report> reports = reportDatabaseHelper.getAllReports();
-        for (Report report : reports) {
-            // Map report fields to Task fields
-            String location = report.getLocation();
-            String description = report.getDescription();
-            String status = report.getStatus();
-            String priority = "HIGH"; // You can set logic to determine priority based on report fields
-            int binFullPercentage = 100; // Default or calculate if you have this info
-            String additionalInfo = report.getWasteType();
-            double estimatedDistance = 0.0; // You can calculate based on cleaner location if available
-            int estimatedTime = 10; // Default or calculate
-            Task task = new Task(location, priority, binFullPercentage, additionalInfo, estimatedDistance, estimatedTime);
-            task.setDescription(description);
-            task.setStatus(status);
-            task.setReportId(report.getReportId());
-            tasks.add(task);
+        
+        // If no reports exist, create some sample tasks for demonstration
+        if (reports.isEmpty()) {
+            tasks.addAll(createSampleTasks());
+        } else {
+            for (Report report : reports) {
+                Task task = createTaskFromReport(report);
+                tasks.add(task);
+            }
         }
+        
         return tasks;
+    }
+
+    private List<Task> createSampleTasks() {
+        List<Task> sampleTasks = new ArrayList<>();
+        
+        // Sample task data
+        String[] locations = {"Main Street Corner", "Central Park", "Market Square", "Beach Front", "Downtown Plaza", "University Campus", "Shopping Mall", "Residential Area"};
+        String[] wasteTypes = {"General Waste", "Recyclables", "Organic Waste", "Hazardous Waste", "Electronic Waste"};
+        String[] descriptions = {"Bin overflow reported", "Regular maintenance needed", "Cleaning required", "Waste collection overdue", "Bin damage reported"};
+        
+        for (int i = 0; i < 8; i++) {
+            String taskId = String.format("#T2024-%03d", 150 + i);
+            String location = locations[i];
+            String wasteType = wasteTypes[random.nextInt(wasteTypes.length)];
+            String description = descriptions[random.nextInt(descriptions.length)];
+            String priority = getRandomPriority();
+            int binFullPercentage = 60 + random.nextInt(40); // 60-100%
+            double estimatedDistance = 0.5 + random.nextDouble() * 2.0; // 0.5-2.5 km
+            int estimatedTime = 10 + random.nextInt(20); // 10-30 minutes
+            
+            Task task = new Task(location, priority, binFullPercentage, wasteType, estimatedDistance, estimatedTime);
+            task.setTaskId(taskId);
+            task.setDescription(description);
+            task.setStatus("Pending");
+            task.setReportId("SAMPLE-" + (i + 1));
+            sampleTasks.add(task);
+        }
+        
+        return sampleTasks;
+    }
+
+    private Task createTaskFromReport(Report report) {
+        String location = report.getLocation();
+        String description = report.getDescription();
+        String status = report.getStatus();
+        String priority = determinePriority(report);
+        int binFullPercentage = calculateBinFullPercentage(report);
+        String additionalInfo = report.getWasteType();
+        double estimatedDistance = calculateEstimatedDistance(report);
+        int estimatedTime = calculateEstimatedTime(report);
+        
+        Task task = new Task(location, priority, binFullPercentage, additionalInfo, estimatedDistance, estimatedTime);
+        task.setDescription(description);
+        task.setStatus(status);
+        task.setReportId(report.getReportId());
+        task.setTaskId(generateTaskId(report));
+        
+        return task;
+    }
+
+    private String getRandomPriority() {
+        String[] priorities = {"HIGH", "MED", "LOW"};
+        return priorities[random.nextInt(priorities.length)];
+    }
+
+    private String determinePriority(Report report) {
+        // Determine priority based on waste type and description
+        String wasteType = report.getWasteType().toLowerCase();
+        String description = report.getDescription().toLowerCase();
+        
+        if (wasteType.contains("hazardous") || wasteType.contains("electronic") || 
+            description.contains("overflow") || description.contains("urgent")) {
+            return "HIGH";
+        } else if (wasteType.contains("organic") || description.contains("maintenance")) {
+            return "MED";
+        } else {
+            return "LOW";
+        }
+    }
+
+    private int calculateBinFullPercentage(Report report) {
+        // Calculate based on waste type and description
+        String description = report.getDescription().toLowerCase();
+        if (description.contains("overflow") || description.contains("full")) {
+            return 90 + random.nextInt(10); // 90-100%
+        } else if (description.contains("half") || description.contains("medium")) {
+            return 50 + random.nextInt(20); // 50-70%
+        } else {
+            return 30 + random.nextInt(30); // 30-60%
+        }
+    }
+
+    private double calculateEstimatedDistance(Report report) {
+        // Simulate distance calculation based on location
+        return 0.5 + random.nextDouble() * 3.0; // 0.5-3.5 km
+    }
+
+    private int calculateEstimatedTime(Report report) {
+        // Calculate estimated time based on waste type and priority
+        String wasteType = report.getWasteType().toLowerCase();
+        if (wasteType.contains("hazardous") || wasteType.contains("electronic")) {
+            return 20 + random.nextInt(15); // 20-35 minutes
+        } else if (wasteType.contains("organic")) {
+            return 15 + random.nextInt(10); // 15-25 minutes
+        } else {
+            return 10 + random.nextInt(10); // 10-20 minutes
+        }
+    }
+
+    private String generateTaskId(Report report) {
+        // Generate task ID based on report ID or timestamp
+        if (report.getReportId() != null) {
+            return "#T" + report.getReportId();
+        } else {
+            return "#T" + System.currentTimeMillis() % 10000;
+        }
     }
 
     private void filterTasks(int tabPosition) {
@@ -176,6 +298,7 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
         try {
             if (task != null) {
                 Toast.makeText(this, "Getting route to " + task.getLocation(), Toast.LENGTH_SHORT).show();
+                // TODO: Implement actual route navigation
             }
         } catch (Exception e) {
             handleError("Error getting route", e);
@@ -191,7 +314,7 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
             }
 
             // Update the report status in the database if this task is linked to a report
-            if (task.getReportId() != null) {
+            if (task.getReportId() != null && !task.getReportId().startsWith("SAMPLE-")) {
                 int updated = reportDatabaseHelper.updateReportStatus(task.getReportId(), "Resolved");
                 if (updated > 0) {
                     Toast.makeText(this, "Report marked as resolved!", Toast.LENGTH_SHORT).show();
