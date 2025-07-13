@@ -14,7 +14,7 @@ import java.util.Locale;
 
 public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "Citizen.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2; // Increased version for new column
 
     // Table name
     private static final String TABLE_CITIZENS = "citizens";
@@ -27,6 +27,7 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_ADDRESS = "address";
     private static final String COLUMN_REGISTRATION_DATE = "registration_date";
+    private static final String COLUMN_PROFILE_PHOTO = "profile_photo";
 
     // Create table query
     private static final String CREATE_CITIZEN_TABLE = "CREATE TABLE " + TABLE_CITIZENS + "("
@@ -36,7 +37,8 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_PASSWORD + " TEXT,"
             + COLUMN_PHONE + " TEXT,"
             + COLUMN_ADDRESS + " TEXT,"
-            + COLUMN_REGISTRATION_DATE + " TEXT"
+            + COLUMN_REGISTRATION_DATE + " TEXT,"
+            + COLUMN_PROFILE_PHOTO + " TEXT"
             + ")";
 
     public CitizenDatabaseHelper(Context context) {
@@ -50,8 +52,10 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CITIZENS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            // Add profile_photo column to existing table
+            db.execSQL("ALTER TABLE " + TABLE_CITIZENS + " ADD COLUMN " + COLUMN_PROFILE_PHOTO + " TEXT");
+        }
     }
 
     // Method to add new citizen
@@ -107,7 +111,7 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     public Citizen getCitizenByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_CITIZENS,
-                new String[]{COLUMN_ID, COLUMN_NAME, COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_PHONE, COLUMN_ADDRESS, COLUMN_REGISTRATION_DATE},
+                new String[]{COLUMN_ID, COLUMN_NAME, COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_PHONE, COLUMN_ADDRESS, COLUMN_REGISTRATION_DATE, COLUMN_PROFILE_PHOTO},
                 COLUMN_EMAIL + "=?", new String[]{email},
                 null, null, null);
 
@@ -120,7 +124,8 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_REGISTRATION_DATE))
+                cursor.getString(cursor.getColumnIndex(COLUMN_REGISTRATION_DATE)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_PROFILE_PHOTO))
             );
             cursor.close();
         }
@@ -145,7 +150,8 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD)),
                     cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)),
                     cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_REGISTRATION_DATE))
+                    cursor.getString(cursor.getColumnIndex(COLUMN_REGISTRATION_DATE)),
+                    cursor.getString(cursor.getColumnIndex(COLUMN_PROFILE_PHOTO))
                 );
                 citizenList.add(citizen);
             } while (cursor.moveToNext());
@@ -166,6 +172,18 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
 
         int result = db.update(TABLE_CITIZENS, values,
                 COLUMN_EMAIL + "=?", new String[]{citizen.getEmail()});
+        db.close();
+        return result;
+    }
+
+    // Method to update profile photo
+    public int updateProfilePhoto(String email, String profilePhotoPath) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PROFILE_PHOTO, profilePhotoPath);
+        
+        int result = db.update(TABLE_CITIZENS, values,
+                COLUMN_EMAIL + "=?", new String[]{email});
         db.close();
         return result;
     }

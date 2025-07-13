@@ -8,6 +8,7 @@ public class Citizen {
     private String phone;
     private String address;
     private String registrationDate;
+    private String profilePhoto;
 
     // Default constructor
     public Citizen() {
@@ -31,6 +32,18 @@ public class Citizen {
         this.phone = phone;
         this.address = address;
         this.registrationDate = registrationDate;
+    }
+
+    // Constructor with all fields including profile photo
+    public Citizen(int id, String name, String email, String password, String phone, String address, String registrationDate, String profilePhoto) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.address = address;
+        this.registrationDate = registrationDate;
+        this.profilePhoto = profilePhoto;
     }
 
     // Getters and Setters
@@ -88,5 +101,13 @@ public class Citizen {
 
     public void setRegistrationDate(String registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
     }
 } 

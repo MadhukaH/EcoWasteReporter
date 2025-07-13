@@ -18,6 +18,11 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.button.MaterialButton;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public class ProfilePage extends AppCompatActivity {
     private TextView userName, userLevel, reportsCount, resolvedCount, pointsCount;
     private MaterialCardView changePasswordLayout, performanceLayout, rewardsLayout;
@@ -34,9 +39,8 @@ public class ProfilePage extends AppCompatActivity {
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                 Uri imageUri = result.getData().getData();
                 if (imageUri != null) {
-                    profileImage.setImageURI(imageUri);
-                    // TODO: Upload the image to your backend server or save it locally
-                    Toast.makeText(this, "Profile photo updated!", Toast.LENGTH_SHORT).show();
+                    // Save the image to internal storage and database
+                    saveImageToInternalStorage(imageUri);
                 }
             }
         }
@@ -125,6 +129,15 @@ public class ProfilePage extends AppCompatActivity {
             com.s23010169.ecowastereporter.models.Citizen citizen = databaseHelper.getCitizenByEmail(userEmail);
             if (citizen != null) {
                 userName.setText(citizen.getName());
+                
+                // Load profile photo if exists
+                String profilePhotoPath = citizen.getProfilePhoto();
+                if (profilePhotoPath != null && !profilePhotoPath.isEmpty()) {
+                    File photoFile = new File(profilePhotoPath);
+                    if (photoFile.exists()) {
+                        profileImage.setImageURI(Uri.fromFile(photoFile));
+                    }
+                }
             } else {
                 userName.setText("Unknown User");
             }
@@ -135,6 +148,43 @@ public class ProfilePage extends AppCompatActivity {
         reportsCount.setText("12");
         resolvedCount.setText("8");
         pointsCount.setText("350");
+    }
+
+    private void saveImageToInternalStorage(Uri imageUri) {
+        try {
+            // Create a unique filename
+            String fileName = "profile_photo_" + System.currentTimeMillis() + ".jpg";
+            File photoFile = new File(getFilesDir(), fileName);
+            
+            // Copy the selected image to internal storage
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            OutputStream outputStream = new FileOutputStream(photoFile);
+            
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            
+            inputStream.close();
+            outputStream.close();
+            
+            // Save the file path to database
+            String photoPath = photoFile.getAbsolutePath();
+            int result = databaseHelper.updateProfilePhoto(userEmail, photoPath);
+            
+            if (result > 0) {
+                // Update the image view
+                profileImage.setImageURI(Uri.fromFile(photoFile));
+                Toast.makeText(this, "Profile photo updated successfully!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to update profile photo", Toast.LENGTH_SHORT).show();
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error saving profile photo", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

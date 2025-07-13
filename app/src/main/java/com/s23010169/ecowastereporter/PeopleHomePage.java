@@ -1,6 +1,7 @@
 package com.s23010169.ecowastereporter;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.imageview.ShapeableImageView;
 import com.s23010169.ecowastereporter.models.Citizen;
 import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
+
+import java.io.File;
 
 public class PeopleHomePage extends AppCompatActivity implements View.OnClickListener {
     private MaterialCardView reportWasteCard, viewMapCard, myReportsCard, recyclingTipsCard;
@@ -43,6 +46,7 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         setupClickListeners();
         setupScrollBehavior();
         displayUserName();
+        loadProfilePhoto();
     }
 
     private void initializeViews() {
@@ -61,6 +65,21 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
             Citizen citizen = databaseHelper.getCitizenByEmail(userEmail);
             if (citizen != null) {
                 welcomeText.setText("Hello, " + citizen.getName() + "! 👋");
+            }
+        }
+    }
+
+    private void loadProfilePhoto() {
+        if (userEmail != null) {
+            Citizen citizen = databaseHelper.getCitizenByEmail(userEmail);
+            if (citizen != null) {
+                String profilePhotoPath = citizen.getProfilePhoto();
+                if (profilePhotoPath != null && !profilePhotoPath.isEmpty()) {
+                    File photoFile = new File(profilePhotoPath);
+                    if (photoFile.exists()) {
+                        profileImage.setImageURI(Uri.fromFile(photoFile));
+                    }
+                }
             }
         }
     }
@@ -110,6 +129,13 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(PeopleHomePage.this, RecyclingTipsPage.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Reload profile photo when returning from ProfilePage
+        loadProfilePhoto();
     }
 
     private void showFeatureMessage(String feature) {
