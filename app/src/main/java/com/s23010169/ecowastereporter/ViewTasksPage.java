@@ -183,10 +183,19 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
     }
 
     private String determinePriority(Report report) {
-        // Determine priority based on waste type and description
-        String wasteType = report.getWasteType().toLowerCase();
-        String description = report.getDescription().toLowerCase();
-        
+        // Robust priority logic based on waste type (ignore spaces and case)
+        String wasteTypeRaw = report.getWasteType() != null ? report.getWasteType() : "";
+        String wasteType = wasteTypeRaw.trim().toLowerCase().replaceAll("\\s+", "");
+
+        if (wasteType.equals("brokenbin")) {
+            return "HIGH";
+        } else if (wasteType.equals("overflowingbin")) {
+            return "MED";
+        } else if (wasteType.equals("illegaldumping")) {
+            return "LOW";
+        }
+        // Fallback to previous logic for other types
+        String description = report.getDescription() != null ? report.getDescription().toLowerCase() : "";
         if (wasteType.contains("hazardous") || wasteType.contains("electronic") || 
             description.contains("overflow") || description.contains("urgent")) {
             return "HIGH";
