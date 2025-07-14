@@ -316,7 +316,7 @@ public class ReportWastePage extends AppCompatActivity {
             }
         });
 
-        // Add text change listener for description to show remaining characters
+        // Remove error for short descriptions, make it always clear
         descriptionInput.addTextChangedListener(new android.text.TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -326,13 +326,7 @@ public class ReportWastePage extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(android.text.Editable s) {
-                int currentLength = s.length();
-                if (currentLength > 0 && currentLength < MIN_DESCRIPTION_LENGTH) {
-                    descriptionInput.setError(String.format("Minimum %d characters required (%d more needed)", 
-                        MIN_DESCRIPTION_LENGTH, MIN_DESCRIPTION_LENGTH - currentLength));
-                } else {
-                    descriptionInput.setError(null);
-                }
+                descriptionInput.setError(null);
             }
         });
     }
@@ -585,11 +579,7 @@ public class ReportWastePage extends AppCompatActivity {
             isValid = false;
         }
 
-        // Check description length
-        else if (descriptionInput.getText().toString().length() < MIN_DESCRIPTION_LENGTH) {
-            errorMessage = String.format("Description must be at least %d characters", MIN_DESCRIPTION_LENGTH);
-            isValid = false;
-        }
+        // Description is now optional, so skip this check
 
         // Check photos
         else if (photoUris.size() < MIN_PHOTOS_REQUIRED) {

@@ -246,7 +246,7 @@
                     android:layout_height="120dp"
                     android:background="@null"
                     android:gravity="top"
-                    android:hint="Provide additional details about the waste..."
+                    android:hint="Provide additional details about the waste... (optional)"
                     android:padding="16dp"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif" />
