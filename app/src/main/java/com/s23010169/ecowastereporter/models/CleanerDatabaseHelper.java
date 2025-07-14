@@ -31,6 +31,7 @@ public class CleanerDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_STATUS = "status";
     private static final String COLUMN_TASKS_COMPLETED = "tasks_completed";
     private static final String COLUMN_RATING = "rating";
+    private static final String COLUMN_PROFILE_PHOTO = "profile_photo";
 
     // Create table query
     private static final String CREATE_CLEANER_TABLE = "CREATE TABLE " + TABLE_CLEANERS + "("
@@ -44,7 +45,8 @@ public class CleanerDatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_REGISTRATION_DATE + " TEXT,"
             + COLUMN_STATUS + " TEXT,"
             + COLUMN_TASKS_COMPLETED + " INTEGER DEFAULT 0,"
-            + COLUMN_RATING + " REAL DEFAULT 0.0"
+            + COLUMN_RATING + " REAL DEFAULT 0.0,"
+            + COLUMN_PROFILE_PHOTO + " TEXT"
             + ")";
 
     public CleanerDatabaseHelper(Context context) {
@@ -136,7 +138,8 @@ public class CleanerDatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(cursor.getColumnIndex(COLUMN_REGISTRATION_DATE)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_STATUS)),
                 cursor.getInt(cursor.getColumnIndex(COLUMN_TASKS_COMPLETED)),
-                cursor.getFloat(cursor.getColumnIndex(COLUMN_RATING))
+                cursor.getFloat(cursor.getColumnIndex(COLUMN_RATING)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_PROFILE_PHOTO)) // profilePhoto
             );
             cursor.close();
         }
@@ -165,7 +168,8 @@ public class CleanerDatabaseHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndex(COLUMN_REGISTRATION_DATE)),
                     cursor.getString(cursor.getColumnIndex(COLUMN_STATUS)),
                     cursor.getInt(cursor.getColumnIndex(COLUMN_TASKS_COMPLETED)),
-                    cursor.getFloat(cursor.getColumnIndex(COLUMN_RATING))
+                    cursor.getFloat(cursor.getColumnIndex(COLUMN_RATING)),
+                    cursor.getString(cursor.getColumnIndex(COLUMN_PROFILE_PHOTO)) // profilePhoto
                 );
                 cleanerList.add(cleaner);
             } while (cursor.moveToNext());
@@ -223,6 +227,16 @@ public class CleanerDatabaseHelper extends SQLiteOpenHelper {
 
         int result = db.update(TABLE_CLEANERS, values,
                 COLUMN_EMAIL + "=?", new String[]{email});
+        db.close();
+        return result;
+    }
+
+    // Method to update profile photo path
+    public int updateProfilePhoto(String email, String photoPath) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PROFILE_PHOTO, photoPath);
+        int result = db.update(TABLE_CLEANERS, values, COLUMN_EMAIL + "=?", new String[]{email});
         db.close();
         return result;
     }

@@ -12,6 +12,15 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.button.MaterialButton;
 import com.s23010169.ecowastereporter.models.Cleaner;
 import com.s23010169.ecowastereporter.models.CleanerDatabaseHelper;
+import android.net.Uri;
+import android.provider.MediaStore;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import de.hdodenhof.circleimageview.CircleImageView;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class CleanerProfilePage extends AppCompatActivity {
     private TextView cleanerName, emailText, phoneText, addressText;
@@ -20,6 +29,18 @@ public class CleanerProfilePage extends AppCompatActivity {
     private MaterialButton signOutButton;
     private CleanerDatabaseHelper databaseHelper;
     private String userEmail;
+    private CircleImageView profileImage;
+    private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                Uri imageUri = result.getData().getData();
+                if (imageUri != null) {
+                    saveImageToInternalStorage(imageUri);
+                }
+            }
+        }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +69,7 @@ public class CleanerProfilePage extends AppCompatActivity {
         experienceYears = findViewById(R.id.experienceYears);
         editProfileButton = findViewById(R.id.editProfileButton);
         signOutButton = findViewById(R.id.signOutButton);
+        profileImage = findViewById(R.id.profileImage);
     }
 
     private void setupToolbar() {
@@ -72,11 +94,54 @@ public class CleanerProfilePage extends AppCompatActivity {
                 tasksCompletedCount.setText(String.valueOf(cleaner.getTasksCompleted()));
                 rating.setText(String.format("%.1f", cleaner.getRating()));
                 experienceYears.setText(cleaner.getExperience());
+                // Load profile photo if exists
+                String profilePhotoPath = cleaner.getProfilePhoto();
+                if (profilePhotoPath != null && !profilePhotoPath.isEmpty()) {
+                    File photoFile = new File(profilePhotoPath);
+                    if (photoFile.exists()) {
+                        profileImage.setImageURI(Uri.fromFile(photoFile));
+                    }
+                }
             }
         }
     }
 
+    private void saveImageToInternalStorage(Uri imageUri) {
+        try {
+            // Create a unique filename
+            String fileName = "profile_photo_" + System.currentTimeMillis() + ".jpg";
+            File photoFile = new File(getFilesDir(), fileName);
+            // Copy the selected image to internal storage
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            OutputStream outputStream = new FileOutputStream(photoFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            inputStream.close();
+            outputStream.close();
+            // Save the file path to database
+            String photoPath = photoFile.getAbsolutePath();
+            int result = databaseHelper.updateProfilePhoto(userEmail, photoPath);
+            if (result > 0) {
+                // Update the image view
+                profileImage.setImageURI(Uri.fromFile(photoFile));
+                Toast.makeText(this, "Profile photo updated successfully!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to update profile photo", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error saving profile photo", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void setupClickListeners() {
+        profileImage.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickImage.launch(intent);
+        });
         editProfileButton.setOnClickListener(v -> {
             // TODO: Implement edit profile functionality
             Toast.makeText(this, "Edit profile functionality coming soon", Toast.LENGTH_SHORT).show();

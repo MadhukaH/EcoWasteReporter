@@ -12,6 +12,7 @@ public class Cleaner {
     private String status; // active, inactive
     private int tasksCompleted;
     private float rating;
+    private String profilePhoto;
 
     // Default constructor
     public Cleaner() {
@@ -33,7 +34,7 @@ public class Cleaner {
     // Constructor with all fields
     public Cleaner(int id, String name, String email, String password, String phone, 
                   String area, String experience, String registrationDate, 
-                  String status, int tasksCompleted, float rating) {
+                  String status, int tasksCompleted, float rating, String profilePhoto) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -45,6 +46,7 @@ public class Cleaner {
         this.status = status;
         this.tasksCompleted = tasksCompleted;
         this.rating = rating;
+        this.profilePhoto = profilePhoto;
     }
 
     // Getters and Setters
@@ -134,5 +136,13 @@ public class Cleaner {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
     }
 } 
