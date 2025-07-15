@@ -116,10 +116,8 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
         List<Task> tasks = new ArrayList<>();
         List<Report> reports = reportDatabaseHelper.getAllReports();
         
-        // If no reports exist, create some sample tasks for demonstration
-        if (reports.isEmpty()) {
-            tasks.addAll(createSampleTasks());
-        } else {
+        // If no reports exist, do not create sample tasks; return empty list
+        if (!reports.isEmpty()) {
             for (Report report : reports) {
                 Task task = createTaskFromReport(report);
                 tasks.add(task);
