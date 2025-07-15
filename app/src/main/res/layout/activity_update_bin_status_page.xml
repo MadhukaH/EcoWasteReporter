@@ -171,6 +171,25 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Photo Preview Section -->
+            <TextView
+                android:id="@+id/photoCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No photos added"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/photoPreviewRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:visibility="gone"/>
+
             <!-- Cleaning Status -->
             <TextView
                 android:layout_width="wrap_content"
@@ -249,7 +268,7 @@
                     android:layout_width="0dp"
                     android:layout_height="56dp"
                     android:layout_weight="1"
-                    android:text="Complete Task"
+                    android:text="DONE TASK"
                     android:backgroundTint="@color/green"
                     app:cornerRadius="8dp"/>
             </LinearLayout>

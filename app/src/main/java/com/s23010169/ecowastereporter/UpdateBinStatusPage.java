@@ -24,6 +24,32 @@ import com.s23010169.ecowastereporter.models.Task;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
+import com.s23010169.ecowastereporter.adapters.PhotoPreviewAdapter;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.view.Window;
+import android.widget.ImageView;
 
 public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelectorAdapter.TaskSelectionListener {
     private RadioButton radioFullyCleaned;
@@ -38,6 +64,14 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
     private Task selectedTask;
     private Random random = new Random();
     private String userEmail;
+    private List<Uri> photoUris = new ArrayList<>();
+    private RecyclerView photoPreviewRecyclerView;
+    private PhotoPreviewAdapter photoPreviewAdapter;
+    private TextView photoCountText;
+    private String currentPhotoPath;
+    private ActivityResultLauncher<Intent> takePictureLauncher;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private ActivityResultLauncher<String[]> requestPermissionLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +86,7 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
 
         // Initialize views
         initializeViews();
+        initializePhotoFunction();
         setupToolbar();
         loadTasksFromDatabase();
         setupClickListeners();
@@ -66,6 +101,189 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
         taskSelectorRecyclerView = findViewById(R.id.taskSelectorRecyclerView);
         locationText = findViewById(R.id.locationText);
         taskDetailsText = findViewById(R.id.taskDetailsText);
+        photoPreviewRecyclerView = findViewById(R.id.photoPreviewRecyclerView);
+        photoCountText = findViewById(R.id.photoCountText);
+    }
+
+    private void initializePhotoFunction() {
+        // Setup photo preview RecyclerView
+        photoPreviewRecyclerView.setLayoutManager(
+            new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        );
+        photoPreviewAdapter = new PhotoPreviewAdapter(photoUris, position -> {
+            photoUris.remove(position);
+            photoPreviewAdapter.updatePhotos(photoUris);
+            updatePhotoPreviewVisibility();
+            updatePhotoCount();
+        });
+        photoPreviewAdapter.setOnPhotoClickListener((position, uri) -> showFullScreenPhoto(uri));
+        photoPreviewRecyclerView.setAdapter(photoPreviewAdapter);
+        updatePhotoCount();
+        updatePhotoPreviewVisibility();
+        // Activity result launchers
+        takePictureLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    if (currentPhotoPath != null) {
+                        File f = new File(currentPhotoPath);
+                        Uri contentUri = FileProvider.getUriForFile(this,
+                            "com.s23010169.ecowastereporter.fileprovider", f);
+                        photoUris.add(contentUri);
+                        photoPreviewAdapter.updatePhotos(photoUris);
+                        updatePhotoCount();
+                        showToast("Photo captured successfully");
+                    }
+                }
+            }
+        );
+        pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri selectedImage = result.getData().getData();
+                    if (selectedImage != null) {
+                        photoUris.add(selectedImage);
+                        photoPreviewAdapter.updatePhotos(photoUris);
+                        updatePhotoCount();
+                        showToast("Photo selected successfully");
+                    }
+                }
+            }
+        );
+        requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            permissions -> {
+                boolean allGranted = true;
+                for (Boolean isGranted : permissions.values()) {
+                    if (!isGranted) {
+                        allGranted = false;
+                        break;
+                    }
+                }
+                if (allGranted) {
+                    showToast("All permissions granted");
+                } else {
+                    showToast("Some permissions were denied");
+                }
+            }
+        );
+    }
+
+    private void updatePhotoPreviewVisibility() {
+        if (photoUris.isEmpty()) {
+            photoPreviewRecyclerView.setVisibility(View.GONE);
+        } else {
+            photoPreviewRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void updatePhotoCount() {
+        if (photoCountText != null) {
+            if (photoUris.isEmpty()) {
+                photoCountText.setText("No photos added");
+                photoCountText.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+            } else {
+                photoCountText.setText(String.format("%d photo%s added", photoUris.size(), photoUris.size() == 1 ? "" : "s"));
+                photoCountText.setTextColor(ContextCompat.getColor(this, R.color.green_500));
+            }
+            updatePhotoPreviewVisibility();
+        }
+    }
+
+    private void showImagePickerOptions() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.bottom_sheet_filter, null);
+        bottomSheetDialog.setContentView(bottomSheetView);
+        MaterialButton cameraButton = bottomSheetView.findViewById(R.id.cameraButton);
+        MaterialButton galleryButton = bottomSheetView.findViewById(R.id.galleryButton);
+        cameraButton.setOnClickListener(v -> {
+            bottomSheetDialog.dismiss();
+            checkAndRequestCameraPermission();
+        });
+        galleryButton.setOnClickListener(v -> {
+            bottomSheetDialog.dismiss();
+            checkAndRequestStoragePermission();
+        });
+        bottomSheetDialog.show();
+    }
+
+    private void checkAndRequestCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissionLauncher.launch(new String[]{Manifest.permission.CAMERA});
+        } else {
+            dispatchTakePictureIntent();
+        }
+    }
+
+    private void checkAndRequestStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(new String[]{Manifest.permission.READ_MEDIA_IMAGES});
+            } else {
+                openGallery();
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+            } else {
+                openGallery();
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+            imageFileName,
+            ".jpg",
+            storageDir
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                showToast("Error occurred while creating the file");
+                return;
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                    "com.s23010169.ecowastereporter.fileprovider",
+                    photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                try {
+                    takePictureLauncher.launch(takePictureIntent);
+                } catch (Exception e) {
+                    showToast("Failed to launch camera");
+                }
+            }
+        } else {
+            showToast("No camera available on this device");
+        }
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        pickImageLauncher.launch(intent);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     private void setupToolbar() {
@@ -190,18 +408,16 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
                 saveDraft();
             }
         });
-
         btnCompleteTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 completeTask();
             }
         });
-
         photoUploadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(UpdateBinStatusPage.this, "Photo upload coming soon", Toast.LENGTH_SHORT).show();
+                showImagePickerOptions();
             }
         });
     }
@@ -276,13 +492,28 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
         // Update UI elements based on task status
         if ("In Progress".equals(status)) {
             btnCompleteTask.setEnabled(true);
-            btnCompleteTask.setText("Complete Task");
+            btnCompleteTask.setText("DONE TASK");
         } else if ("Pending".equals(status)) {
             btnCompleteTask.setEnabled(true);
-            btnCompleteTask.setText("Start Task");
+            btnCompleteTask.setText("DONE TASK");
         } else {
             btnCompleteTask.setEnabled(false);
             btnCompleteTask.setText("Task Completed");
         }
+    }
+
+    private void showFullScreenPhoto(Uri uri) {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_fullscreen_photo);
+        ImageView imageView = dialog.findViewById(R.id.fullscreenImageView);
+        imageView.setImageURI(uri);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        dialog.getWindow().setLayout(
+            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+            android.view.ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        imageView.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 } 

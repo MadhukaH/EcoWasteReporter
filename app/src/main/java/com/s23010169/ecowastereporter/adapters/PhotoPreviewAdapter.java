@@ -14,14 +14,23 @@ import java.util.List;
 public class PhotoPreviewAdapter extends RecyclerView.Adapter<PhotoPreviewAdapter.PhotoViewHolder> {
     private List<Uri> photos;
     private OnPhotoDeleteListener deleteListener;
+    private OnPhotoClickListener clickListener;
 
     public interface OnPhotoDeleteListener {
         void onPhotoDelete(int position);
     }
 
-    public PhotoPreviewAdapter(List<Uri> photos, OnPhotoDeleteListener listener) {
+    public interface OnPhotoClickListener {
+        void onPhotoClick(int position, Uri uri);
+    }
+
+    public PhotoPreviewAdapter(List<Uri> photos, OnPhotoDeleteListener deleteListener) {
         this.photos = photos;
-        this.deleteListener = listener;
+        this.deleteListener = deleteListener;
+    }
+
+    public void setOnPhotoClickListener(OnPhotoClickListener clickListener) {
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -39,6 +48,11 @@ public class PhotoPreviewAdapter extends RecyclerView.Adapter<PhotoPreviewAdapte
         holder.deleteButton.setOnClickListener(v -> {
             if (deleteListener != null) {
                 deleteListener.onPhotoDelete(position);
+            }
+        });
+        holder.photoPreview.setOnClickListener(v -> {
+            if (clickListener != null) {
+                clickListener.onPhotoClick(position, photoUri);
             }
         });
     }
