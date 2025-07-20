@@ -30,11 +30,15 @@ public class CleanerPerformancePage extends AppCompatActivity {
     private View emptyStateLayout;
     private MaterialButton btnStartNewTask;
     private CleanerDatabaseHelper dbHelper;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cleaner_performance_page);
+
+        // Get email from intent
+        userEmail = getIntent().getStringExtra("email");
 
         // Initialize views
         initializeViews();
@@ -49,13 +53,19 @@ public class CleanerPerformancePage extends AppCompatActivity {
         setCurrentDate();
 
         // Load performance metrics
-        loadPerformanceMetrics();
+        updatePerformanceMetrics();
 
         // Load recent activities
         loadRecentActivities();
 
         // Setup click listeners
         setupClickListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updatePerformanceMetrics();
     }
 
     private void initializeViews() {
@@ -87,11 +97,34 @@ public class CleanerPerformancePage extends AppCompatActivity {
         tvCurrentDate.setText(currentDate);
     }
 
-    private void loadPerformanceMetrics() {
-        // TODO: Load actual metrics from database
-        // For now, setting sample data with animation
-        animateNumber(tvTasksCompleted, 0, 25, 1000);
-        animateNumber(tvEfficiencyRate, 0, 85, 1500);
+    private void updatePerformanceMetrics() {
+        // Use the same logic as CleanerHomePage for today's stats
+        com.s23010169.ecowastereporter.models.ReportDatabaseHelper reportDb = new com.s23010169.ecowastereporter.models.ReportDatabaseHelper(this);
+        java.util.List<com.s23010169.ecowastereporter.models.Report> allReports = reportDb.getAllReports();
+        int totalTasks = 0;
+        int completedTasks = 0;
+        long todayStart = getTodayStartMillis();
+        for (com.s23010169.ecowastereporter.models.Report report : allReports) {
+            if (report.getTimestamp() >= todayStart) {
+                totalTasks++;
+                if ("Resolved".equalsIgnoreCase(report.getStatus())) {
+                    completedTasks++;
+                }
+            }
+        }
+        // Efficiency: percent of completed tasks
+        int percent = (totalTasks > 0) ? (int) ((completedTasks * 100.0f) / totalTasks) : 0;
+        animateNumber(tvTasksCompleted, 0, completedTasks, 1000);
+        animateNumber(tvEfficiencyRate, 0, percent, 1500);
+    }
+
+    private long getTodayStartMillis() {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.SECOND, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        return cal.getTimeInMillis();
     }
 
     private void loadRecentActivities() {
