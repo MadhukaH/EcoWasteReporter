@@ -156,6 +156,7 @@
                         app:trackThickness="8dp" />
 
                     <TextView
+                        android:id="@+id/taskProgressText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"

@@ -23,6 +23,7 @@ import com.s23010169.ecowastereporter.models.CleanerDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.LinearLayout;
 
 public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.ActionClickListener {
     private TextView cleanerName;
@@ -33,6 +34,7 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
     private ImageView notificationIcon, profileIcon;
     private CleanerDatabaseHelper databaseHelper;
     private String userEmail;
+    private TextView tasksCountTextView, completedCountTextView, taskProgressText;
 
     @Override
     public void onBackPressed() {
@@ -55,8 +57,14 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
         setupToolbar();
         setupRecyclerView();
         setupClickListeners();
-        updateTaskProgress();
+        updateTaskStatsAndProgress();
         displayCleanerName();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateTaskStatsAndProgress();
     }
 
     private void initializeViews() {
@@ -68,6 +76,9 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
         startRouteButton = findViewById(R.id.startRouteButton);
         notificationIcon = findViewById(R.id.notificationIcon);
         profileIcon = findViewById(R.id.profileIcon);
+        tasksCountTextView = findViewById(R.id.tasksCount);
+        completedCountTextView = findViewById(R.id.completedCount);
+        taskProgressText = findViewById(R.id.taskProgressText);
     }
 
     private void displayCleanerName() {
@@ -107,8 +118,46 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
         profileIcon.setOnClickListener(v -> navigateToProfile());
     }
 
-    private void updateTaskProgress() {
-        taskProgress.setProgress(42); // This would be dynamic in a real app
+    private void updateTaskStatsAndProgress() {
+        // Fetch all tasks for today for this cleaner
+        // For now, we use all reports as tasks (simulate today's tasks)
+        com.s23010169.ecowastereporter.models.ReportDatabaseHelper reportDb = new com.s23010169.ecowastereporter.models.ReportDatabaseHelper(this);
+        java.util.List<com.s23010169.ecowastereporter.models.Report> allReports = reportDb.getAllReports();
+        int totalTasks = 0;
+        int completedTasks = 0;
+        long todayStart = getTodayStartMillis();
+        for (com.s23010169.ecowastereporter.models.Report report : allReports) {
+            // Only count reports assigned to this cleaner (if such logic exists)
+            // For now, count all reports from today
+            if (report.getTimestamp() >= todayStart) {
+                totalTasks++;
+                if ("Resolved".equalsIgnoreCase(report.getStatus())) {
+                    completedTasks++;
+                }
+            }
+        }
+        // Avoid division by zero
+        int percent = (totalTasks > 0) ? (int) ((completedTasks * 100.0f) / totalTasks) : 0;
+        // Update UI
+        taskProgress.setProgress(percent);
+        if (taskProgressText != null) {
+            taskProgressText.setText(percent + "% of today's tasks completed");
+        }
+        if (tasksCountTextView != null) {
+            tasksCountTextView.setText(String.valueOf(totalTasks));
+        }
+        if (completedCountTextView != null) {
+            completedCountTextView.setText(String.valueOf(completedTasks));
+        }
+    }
+
+    private long getTodayStartMillis() {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.SECOND, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        return cal.getTimeInMillis();
     }
 
     @Override
