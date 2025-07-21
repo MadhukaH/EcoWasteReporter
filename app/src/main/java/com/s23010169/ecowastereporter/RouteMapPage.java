@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 import java.util.ArrayList;
 import java.util.List;
+import com.s23010169.ecowastereporter.models.Report;
+import com.s23010169.ecowastereporter.models.ReportDatabaseHelper;
 
 public class RouteMapPage extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -115,19 +117,42 @@ public class RouteMapPage extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    private double calculateDistanceKm(LatLng p1, LatLng p2) {
+        final int R = 6371; // Radius of the earth in km
+        double latDistance = Math.toRadians(p2.latitude - p1.latitude);
+        double lonDistance = Math.toRadians(p2.longitude - p1.longitude);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(p1.latitude)) * Math.cos(Math.toRadians(p2.latitude))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
     private void loadRouteData() {
-        // Sample route data - in a real app, this would come from a database or API
+        // Load reports from database and use their locations for the route
+        ReportDatabaseHelper dbHelper = new ReportDatabaseHelper(this);
+        List<Report> reports = dbHelper.getAllReports();
+        routePoints.clear();
+        int validLocationCount = 0;
+        for (Report report : reports) {
+            // Only add reports with valid latitude/longitude
+            if (report.getLatitude() != 0 && report.getLongitude() != 0) {
+                routePoints.add(new LatLng(report.getLatitude(), report.getLongitude()));
+                validLocationCount++;
+            }
+        }
+        // Calculate total distance
+        double totalDistanceKm = 0.0;
+        for (int i = 1; i < routePoints.size(); i++) {
+            totalDistanceKm += calculateDistanceKm(routePoints.get(i - 1), routePoints.get(i));
+        }
+        // Estimate duration (walking speed ~5 km/h)
+        int estimatedMinutes = (int) Math.round((totalDistanceKm / 5.0) * 60.0);
+        // Update UI with real data
         routeTitle.setText("Today's Cleaning Route");
-        routeDistance.setText("2.4 km");
-        routeDuration.setText("45 min");
-        taskCount.setText("7 tasks");
-        
-        // Sample route points (these would be actual bin locations)
-        routePoints.add(new LatLng(37.7749, -122.4194)); // San Francisco
-        routePoints.add(new LatLng(37.7849, -122.4094));
-        routePoints.add(new LatLng(37.7949, -122.3994));
-        routePoints.add(new LatLng(37.8049, -122.3894));
-        routePoints.add(new LatLng(37.8149, -122.3794));
+        taskCount.setText(validLocationCount + " tasks");
+        routeDistance.setText(String.format("%.2f km", totalDistanceKm));
+        routeDuration.setText(estimatedMinutes + " min");
     }
 
     @Override
