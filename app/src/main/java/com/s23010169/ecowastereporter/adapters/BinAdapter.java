@@ -54,15 +54,17 @@ public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
     class BinViewHolder extends RecyclerView.ViewHolder {
         private CircularProgressIndicator progressFill;
         private TextView textFillPercent;
-        private TextView textWeight;
         private TextView textStatus;
+        private TextView textBinName;
+        private TextView textBinLevel;
 
         BinViewHolder(@NonNull View itemView) {
             super(itemView);
             progressFill = itemView.findViewById(R.id.progressFill);
             textFillPercent = itemView.findViewById(R.id.textFillPercent);
-            textWeight = itemView.findViewById(R.id.textWeight);
             textStatus = itemView.findViewById(R.id.textStatus);
+            textBinName = itemView.findViewById(R.id.textBinName);
+            textBinLevel = itemView.findViewById(R.id.textBinLevel);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
@@ -76,9 +78,8 @@ public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
             int fill = bin.getFillPercentage();
             textFillPercent.setText(fill + "%");
             progressFill.setProgress(fill);
-            // Simulate weight as fill * 0.6 (e.g., 90% = 54kg)
-            double weight = fill * 0.6;
-            textWeight.setText(String.format("%.1fkg", weight));
+            textBinName.setText(bin.getLocation());
+            textBinLevel.setText("Bin Level: " + fill + "%");
             // Status logic
             if (fill >= 90) {
                 textStatus.setText("Requested");

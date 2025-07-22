@@ -18,6 +18,17 @@
         android:gravity="center_horizontal"
         android:padding="16dp">
 
+        <TextView
+            android:id="@+id/textBinName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bin Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:layout_gravity="center"
+            android:layout_marginBottom="12dp"/>
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progressFill"
             android:layout_width="320dp"
@@ -43,14 +54,14 @@
             android:textColor="#222"/>
 
         <TextView
-            android:id="@+id/textWeight"
+            android:id="@+id/textBinLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="50.0kg"
-            android:textSize="15sp"
+            android:text="Bin Level: 90%"
+            android:textSize="16sp"
             android:textColor="#666"
             android:layout_marginTop="8dp"
-            android:layout_gravity="start"/>
+            android:layout_gravity="center"/>
 
         <TextView
             android:id="@+id/textStatus"
