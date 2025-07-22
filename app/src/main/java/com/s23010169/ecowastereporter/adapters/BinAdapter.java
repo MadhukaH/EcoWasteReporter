@@ -94,6 +94,14 @@ public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
                 textStatus.setBackgroundResource(R.drawable.status_active_bg);
                 textStatus.setTextColor(ContextCompat.getColor(context, R.color.status_active));
             }
+            // Set progress color based on fill percentage
+            if (fill < 40) {
+                progressFill.setIndicatorColor(ContextCompat.getColor(context, R.color.success_green));
+            } else if (fill < 80) {
+                progressFill.setIndicatorColor(ContextCompat.getColor(context, R.color.warning_yellow));
+            } else {
+                progressFill.setIndicatorColor(ContextCompat.getColor(context, R.color.error_red));
+            }
         }
     }
 } 
