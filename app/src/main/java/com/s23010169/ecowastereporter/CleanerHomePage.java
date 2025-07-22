@@ -113,7 +113,10 @@ public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.
     private void setupClickListeners() {
         tasksCard.setOnClickListener(v -> showTasksDetail());
         completedCard.setOnClickListener(v -> showCompletedTasksDetail());
-        startRouteButton.setOnClickListener(v -> startRoute());
+        startRouteButton.setOnClickListener(v -> {
+            Intent intent = new Intent(CleanerHomePage.this, ShowBinsPage.class);
+            startActivity(intent);
+        });
         notificationIcon.setOnClickListener(v -> showNotifications());
         profileIcon.setOnClickListener(v -> navigateToProfile());
     }

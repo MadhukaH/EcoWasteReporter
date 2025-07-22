@@ -279,7 +279,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:layout_margin="16dp"
-        android:text="Start Route"
+        android:text="SHOW BINS"
         android:textColor="@color/white"
         app:backgroundTint="@color/primary"
         app:icon="@drawable/ic_arrow_forward"
