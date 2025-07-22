@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.s23010169.ecowastereporter.R;
 import com.s23010169.ecowastereporter.models.Bin;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import java.util.List;
 
 public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
@@ -51,15 +52,17 @@ public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
     }
 
     class BinViewHolder extends RecyclerView.ViewHolder {
-        private View statusIndicator;
-        private TextView locationText;
-        private TextView statusText;
+        private CircularProgressIndicator progressFill;
+        private TextView textFillPercent;
+        private TextView textWeight;
+        private TextView textStatus;
 
         BinViewHolder(@NonNull View itemView) {
             super(itemView);
-            statusIndicator = itemView.findViewById(R.id.statusIndicator);
-            locationText = itemView.findViewById(R.id.locationText);
-            statusText = itemView.findViewById(R.id.statusText);
+            progressFill = itemView.findViewById(R.id.progressFill);
+            textFillPercent = itemView.findViewById(R.id.textFillPercent);
+            textWeight = itemView.findViewById(R.id.textWeight);
+            textStatus = itemView.findViewById(R.id.textStatus);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
@@ -70,19 +73,26 @@ public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
         }
 
         void bind(Bin bin) {
-            locationText.setText(bin.getLocation());
-            String statusString = String.format("%d%% Full • %.1f km away", bin.getFillPercentage(), bin.getDistance());
-            statusText.setText(statusString);
-
-            int colorResId;
-            if (bin.getFillPercentage() < 40) {
-                colorResId = R.color.success_green;
-            } else if (bin.getFillPercentage() < 80) {
-                colorResId = R.color.warning_yellow;
+            int fill = bin.getFillPercentage();
+            textFillPercent.setText(fill + "%");
+            progressFill.setProgress(fill);
+            // Simulate weight as fill * 0.6 (e.g., 90% = 54kg)
+            double weight = fill * 0.6;
+            textWeight.setText(String.format("%.1fkg", weight));
+            // Status logic
+            if (fill >= 90) {
+                textStatus.setText("Requested");
+                textStatus.setBackgroundResource(R.drawable.status_requested_bg);
+                textStatus.setTextColor(ContextCompat.getColor(context, R.color.status_requested));
+            } else if (fill == 0) {
+                textStatus.setText("Pending");
+                textStatus.setBackgroundResource(R.drawable.status_pending_bg);
+                textStatus.setTextColor(ContextCompat.getColor(context, R.color.status_pending));
             } else {
-                colorResId = R.color.error_red;
+                textStatus.setText("Active");
+                textStatus.setBackgroundResource(R.drawable.status_active_bg);
+                textStatus.setTextColor(ContextCompat.getColor(context, R.color.status_active));
             }
-            statusIndicator.setBackgroundTintList(ContextCompat.getColorStateList(context, colorResId));
         }
     }
 } 
