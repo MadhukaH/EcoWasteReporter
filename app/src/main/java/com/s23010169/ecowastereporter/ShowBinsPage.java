@@ -1,5 +1,6 @@
 package com.s23010169.ecowastereporter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -53,7 +54,13 @@ public class ShowBinsPage extends AppCompatActivity {
         allBins.add(new Bin("Sanath Jayasuriya Ground Bin", 35, 1.1, 5.9533, 80.5518));
         allBins.add(new Bin("Matara Hospital Waste Point", 85, 0.4, 5.9508, 80.5435));
 
-        adapter = new BinAdapter(this, new ArrayList<>(allBins), null);
+        adapter = new BinAdapter(this, new ArrayList<>(allBins), bin -> {
+            // Navigate to RouteMapPage with bin location
+            Intent intent = new Intent(ShowBinsPage.this, RouteMapPage.class);
+            intent.putExtra("latitude", bin.getLatitude());
+            intent.putExtra("longitude", bin.getLongitude());
+            startActivity(intent);
+        });
         recyclerView.setAdapter(adapter);
 
         setupSearch();
