@@ -5,6 +5,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
+import android.location.Location;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import androidx.core.app.ActivityCompat;
+import android.content.pm.PackageManager;
+import android.Manifest;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -36,6 +42,9 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
     private ReportDatabaseHelper reportDatabaseHelper;
     private Random random = new Random();
     private String userEmail;
+    private FusedLocationProviderClient fusedLocationClient;
+    private Location userLocation;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +91,8 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
 
         // Initialize ReportDatabaseHelper
         reportDatabaseHelper = new ReportDatabaseHelper(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        requestUserLocation();
 
         // Load initial data
         loadTasks();
@@ -165,15 +176,22 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
         String priority = determinePriority(report);
         int binFullPercentage = calculateBinFullPercentage(report);
         String additionalInfo = report.getWasteType();
-        double estimatedDistance = calculateEstimatedDistance(report);
-        int estimatedTime = calculateEstimatedTime(report);
-        
+        double estimatedDistance = 0;
+        int estimatedTime = 0;
+        if (userLocation != null && report.getLatitude() != 0 && report.getLongitude() != 0) {
+            float[] results = new float[1];
+            Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(), report.getLatitude(), report.getLongitude(), results);
+            estimatedDistance = results[0] / 1000.0; // meters to km
+            estimatedTime = (int) Math.round((estimatedDistance / 5.0) * 60.0); // 5 km/h walking speed
+        } else {
+            estimatedDistance = calculateEstimatedDistance(report);
+            estimatedTime = calculateEstimatedTime(report);
+        }
         Task task = new Task(location, priority, binFullPercentage, additionalInfo, estimatedDistance, estimatedTime);
         task.setDescription(description);
         task.setStatus(status);
         task.setReportId(report.getReportId());
         task.setTaskId(generateTaskId(report));
-        
         return task;
     }
 
@@ -302,12 +320,51 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
         }
     }
 
+    private void requestUserLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+            return;
+        }
+        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                userLocation = location;
+                // Reload tasks to update distances
+                loadTasks();
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requestUserLocation();
+            } else {
+                Toast.makeText(this, "Location permission is required to show real distances.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     @Override
     public void onGetRouteClick(Task task) {
         try {
             if (task != null) {
-                Toast.makeText(this, "Getting route to " + task.getLocation(), Toast.LENGTH_SHORT).show();
-                // TODO: Implement actual route navigation
+                // Fetch the report to get coordinates
+                String reportId = task.getReportId();
+                double latitude = 0;
+                double longitude = 0;
+                if (reportId != null) {
+                    Report report = reportDatabaseHelper.getReportById(reportId);
+                    if (report != null) {
+                        latitude = report.getLatitude();
+                        longitude = report.getLongitude();
+                    }
+                }
+                Intent intent = new Intent(this, RouteMapPage.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                startActivity(intent);
             }
         } catch (Exception e) {
             handleError("Error getting route", e);

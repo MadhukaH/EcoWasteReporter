@@ -342,4 +342,41 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
             }
         }
     }
+
+    // Method to get a report by its ID
+    public Report getReportById(String reportId) {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = this.getReadableDatabase();
+            cursor = db.query(TABLE_REPORTS, null, COLUMN_REPORT_ID + " = ?", new String[]{reportId}, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                Report report = new Report();
+                report.setReportId(cursor.getString(cursor.getColumnIndex(COLUMN_REPORT_ID)));
+                report.setWasteType(cursor.getString(cursor.getColumnIndex(COLUMN_WASTE_TYPE)));
+                report.setLocation(cursor.getString(cursor.getColumnIndex(COLUMN_LOCATION)));
+                report.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
+                report.setLatitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LATITUDE)));
+                report.setLongitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LONGITUDE)));
+                // Convert JSON string back to List<Uri>
+                String photoUrisJson = cursor.getString(cursor.getColumnIndex(COLUMN_PHOTO_URIS));
+                try {
+                    Type type = new TypeToken<List<Uri>>(){}.getType();
+                    List<Uri> photoUris = gson.fromJson(photoUrisJson, type);
+                    report.setPhotoUris(photoUris != null ? photoUris : new ArrayList<>());
+                } catch (Exception e) {
+                    report.setPhotoUris(new ArrayList<>());
+                }
+                report.setTimestamp(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMESTAMP)));
+                report.setStatus(cursor.getString(cursor.getColumnIndex(COLUMN_STATUS)));
+                return report;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error fetching report by ID", e);
+        } finally {
+            if (cursor != null) cursor.close();
+            if (db != null && db.isOpen()) db.close();
+        }
+        return null;
+    }
 } 

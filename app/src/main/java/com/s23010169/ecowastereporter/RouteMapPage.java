@@ -48,7 +48,19 @@ public class RouteMapPage extends AppCompatActivity implements OnMapReadyCallbac
         setupToolbar();
         setupMap();
         setupClickListeners();
-        loadRouteData();
+
+        // Check for single location intent extras
+        Intent intent = getIntent();
+        double latitude = intent.getDoubleExtra("latitude", 0);
+        double longitude = intent.getDoubleExtra("longitude", 0);
+        if (latitude != 0 && longitude != 0) {
+            // Show only this location on the map
+            routePoints.clear();
+            routePoints.add(new com.google.android.gms.maps.model.LatLng(latitude, longitude));
+            // The rest will be handled in onMapReady
+        } else {
+            loadRouteData();
+        }
     }
 
     private void initializeViews() {

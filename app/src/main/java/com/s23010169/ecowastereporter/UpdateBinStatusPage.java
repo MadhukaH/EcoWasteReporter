@@ -50,6 +50,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Window;
 import android.widget.ImageView;
+import android.location.Location;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import androidx.core.app.ActivityCompat;
+import android.content.pm.PackageManager;
 
 public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelectorAdapter.TaskSelectionListener {
     private RadioButton radioFullyCleaned;
@@ -72,6 +77,9 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
     private ActivityResultLauncher<Intent> takePictureLauncher;
     private ActivityResultLauncher<Intent> pickImageLauncher;
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
+    private FusedLocationProviderClient fusedLocationClient;
+    private Location userLocation;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +91,8 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
 
         // Initialize database helper
         reportDatabaseHelper = new ReportDatabaseHelper(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        requestUserLocation();
 
         // Initialize views
         initializeViews();
@@ -367,11 +377,17 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
         String location = report.getLocation();
         String description = report.getDescription();
         String status = report.getStatus();
-        String distance = calculateDistance(report);
-        
+        String distance;
+        if (userLocation != null && report.getLatitude() != 0 && report.getLongitude() != 0) {
+            float[] results = new float[1];
+            Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(), report.getLatitude(), report.getLongitude(), results);
+            double km = results[0] / 1000.0;
+            distance = String.format("%.1f km away", km);
+        } else {
+            distance = calculateDistance(report);
+        }
         Task task = new Task(taskId, location, description, status, distance);
         task.setReportId(report.getReportId());
-        
         return task;
     }
 
@@ -515,5 +531,31 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
         );
         imageView.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+    }
+
+    private void requestUserLocation() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+            return;
+        }
+        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                userLocation = location;
+                // Reload tasks to update distances
+                loadTasksFromDatabase();
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requestUserLocation();
+            } else {
+                Toast.makeText(this, "Location permission is required to show real distances.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 } 
