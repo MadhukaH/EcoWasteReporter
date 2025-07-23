@@ -151,31 +151,31 @@ public class RouteMapPage extends AppCompatActivity implements OnMapReadyCallbac
         return R * c;
     }
 
+    private void updateRouteDetailsUI() {
+        int validLocationCount = routePoints.size();
+        double totalDistanceKm = 0.0;
+        for (int i = 1; i < routePoints.size(); i++) {
+            totalDistanceKm += calculateDistanceKm(routePoints.get(i - 1), routePoints.get(i));
+        }
+        int estimatedMinutes = (int) Math.round((totalDistanceKm / 5.0) * 60.0); // 5 km/h walking
+        taskCount.setText(validLocationCount + " tasks");
+        routeDistance.setText(String.format("%.2f km", totalDistanceKm));
+        routeDuration.setText(estimatedMinutes + " min");
+    }
+
     private void loadRouteData() {
         // Load reports from database and use their locations for the route
         ReportDatabaseHelper dbHelper = new ReportDatabaseHelper(this);
         List<Report> reports = dbHelper.getAllReports();
         routePoints.clear();
-        int validLocationCount = 0;
         for (Report report : reports) {
             // Only add reports with valid latitude/longitude
             if (report.getLatitude() != 0 && report.getLongitude() != 0) {
                 routePoints.add(new LatLng(report.getLatitude(), report.getLongitude()));
-                validLocationCount++;
             }
         }
-        // Calculate total distance
-        double totalDistanceKm = 0.0;
-        for (int i = 1; i < routePoints.size(); i++) {
-            totalDistanceKm += calculateDistanceKm(routePoints.get(i - 1), routePoints.get(i));
-        }
-        // Estimate duration (walking speed ~5 km/h)
-        int estimatedMinutes = (int) Math.round((totalDistanceKm / 5.0) * 60.0);
-        // Update UI with real data
+        updateRouteDetailsUI();
         routeTitle.setText("Today's Cleaning Route");
-        taskCount.setText(validLocationCount + " tasks");
-        routeDistance.setText(String.format("%.2f km", totalDistanceKm));
-        routeDuration.setText(estimatedMinutes + " min");
     }
 
     @Override
@@ -213,6 +213,7 @@ public class RouteMapPage extends AppCompatActivity implements OnMapReadyCallbac
             Marker marker = mMap.addMarker(markerOptions);
             markers.add(marker);
         }
+        updateRouteDetailsUI();
     }
 
     private void drawRouteLine() {
@@ -274,6 +275,7 @@ public class RouteMapPage extends AppCompatActivity implements OnMapReadyCallbac
         addRouteMarkers();
         drawRouteLine();
         fitCameraToRoute();
+        updateRouteDetailsUI();
         Toast.makeText(this, "Route optimized for shortest path!", Toast.LENGTH_SHORT).show();
     }
 
