@@ -100,8 +100,19 @@ public class RouteMapPage extends AppCompatActivity implements OnMapReadyCallbac
         backButton.setOnClickListener(v -> onBackPressed());
         
         startNavigationButton.setOnClickListener(v -> {
-            Toast.makeText(this, "Starting navigation...", Toast.LENGTH_SHORT).show();
-            // TODO: Implement actual navigation
+            if (!routePoints.isEmpty()) {
+                LatLng destination = routePoints.get(0);
+                String uri = "google.navigation:q=" + destination.latitude + "," + destination.longitude + "&mode=d";
+                Intent intent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(uri));
+                intent.setPackage("com.google.android.apps.maps");
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Google Maps app is not installed", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "No destination to navigate to", Toast.LENGTH_SHORT).show();
+            }
         });
         
         optimizeRouteButton.setOnClickListener(v -> {
@@ -229,31 +240,41 @@ public class RouteMapPage extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void optimizeRoute() {
-        // TODO: Implement route optimization algorithm
-        Toast.makeText(this, "Route optimized for efficiency!", Toast.LENGTH_SHORT).show();
-        
-        // For demo purposes, just reverse the route
-        if (routePoints.size() > 1) {
-            List<LatLng> optimizedPoints = new ArrayList<>();
-            for (int i = routePoints.size() - 1; i >= 0; i--) {
-                optimizedPoints.add(routePoints.get(i));
+        if (routePoints.size() > 2) {
+            // Nearest Neighbor Algorithm for simple route optimization
+            List<LatLng> optimized = new ArrayList<>();
+            List<LatLng> toVisit = new ArrayList<>(routePoints);
+            LatLng current = toVisit.remove(0); // Start from the first point
+            optimized.add(current);
+            while (!toVisit.isEmpty()) {
+                LatLng nearest = toVisit.get(0);
+                double minDist = calculateDistanceKm(current, nearest);
+                for (LatLng candidate : toVisit) {
+                    double dist = calculateDistanceKm(current, candidate);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        nearest = candidate;
+                    }
+                }
+                optimized.add(nearest);
+                toVisit.remove(nearest);
+                current = nearest;
             }
-            routePoints = optimizedPoints;
-            
-            // Clear existing markers and polyline
-            for (Marker marker : markers) {
-                marker.remove();
-            }
-            markers.clear();
-            if (routePolyline != null) {
-                routePolyline.remove();
-            }
-            
-            // Redraw with optimized route
-            addRouteMarkers();
-            drawRouteLine();
-            fitCameraToRoute();
+            routePoints = optimized;
         }
+        // Clear existing markers and polyline
+        for (Marker marker : markers) {
+            marker.remove();
+        }
+        markers.clear();
+        if (routePolyline != null) {
+            routePolyline.remove();
+        }
+        // Redraw with optimized route
+        addRouteMarkers();
+        drawRouteLine();
+        fitCameraToRoute();
+        Toast.makeText(this, "Route optimized for shortest path!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
