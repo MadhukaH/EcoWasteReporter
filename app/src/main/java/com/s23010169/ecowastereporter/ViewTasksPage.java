@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -321,27 +322,12 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
                 return;
             }
 
-            // Update the report status in the database if this task is linked to a report
-            if (task.getReportId() != null && !task.getReportId().startsWith("SAMPLE-")) {
-                int updated = reportDatabaseHelper.updateReportStatus(task.getReportId(), "Resolved");
-                if (updated > 0) {
-                    Toast.makeText(this, "Report marked as resolved!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            // Remove from both lists to maintain consistency
-            allTasks.remove(task);
-            currentDisplayedTasks.remove(task);
-            
-            // Update the adapter with the current displayed tasks
-            taskAdapter.updateTasks(new ArrayList<>(currentDisplayedTasks));
-            
-            // Update the task count
-            updateTaskCount();
-            
-            Toast.makeText(this, "Task completed: " + task.getLocation(), Toast.LENGTH_SHORT).show();
+            // Only navigate to UpdateBinStatusPage, do not mark as done here
+            Intent intent = new Intent(this, UpdateBinStatusPage.class);
+            intent.putExtra("email", userEmail);
+            startActivity(intent);
         } catch (Exception e) {
-            handleError("Error marking task as done", e);
+            handleError("Error navigating to update bin status page", e);
         }
     }
 
