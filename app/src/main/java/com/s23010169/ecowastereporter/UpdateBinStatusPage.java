@@ -485,6 +485,12 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
                 locationText.setText("No tasks available");
                 taskDetailsText.setText("All tasks completed");
             }
+
+            // Navigate to ViewTasksPage after completion
+            Intent intent = new Intent(this, ViewTasksPage.class);
+            intent.putExtra("email", userEmail);
+            startActivity(intent);
+            finish();
             
         } catch (Exception e) {
             e.printStackTrace();
