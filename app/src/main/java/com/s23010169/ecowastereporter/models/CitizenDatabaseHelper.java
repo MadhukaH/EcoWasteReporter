@@ -198,6 +198,43 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
         return points;
     }
 
+    // Phone-based getters
+    public int getUserPointsByPhone(String phone) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_POINTS}, COLUMN_PHONE + "=?", new String[]{phone}, null, null, null);
+        int points = 0;
+        if (cursor != null && cursor.moveToFirst()) {
+            points = cursor.getInt(cursor.getColumnIndex(COLUMN_POINTS));
+            cursor.close();
+        }
+        db.close();
+        return points;
+    }
+
+    public int getUserLevelByPhone(String phone) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_LEVEL}, COLUMN_PHONE + "=?", new String[]{phone}, null, null, null);
+        int level = 1;
+        if (cursor != null && cursor.moveToFirst()) {
+            level = cursor.getInt(cursor.getColumnIndex(COLUMN_LEVEL));
+            cursor.close();
+        }
+        db.close();
+        return level;
+    }
+
+    public int getUserCurrentXpByPhone(String phone) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_CURRENT_XP}, COLUMN_PHONE + "=?", new String[]{phone}, null, null, null);
+        int xp = 0;
+        if (cursor != null && cursor.moveToFirst()) {
+            xp = cursor.getInt(cursor.getColumnIndex(COLUMN_CURRENT_XP));
+            cursor.close();
+        }
+        db.close();
+        return xp;
+    }
+
     public int getUserLevel(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_LEVEL}, COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
@@ -242,6 +279,28 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_STREAK, streak);
         values.put(COLUMN_CURRENT_XP, currentXp);
         int result = db.update(TABLE_CITIZENS, values, COLUMN_EMAIL + "=?", new String[]{email});
+        db.close();
+        return result;
+    }
+
+    // Phone-based updaters
+    public int updateUserPointsByPhone(String phone, int points) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_POINTS, points);
+        int result = db.update(TABLE_CITIZENS, values, COLUMN_PHONE + "=?", new String[]{phone});
+        db.close();
+        return result;
+    }
+
+    public int updateUserStatsByPhone(String phone, int points, int level, int streak, int currentXp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_POINTS, points);
+        values.put(COLUMN_LEVEL, level);
+        values.put(COLUMN_STREAK, streak);
+        values.put(COLUMN_CURRENT_XP, currentXp);
+        int result = db.update(TABLE_CITIZENS, values, COLUMN_PHONE + "=?", new String[]{phone});
         db.close();
         return result;
     }

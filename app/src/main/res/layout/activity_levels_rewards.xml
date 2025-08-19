@@ -30,28 +30,7 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            app:tabTextColor="#757575"
-            app:tabSelectedTextColor="#1B1B1B"
-            app:tabIndicatorColor="@color/green_500"
-            app:tabMode="fixed"
-            app:tabGravity="fill">
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/level_progress" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rewards_store" />
-
-        </com.google.android.material.tabs.TabLayout>
+        <!-- Removed TabLayout: page now focuses on Levels only -->
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -252,38 +231,37 @@
 
             </LinearLayout>
 
-            <!-- Stats Grid -->
-            <LinearLayout
+            <!-- Stats: total points only (simplified) -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#E0E0E0"
                 android:layout_marginBottom="16dp">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="#E0E0E0">
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="6dp"
+                        android:src="@drawable/coin"
+                        android:background="@drawable/circle_background"
+                        app:tint="@null"
+                        app:shapeAppearanceOverlay="@style/CircleImageView" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="20dp"
-                        android:gravity="center">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:padding="6dp"
-                            android:src="@drawable/coin"
-                            android:background="@drawable/circle_background"
-                            app:tint="@null"
-                            app:shapeAppearanceOverlay="@style/CircleImageView" />
+                        android:layout_marginStart="12dp">
 
                         <TextView
                             android:id="@+id/totalPoints"
@@ -293,7 +271,6 @@
                             android:textSize="24sp"
                             android:textStyle="bold"
                             android:textColor="@color/green_500"
-                            android:layout_marginTop="12dp"
                             android:fontFamily="sans-serif-medium" />
 
                         <TextView
@@ -304,81 +281,220 @@
                             android:textColor="#757575"
                             android:fontFamily="sans-serif-medium" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="#E0E0E0">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp"
-                        android:gravity="center">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="58dp"
-                            android:layout_height="58dp"
-                            android:padding="12dp"
-                            android:src="@drawable/daystark"
-                            android:background="@drawable/circle_background"
-                            app:tint="@color/green_500"
-                            app:shapeAppearanceOverlay="@style/CircleImageView" />
-
-                        <TextView
-                            android:id="@+id/streakCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="7"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/green_500"
-                            android:layout_marginTop="12dp"
-                            android:fontFamily="sans-serif-medium" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/day_streak"
-                            android:textSize="14sp"
-                            android:textColor="#757575"
-                            android:fontFamily="sans-serif-medium" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
-
-            <!-- Achievements Section -->
+            <!-- Mobile Reload Rewards -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/recent_achievements"
+                android:text="Mobile Reload Rewards"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#1B1B1B"
                 android:layout_marginBottom="12dp"
                 android:fontFamily="sans-serif-medium" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/achievementsRecyclerView"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:clipToPadding="false" />
+                app:cardCornerRadius="20dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#E0E0E0"
+                android:layout_marginBottom="24dp">
 
-            <!-- Rewards RecyclerView -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rewardsRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:visibility="gone" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem100Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="100 pts → Rs.100 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginBottom="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem200Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="200 pts → Rs.150 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginBottom="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem300Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="300 pts → Rs.200 reload"
+                        android:textAllCaps="false"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <!-- Mid-tier redemptions -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem400Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="400 pts → Rs.250 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem500Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="500 pts → Rs.300 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem600Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="600 pts → Rs.350 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem700Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="700 pts → Rs.400 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem800Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="800 pts → Rs.450 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem900Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="900 pts → Rs.500 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <!-- High-tier redemptions -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem1000Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1000 pts → Rs.700 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem1500Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1500 pts → Rs.1100 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/redeem2000Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="2000 pts → Rs.1500 reload"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_refresh"
+                        app:iconTint="@color/white"
+                        app:iconPadding="12dp"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.MaterialComponents.Button"
+                        />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Removed rewards list for simplified page -->
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

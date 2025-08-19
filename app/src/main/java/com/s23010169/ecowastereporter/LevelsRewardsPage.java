@@ -8,37 +8,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.tabs.TabLayout;
 import com.s23010169.ecowastereporter.adapters.LevelAdapter;
-import com.s23010169.ecowastereporter.adapters.RewardAdapter;
 import com.s23010169.ecowastereporter.models.Level;
-import com.s23010169.ecowastereporter.models.Reward;
 import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapter.OnRewardActionListener {
-    private TabLayout tabLayout;
+public class LevelsRewardsPage extends AppCompatActivity {
     private View levelInfoCard;
-    private RecyclerView rewardsRecyclerView;
-    private RecyclerView achievementsRecyclerView;
     private RecyclerView levelProgressionRecyclerView;
-    private TextView levelTitle, currentXp, xpToNext, totalPoints, streakCount;
+    private TextView levelTitle, currentXp, xpToNext, totalPoints;
     private LinearProgressIndicator levelProgress;
-    private RewardAdapter rewardAdapter;
     private LevelAdapter levelAdapter;
+    private View redeem100Btn, redeem200Btn, redeem300Btn,
+                 redeem400Btn, redeem500Btn, redeem600Btn, redeem700Btn, redeem800Btn, redeem900Btn,
+                 redeem1000Btn, redeem1500Btn, redeem2000Btn;
 
     private CitizenDatabaseHelper citizenDb;
     private String userEmail;
+    private String userPhone;
     private int userLevel = 1;
     private int currentXpValue = 0;
-    private int xpToNextValue = 100; // will adjust based on level thresholds
     private int totalPointsValue = 0;
-    private int streakValue = 0;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,29 +42,35 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
 
         initializeViews();
         citizenDb = new CitizenDatabaseHelper(this);
-        citizenDb.seedRewardsIfEmpty();
         userEmail = getIntent().getStringExtra("email");
+        userPhone = getIntent().getStringExtra("phone");
         setupToolbar();
-        setupTabLayout();
         loadUserData();
         setupLevelProgressionRecyclerView();
-        setupRewardsRecyclerView();
-        setupAchievementsRecyclerView();
         animateProgress();
+        setupRedemptionButtons();
     }
 
     private void initializeViews() {
-        tabLayout = findViewById(R.id.tabLayout);
         levelInfoCard = findViewById(R.id.levelInfoCard);
-        rewardsRecyclerView = findViewById(R.id.rewardsRecyclerView);
-        achievementsRecyclerView = findViewById(R.id.achievementsRecyclerView);
         levelProgressionRecyclerView = findViewById(R.id.levelProgressionRecyclerView);
         levelTitle = findViewById(R.id.levelTitle);
         currentXp = findViewById(R.id.currentXp);
         xpToNext = findViewById(R.id.xpToNext);
         totalPoints = findViewById(R.id.totalPoints);
-        streakCount = findViewById(R.id.streakCount);
         levelProgress = findViewById(R.id.levelProgress);
+        redeem100Btn = findViewById(R.id.redeem100Btn);
+        redeem200Btn = findViewById(R.id.redeem200Btn);
+        redeem300Btn = findViewById(R.id.redeem300Btn);
+        redeem400Btn = findViewById(R.id.redeem400Btn);
+        redeem500Btn = findViewById(R.id.redeem500Btn);
+        redeem600Btn = findViewById(R.id.redeem600Btn);
+        redeem700Btn = findViewById(R.id.redeem700Btn);
+        redeem800Btn = findViewById(R.id.redeem800Btn);
+        redeem900Btn = findViewById(R.id.redeem900Btn);
+        redeem1000Btn = findViewById(R.id.redeem1000Btn);
+        redeem1500Btn = findViewById(R.id.redeem1500Btn);
+        redeem2000Btn = findViewById(R.id.redeem2000Btn);
     }
 
     private void setupToolbar() {
@@ -82,28 +83,16 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         }
     }
 
-    private void setupTabLayout() {
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                updateUI(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
-    }
-
     private void loadUserData() {
-        // Load from DB if we have a user
-        if (userEmail != null) {
+        // Load from DB: prefer phone, fallback to email
+        if (userPhone != null && !userPhone.isEmpty()) {
+            userLevel = citizenDb.getUserLevelByPhone(userPhone);
+            currentXpValue = citizenDb.getUserCurrentXpByPhone(userPhone);
+            totalPointsValue = citizenDb.getUserPointsByPhone(userPhone);
+        } else if (userEmail != null && !userEmail.isEmpty()) {
             userLevel = citizenDb.getUserLevel(userEmail);
             currentXpValue = citizenDb.getUserCurrentXp(userEmail);
             totalPointsValue = citizenDb.getUserPoints(userEmail);
-            streakValue = citizenDb.getUserStreak(userEmail);
         }
 
         List<Level> levels = getLevels();
@@ -124,15 +113,91 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         int needed = Math.max(0, nextThreshold - currentXpValue);
         xpToNext.setText(getString(R.string.xp_needed, needed));
         totalPoints.setText(String.valueOf(totalPointsValue));
-        streakCount.setText(String.valueOf(streakValue));
+        // points are shown in the header card
 
         // Set progress
         levelProgress.setMax(100);
-        int progressPct = Math.max(0, Math.min(100, (gainedInLevel * 100) / totalNeeded));
         levelProgress.setProgress(0); // Start at 0 for animation
         // store in field for animateProgress to use
-        this.xpToNextValue = nextThreshold; // keep for compat
         this.currentXpValue = currentXpValue; // unchanged
+        refreshRedemptionButtonsState();
+    }
+
+    private void setupRedemptionButtons() {
+        if (redeem100Btn != null) {
+            redeem100Btn.setOnClickListener(v -> attemptRedeem(100, 100));
+        }
+        if (redeem200Btn != null) {
+            redeem200Btn.setOnClickListener(v -> attemptRedeem(200, 150));
+        }
+        if (redeem300Btn != null) {
+            redeem300Btn.setOnClickListener(v -> attemptRedeem(300, 200));
+        }
+        if (redeem400Btn != null) {
+            redeem400Btn.setOnClickListener(v -> attemptRedeem(400, 250));
+        }
+        if (redeem500Btn != null) {
+            redeem500Btn.setOnClickListener(v -> attemptRedeem(500, 300));
+        }
+        if (redeem600Btn != null) {
+            redeem600Btn.setOnClickListener(v -> attemptRedeem(600, 350));
+        }
+        if (redeem700Btn != null) {
+            redeem700Btn.setOnClickListener(v -> attemptRedeem(700, 400));
+        }
+        if (redeem800Btn != null) {
+            redeem800Btn.setOnClickListener(v -> attemptRedeem(800, 450));
+        }
+        if (redeem900Btn != null) {
+            redeem900Btn.setOnClickListener(v -> attemptRedeem(900, 500));
+        }
+        if (redeem1000Btn != null) {
+            redeem1000Btn.setOnClickListener(v -> attemptRedeem(1000, 700));
+        }
+        if (redeem1500Btn != null) {
+            redeem1500Btn.setOnClickListener(v -> attemptRedeem(1500, 1100));
+        }
+        if (redeem2000Btn != null) {
+            redeem2000Btn.setOnClickListener(v -> attemptRedeem(2000, 1500));
+        }
+        refreshRedemptionButtonsState();
+    }
+
+    private void refreshRedemptionButtonsState() {
+        if (redeem100Btn != null) redeem100Btn.setEnabled(totalPointsValue >= 100);
+        if (redeem200Btn != null) redeem200Btn.setEnabled(totalPointsValue >= 200);
+        if (redeem300Btn != null) redeem300Btn.setEnabled(totalPointsValue >= 300);
+        if (redeem400Btn != null) redeem400Btn.setEnabled(totalPointsValue >= 400);
+        if (redeem500Btn != null) redeem500Btn.setEnabled(totalPointsValue >= 500);
+        if (redeem600Btn != null) redeem600Btn.setEnabled(totalPointsValue >= 600);
+        if (redeem700Btn != null) redeem700Btn.setEnabled(totalPointsValue >= 700);
+        if (redeem800Btn != null) redeem800Btn.setEnabled(totalPointsValue >= 800);
+        if (redeem900Btn != null) redeem900Btn.setEnabled(totalPointsValue >= 900);
+        if (redeem1000Btn != null) redeem1000Btn.setEnabled(totalPointsValue >= 1000);
+        if (redeem1500Btn != null) redeem1500Btn.setEnabled(totalPointsValue >= 1500);
+        if (redeem2000Btn != null) redeem2000Btn.setEnabled(totalPointsValue >= 2000);
+    }
+
+    private void attemptRedeem(int requiredPoints, int reloadAmount) {
+        if ((userPhone == null || userPhone.isEmpty()) && (userEmail == null || userEmail.isEmpty())) {
+            android.widget.Toast.makeText(this, "Login with phone or email to redeem", android.widget.Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (totalPointsValue < requiredPoints) {
+            android.widget.Toast.makeText(this, getString(R.string.insufficient_points), android.widget.Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        totalPointsValue -= requiredPoints;
+        if (userPhone != null && !userPhone.isEmpty()) {
+            citizenDb.updateUserPointsByPhone(userPhone, totalPointsValue);
+        } else {
+            int streak = citizenDb.getUserStreak(userEmail);
+            citizenDb.updateUserStats(userEmail, totalPointsValue, userLevel, streak, currentXpValue);
+        }
+        totalPoints.setText(String.valueOf(totalPointsValue));
+        refreshRedemptionButtonsState();
+        android.widget.Toast.makeText(this, "Redeemed Rs." + reloadAmount + " mobile reload", android.widget.Toast.LENGTH_SHORT).show();
     }
 
     private Level getCurrentLevel() {
@@ -216,64 +281,7 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         animation.start();
     }
 
-    private void setupRewardsRecyclerView() {
-        List<Reward> rewards = citizenDb.getAllRewards();
-        // mark claimed
-        if (userEmail != null) {
-            List<Integer> claimedIds = citizenDb.getClaimedRewardIdsForUser(userEmail);
-            for (Reward r : rewards) {
-                if (claimedIds.contains(r.getId())) {
-                    r.setClaimed(true);
-                }
-            }
-        }
-        rewardAdapter = new RewardAdapter(this, rewards, totalPointsValue, this);
-        rewardsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        rewardsRecyclerView.setAdapter(rewardAdapter);
-    }
-
-    private void setupAchievementsRecyclerView() {
-        // TODO: Create Achievement model and adapter
-        achievementsRecyclerView.setLayoutManager(
-            new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        // achievementsRecyclerView.setAdapter(achievementAdapter);
-    }
-
-    // removed mock rewards; now loaded from DB
-
-    private void updateUI(int tabPosition) {
-        if (tabPosition == 0) { // Level Progress
-            levelInfoCard.setVisibility(View.VISIBLE);
-            levelProgressionRecyclerView.setVisibility(View.VISIBLE);
-            achievementsRecyclerView.setVisibility(View.VISIBLE);
-            rewardsRecyclerView.setVisibility(View.GONE);
-        } else { // Rewards Store
-            levelInfoCard.setVisibility(View.GONE);
-            levelProgressionRecyclerView.setVisibility(View.GONE);
-            achievementsRecyclerView.setVisibility(View.GONE);
-            rewardsRecyclerView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onClaimReward(Reward reward) {
-        if (userEmail == null) {
-            Toast.makeText(this, "Login required to claim rewards", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (totalPointsValue < reward.getPoints()) {
-            Toast.makeText(this, getString(R.string.insufficient_points), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        boolean ok = citizenDb.claimReward(userEmail, reward.getId());
-        if (ok) {
-            reward.setClaimed(true);
-            rewardAdapter.notifyDataSetChanged();
-            Toast.makeText(this, "Claimed " + reward.getName() + "!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Failed to claim reward", Toast.LENGTH_SHORT).show();
-        }
-    }
+    // removed rewards store for a simpler, focused Levels page
 
     @Override
     public boolean onSupportNavigateUp() {
