@@ -20,7 +20,7 @@ import java.util.List;
 public class LevelsRewardsPage extends AppCompatActivity {
     private View levelInfoCard;
     private RecyclerView levelProgressionRecyclerView;
-    private TextView levelTitle, currentXp, xpToNext, totalPoints;
+    private TextView levelTitle, currentXp, xpToNext, totalPoints, levelsCountLabel;
     private LinearProgressIndicator levelProgress;
     private LevelAdapter levelAdapter;
     private View redeem100Btn, redeem200Btn, redeem300Btn,
@@ -58,6 +58,7 @@ public class LevelsRewardsPage extends AppCompatActivity {
         currentXp = findViewById(R.id.currentXp);
         xpToNext = findViewById(R.id.xpToNext);
         totalPoints = findViewById(R.id.totalPoints);
+        levelsCountLabel = findViewById(R.id.levelsCountLabel);
         levelProgress = findViewById(R.id.levelProgress);
         redeem100Btn = findViewById(R.id.redeem100Btn);
         redeem200Btn = findViewById(R.id.redeem200Btn);
@@ -102,18 +103,33 @@ public class LevelsRewardsPage extends AppCompatActivity {
 
         int currentThreshold = currentLevel.getRequiredPoints();
         int nextThreshold = currentThreshold;
+        String nextLevelName = null;
         for (Level l : levels) {
             if (l.getLevelNumber() == currentLevel.getLevelNumber() + 1) {
                 nextThreshold = l.getRequiredPoints();
+                nextLevelName = l.getTitle();
                 break;
             }
         }
         int totalNeeded = Math.max(1, nextThreshold - currentThreshold);
         int gainedInLevel = Math.max(0, currentXpValue - currentThreshold);
         int needed = Math.max(0, nextThreshold - currentXpValue);
+        if (nextLevelName != null) {
+            TextView nextLevelLabel = findViewById(R.id.nextLevelLabel);
+            TextView pointsToNextLevelLabel = findViewById(R.id.pointsToNextLevelLabel);
+            if (nextLevelLabel != null) {
+                nextLevelLabel.setText("Next Level: " + nextLevelName);
+            }
+            if (pointsToNextLevelLabel != null) {
+                pointsToNextLevelLabel.setText("  |  " + needed + " points needed");
+            }
+        }
         xpToNext.setText(getString(R.string.xp_needed, needed));
         totalPoints.setText(String.valueOf(totalPointsValue));
         // points are shown in the header card
+        if (levelsCountLabel != null) {
+            levelsCountLabel.setText(levels.size() + " Levels");
+        }
 
         // Set progress
         levelProgress.setMax(100);
