@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/eco_gradient_background">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:navigationIcon="@drawable/ic_arrow_forward"
+        app:title="Change Bin Status" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/report"
+                android:layout_marginBottom="24dp"
+                app:tint="@color/primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update Bin Status"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter bin ID and select new status"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:alpha="0.8"
+                android:layout_marginBottom="32dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp"
+                android:layout_marginBottom="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                                         <TextView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:text="Select Bin"
+                         android:textSize="16sp"
+                         android:textStyle="bold"
+                         android:textColor="@android:color/black"
+                         android:layout_marginBottom="8dp" />
+
+                     <Spinner
+                         android:id="@+id/binIdInput"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_marginBottom="16dp"
+                         android:background="@drawable/edit_text_background"
+                         android:padding="16dp" />
+
+                     <com.google.android.material.button.MaterialButton
+                         android:id="@+id/checkBinButton"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:text="Check Bin"
+                         android:layout_marginTop="8dp"
+                         android:layout_marginBottom="16dp"
+                         app:cornerRadius="8dp"
+                         style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New Status"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="8dp" />
+
+                                         <Spinner
+                         android:id="@+id/statusSpinner"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_marginBottom="16dp"
+                         android:background="@drawable/edit_text_background"
+                         android:padding="16dp" />
+
+                     <!-- Bin Information Display -->
+                     <LinearLayout
+                         android:id="@+id/binInfoLayout"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:orientation="vertical"
+                         android:background="@drawable/eco_gray_background"
+                         android:padding="16dp"
+                         android:layout_marginBottom="16dp"
+                         android:visibility="gone">
+
+                         <TextView
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:text="Bin Information"
+                             android:textSize="16sp"
+                             android:textStyle="bold"
+                             android:textColor="@color/primary"
+                             android:layout_marginBottom="8dp" />
+
+                         <LinearLayout
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:orientation="horizontal"
+                             android:layout_marginBottom="4dp">
+
+                             <TextView
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:text="Bin ID: "
+                                 android:textStyle="bold"
+                                 android:textColor="@android:color/black" />
+
+                             <TextView
+                                 android:id="@+id/binIdDisplay"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:textColor="@android:color/black" />
+                         </LinearLayout>
+
+                         <LinearLayout
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:orientation="horizontal"
+                             android:layout_marginBottom="4dp">
+
+                             <TextView
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:text="Location: "
+                                 android:textStyle="bold"
+                                 android:textColor="@android:color/black" />
+
+                             <TextView
+                                 android:id="@+id/binLocationDisplay"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:textColor="@android:color/black" />
+                         </LinearLayout>
+
+                         <LinearLayout
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:orientation="horizontal"
+                             android:layout_marginBottom="4dp">
+
+                             <TextView
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:text="Current Status: "
+                                 android:textStyle="bold"
+                                 android:textColor="@android:color/black" />
+
+                             <TextView
+                                 android:id="@+id/binCurrentStatusDisplay"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:textColor="@android:color/black" />
+                         </LinearLayout>
+
+                         <LinearLayout
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:orientation="horizontal">
+
+                             <TextView
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:text="Fill Level: "
+                                 android:textStyle="bold"
+                                 android:textColor="@android:color/black" />
+
+                             <TextView
+                                 android:id="@+id/binFillLevelDisplay"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:textColor="@android:color/black" />
+                         </LinearLayout>
+
+                     </LinearLayout>
+
+                     <LinearLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:orientation="horizontal"
+                         android:layout_marginTop="8dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/cancelButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Cancel"
+                            android:layout_marginEnd="8dp"
+                            app:cornerRadius="8dp"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/updateButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Update"
+                            android:layout_marginStart="8dp"
+                            app:cornerRadius="8dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

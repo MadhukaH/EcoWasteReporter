@@ -25,6 +25,7 @@ import java.io.OutputStream;
 public class CleanerProfilePage extends AppCompatActivity {
     private TextView cleanerName, emailText, phoneText, addressText;
     private TextView tasksCompletedCount, rating, experienceYears;
+    private MaterialButton binStatusButton;
     private MaterialButton editProfileButton;
     private MaterialButton signOutButton;
     private CleanerDatabaseHelper databaseHelper;
@@ -67,6 +68,7 @@ public class CleanerProfilePage extends AppCompatActivity {
         tasksCompletedCount = findViewById(R.id.tasksCompletedCount);
         rating = findViewById(R.id.rating);
         experienceYears = findViewById(R.id.experienceYears);
+        binStatusButton = findViewById(R.id.binStatusButton);
         editProfileButton = findViewById(R.id.editProfileButton);
         signOutButton = findViewById(R.id.signOutButton);
         profileImage = findViewById(R.id.profileImage);
@@ -141,6 +143,11 @@ public class CleanerProfilePage extends AppCompatActivity {
         profileImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             pickImage.launch(intent);
+        });
+        binStatusButton.setOnClickListener(v -> {
+            // Navigate to ChangeBinValue activity
+            Intent intent = new Intent(this, ChangeBinValue.class);
+            startActivity(intent);
         });
         editProfileButton.setOnClickListener(v -> {
             // TODO: Implement edit profile functionality

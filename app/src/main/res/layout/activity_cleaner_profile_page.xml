@@ -267,11 +267,19 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/binStatusButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bin Status"
+                android:layout_marginTop="24dp"
+                app:cornerRadius="8dp"/>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/editProfileButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Edit Profile"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="12dp"
                 app:cornerRadius="8dp"/>
 
             <com.google.android.material.button.MaterialButton

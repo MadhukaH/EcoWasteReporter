@@ -32,6 +32,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.slider.RangeSlider;
 import com.s23010169.ecowastereporter.adapters.BinAdapter;
 import com.s23010169.ecowastereporter.models.Bin;
+import com.s23010169.ecowastereporter.models.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,6 +54,7 @@ public class NearbyBinsPage extends AppCompatActivity implements
     private String currentFillLevelFilter = "all";
     private float minDistance = 0f;
     private float maxDistance = 5f;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,7 @@ public class NearbyBinsPage extends AppCompatActivity implements
         setupMap();
         setupLocationServices();
         setupFilterBottomSheet();
-        loadDummyData();
+        loadBinsFromDatabase();
         setupSearch();
         setupClickListeners();
     }
@@ -165,27 +167,35 @@ public class NearbyBinsPage extends AppCompatActivity implements
         binsRecyclerView.setAdapter(binAdapter);
     }
 
-    private void loadDummyData() {
-        List<Bin> bins = new ArrayList<>();
-        // Matara City and nearby locations
-        bins.add(new Bin("Matara Bus Stand Recycling Point", 45, 0.2, 5.9549, 80.5550));
-        bins.add(new Bin("Uyanwatta Stadium Waste Bin", 30, 0.5, 5.9539, 80.5535));
-        bins.add(new Bin("Matara Beach Recycling Center", 75, 0.8, 5.9485, 80.5453));
-        bins.add(new Bin("Star Fort Waste Collection", 25, 1.0, 5.9527, 80.5477));
-        bins.add(new Bin("Matara Central Market Bin", 90, 0.7, 5.9520, 80.5424));
-        bins.add(new Bin("Nupe Junction Recycling Point", 60, 1.2, 5.9572, 80.5506));
-        bins.add(new Bin("Rahula College Area Bin", 40, 0.9, 5.9563, 80.5559));
-        bins.add(new Bin("Matara Railway Station Bin", 55, 0.6, 5.9515, 80.5443));
-        bins.add(new Bin("Sanath Jayasuriya Ground Bin", 35, 1.1, 5.9533, 80.5518));
-        bins.add(new Bin("Matara Hospital Waste Point", 85, 0.4, 5.9508, 80.5435));
-        allBins = bins;
-        binAdapter.updateBins(bins);
-        updateMapMarkers();
-        
-        // Set initial map focus to Matara city center
-        if (mMap != null) {
-            LatLng mataraCityCenter = new LatLng(5.9549, 80.5550);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mataraCityCenter, 14f));
+    private void loadBinsFromDatabase() {
+        try {
+            // Initialize database helper
+            databaseHelper = new DatabaseHelper(this);
+            
+            // Load bins from database
+            allBins = databaseHelper.getAllBins();
+            if (allBins == null || allBins.isEmpty()) {
+                // If no bins in database, add sample data
+                databaseHelper.addSampleBins();
+                allBins = databaseHelper.getAllBins();
+                if (allBins == null) {
+                    allBins = new ArrayList<>();
+                }
+            }
+            
+            binAdapter.updateBins(allBins);
+            updateMapMarkers();
+            
+            // Set initial map focus to first bin location or default location
+            if (mMap != null && !allBins.isEmpty() && allBins.get(0) != null) {
+                Bin firstBin = allBins.get(0);
+                LatLng binLocation = new LatLng(firstBin.getLatitude(), firstBin.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(binLocation, 14f));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            allBins = new ArrayList<>();
+            Toast.makeText(this, "Error loading bins: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -303,6 +313,14 @@ public class NearbyBinsPage extends AppCompatActivity implements
 
     private void setupClickListeners() {
         filterFab.setOnClickListener(v -> filterBottomSheet.show());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadBinsFromDatabase();
+        binAdapter.updateBins(allBins);
+        updateMapMarkers();
     }
 
     private void filterBins(String query) {

@@ -1,11 +1,23 @@
 package com.s23010169.ecowastereporter.models;
 
 public class Bin {
+    private int id;
     private String location;
     private int fillPercentage;
     private double distance;
     private double latitude;
     private double longitude;
+    private String status;
+
+    public Bin(int id, String location, int fillPercentage, double distance, double latitude, double longitude, String status) {
+        this.id = id;
+        this.location = location;
+        this.fillPercentage = fillPercentage;
+        this.distance = distance;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.status = status;
+    }
 
     public Bin(String location, int fillPercentage, double distance, double latitude, double longitude) {
         this.location = location;
@@ -13,6 +25,7 @@ public class Bin {
         this.distance = distance;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.status = "Empty";
     }
 
     public String getLocation() {
@@ -53,5 +66,21 @@ public class Bin {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 } 

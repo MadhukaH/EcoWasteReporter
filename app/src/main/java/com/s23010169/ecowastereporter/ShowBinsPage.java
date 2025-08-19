@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +18,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.slider.RangeSlider;
 import com.s23010169.ecowastereporter.adapters.BinAdapter;
 import com.s23010169.ecowastereporter.models.Bin;
+import com.s23010169.ecowastereporter.models.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ public class ShowBinsPage extends AppCompatActivity {
     private String currentFillLevelFilter = "all";
     private float minDistance = 0f;
     private float maxDistance = 5f;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +45,11 @@ public class ShowBinsPage extends AppCompatActivity {
         searchEditText = findViewById(R.id.searchEditText);
         filterFab = findViewById(R.id.filterFab);
 
-        allBins = new ArrayList<>();
-        allBins.add(new Bin("Matara Bus Stand Recycling Point", 45, 0.2, 5.9549, 80.5550));
-        allBins.add(new Bin("Uyanwatta Stadium Waste Bin", 30, 0.5, 5.9539, 80.5535));
-        allBins.add(new Bin("Matara Beach Recycling Center", 75, 0.8, 5.9485, 80.5453));
-        allBins.add(new Bin("Star Fort Waste Collection", 25, 1.0, 5.9527, 80.5477));
-        allBins.add(new Bin("Matara Central Market Bin", 90, 0.7, 5.9520, 80.5424));
-        allBins.add(new Bin("Nupe Junction Recycling Point", 60, 1.2, 5.9572, 80.5506));
-        allBins.add(new Bin("Rahula College Area Bin", 40, 0.9, 5.9563, 80.5559));
-        allBins.add(new Bin("Matara Railway Station Bin", 55, 0.6, 5.9515, 80.5443));
-        allBins.add(new Bin("Sanath Jayasuriya Ground Bin", 35, 1.1, 5.9533, 80.5518));
-        allBins.add(new Bin("Matara Hospital Waste Point", 85, 0.4, 5.9508, 80.5435));
+        // Initialize database helper
+        databaseHelper = new DatabaseHelper(this);
+        
+        // Load bins from database
+        loadBinsFromDatabase();
 
         adapter = new BinAdapter(this, new ArrayList<>(allBins), bin -> {
             // Navigate to RouteMapPage with bin location
@@ -171,5 +168,30 @@ public class ShowBinsPage extends AppCompatActivity {
                 .filter(bin -> bin.getLocation().toLowerCase().contains(query.toLowerCase()))
                 .collect(Collectors.toList());
         adapter.updateBins(filteredBins);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadBinsFromDatabase();
+        adapter.updateBins(new ArrayList<>(allBins));
+    }
+
+    private void loadBinsFromDatabase() {
+        try {
+            allBins = databaseHelper.getAllBins();
+            if (allBins == null || allBins.isEmpty()) {
+                // If no bins in database, add sample data
+                databaseHelper.addSampleBins();
+                allBins = databaseHelper.getAllBins();
+                if (allBins == null) {
+                    allBins = new ArrayList<>();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            allBins = new ArrayList<>();
+            Toast.makeText(this, "Error loading bins: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 } 

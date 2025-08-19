@@ -95,6 +95,9 @@
         <activity
             android:name=".CleanerProfilePage"
             android:exported="false" />
+        <activity
+            android:name=".ChangeBinValue"
+            android:exported="false" />
         <activity android:name=".ShowBinsPage" />
     </application>
 
