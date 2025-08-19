@@ -17,6 +17,7 @@ import com.s23010169.ecowastereporter.adapters.LevelAdapter;
 import com.s23010169.ecowastereporter.adapters.RewardAdapter;
 import com.s23010169.ecowastereporter.models.Level;
 import com.s23010169.ecowastereporter.models.Reward;
+import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +32,13 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
     private RewardAdapter rewardAdapter;
     private LevelAdapter levelAdapter;
 
-    // Mock user data - In a real app, this would come from a database
-    private final int userLevel = 3; // Current level (1-6)
-    private final int currentXpValue = 2450;
-    private final int xpToNextValue = 3000;
-    private final int totalPointsValue = 15680;
-    private final int streakValue = 7;
+    private CitizenDatabaseHelper citizenDb;
+    private String userEmail;
+    private int userLevel = 1;
+    private int currentXpValue = 0;
+    private int xpToNextValue = 100; // will adjust based on level thresholds
+    private int totalPointsValue = 0;
+    private int streakValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         setContentView(R.layout.activity_levels_rewards);
 
         initializeViews();
+        citizenDb = new CitizenDatabaseHelper(this);
+        citizenDb.seedRewardsIfEmpty();
+        userEmail = getIntent().getStringExtra("email");
         setupToolbar();
         setupTabLayout();
         loadUserData();
@@ -93,17 +98,41 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
     }
 
     private void loadUserData() {
-        // Get current level info
+        // Load from DB if we have a user
+        if (userEmail != null) {
+            userLevel = citizenDb.getUserLevel(userEmail);
+            currentXpValue = citizenDb.getUserCurrentXp(userEmail);
+            totalPointsValue = citizenDb.getUserPoints(userEmail);
+            streakValue = citizenDb.getUserStreak(userEmail);
+        }
+
+        List<Level> levels = getLevels();
         Level currentLevel = getCurrentLevel();
         levelTitle.setText(currentLevel.getTitle());
         currentXp.setText(getString(R.string.current_xp, currentXpValue));
-        xpToNext.setText(getString(R.string.xp_needed, xpToNextValue - currentXpValue));
+
+        int currentThreshold = currentLevel.getRequiredPoints();
+        int nextThreshold = currentThreshold;
+        for (Level l : levels) {
+            if (l.getLevelNumber() == currentLevel.getLevelNumber() + 1) {
+                nextThreshold = l.getRequiredPoints();
+                break;
+            }
+        }
+        int totalNeeded = Math.max(1, nextThreshold - currentThreshold);
+        int gainedInLevel = Math.max(0, currentXpValue - currentThreshold);
+        int needed = Math.max(0, nextThreshold - currentXpValue);
+        xpToNext.setText(getString(R.string.xp_needed, needed));
         totalPoints.setText(String.valueOf(totalPointsValue));
         streakCount.setText(String.valueOf(streakValue));
 
         // Set progress
         levelProgress.setMax(100);
+        int progressPct = Math.max(0, Math.min(100, (gainedInLevel * 100) / totalNeeded));
         levelProgress.setProgress(0); // Start at 0 for animation
+        // store in field for animateProgress to use
+        this.xpToNextValue = nextThreshold; // keep for compat
+        this.currentXpValue = currentXpValue; // unchanged
     }
 
     private Level getCurrentLevel() {
@@ -167,7 +196,20 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
     }
 
     private void animateProgress() {
-        int progress = (currentXpValue * 100) / xpToNextValue;
+        // Recompute progress to animate smoothly
+        List<Level> levels = getLevels();
+        Level currentLevel = getCurrentLevel();
+        int currentThreshold = currentLevel.getRequiredPoints();
+        int nextThreshold = currentThreshold;
+        for (Level l : levels) {
+            if (l.getLevelNumber() == currentLevel.getLevelNumber() + 1) {
+                nextThreshold = l.getRequiredPoints();
+                break;
+            }
+        }
+        int totalNeeded = Math.max(1, nextThreshold - currentThreshold);
+        int gainedInLevel = Math.max(0, currentXpValue - currentThreshold);
+        int progress = Math.max(0, Math.min(100, (gainedInLevel * 100) / totalNeeded));
         ObjectAnimator animation = ObjectAnimator.ofInt(levelProgress, "progress", 0, progress);
         animation.setDuration(1500);
         animation.setInterpolator(new DecelerateInterpolator());
@@ -175,7 +217,16 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
     }
 
     private void setupRewardsRecyclerView() {
-        List<Reward> rewards = getMockRewards();
+        List<Reward> rewards = citizenDb.getAllRewards();
+        // mark claimed
+        if (userEmail != null) {
+            List<Integer> claimedIds = citizenDb.getClaimedRewardIdsForUser(userEmail);
+            for (Reward r : rewards) {
+                if (claimedIds.contains(r.getId())) {
+                    r.setClaimed(true);
+                }
+            }
+        }
         rewardAdapter = new RewardAdapter(this, rewards, totalPointsValue, this);
         rewardsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         rewardsRecyclerView.setAdapter(rewardAdapter);
@@ -188,18 +239,7 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
         // achievementsRecyclerView.setAdapter(achievementAdapter);
     }
 
-    private List<Reward> getMockRewards() {
-        List<Reward> rewards = new ArrayList<>();
-        rewards.add(new Reward(1, "Eco Coffee Cup", 500, "item", "☕", false));
-        rewards.add(new Reward(2, "Recycling Badge", 1000, "badge", "♻️", true));
-        rewards.add(new Reward(3, "Tree Planting Day", 2000, "experience", "🌳", false));
-        rewards.add(new Reward(4, "Eco Workshop", 5000, "education", "📚", false));
-        rewards.add(new Reward(5, "Solar Charger", 8000, "item", "☀️", false));
-        rewards.add(new Reward(6, "Beach Cleanup", 1500, "experience", "🏖️", false));
-        rewards.add(new Reward(7, "Eco Water Bottle", 3000, "item", "💧", false));
-        rewards.add(new Reward(8, "Green Energy Credits", 800, "credits", "⚡", false));
-        return rewards;
-    }
+    // removed mock rewards; now loaded from DB
 
     private void updateUI(int tabPosition) {
         if (tabPosition == 0) { // Level Progress
@@ -217,8 +257,22 @@ public class LevelsRewardsPage extends AppCompatActivity implements RewardAdapte
 
     @Override
     public void onClaimReward(Reward reward) {
-        // In a real app, this would update the database
-        Toast.makeText(this, "Claimed " + reward.getName() + "!", Toast.LENGTH_SHORT).show();
+        if (userEmail == null) {
+            Toast.makeText(this, "Login required to claim rewards", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (totalPointsValue < reward.getPoints()) {
+            Toast.makeText(this, getString(R.string.insufficient_points), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        boolean ok = citizenDb.claimReward(userEmail, reward.getId());
+        if (ok) {
+            reward.setClaimed(true);
+            rewardAdapter.notifyDataSetChanged();
+            Toast.makeText(this, "Claimed " + reward.getName() + "!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Failed to claim reward", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

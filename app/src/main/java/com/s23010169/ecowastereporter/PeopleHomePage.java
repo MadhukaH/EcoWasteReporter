@@ -22,6 +22,8 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
     private NestedScrollView scrollView;
     private ShapeableImageView profileImage;
     private TextView welcomeText;
+    private TextView homeReportsCount;
+    private TextView homeLevelName;
     private CitizenDatabaseHelper databaseHelper;
     private String userEmail;
 
@@ -47,6 +49,7 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         setupScrollBehavior();
         displayUserName();
         loadProfilePhoto();
+        updateStatsWidgets();
     }
 
     private void initializeViews() {
@@ -58,6 +61,8 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         scrollView = findViewById(R.id.scrollView);
         profileImage = findViewById(R.id.profileImage);
         welcomeText = findViewById(R.id.welcomeText);
+        homeReportsCount = findViewById(R.id.homeReportsCount);
+        homeLevelName = findViewById(R.id.homeLevelName);
     }
 
     private void displayUserName() {
@@ -82,6 +87,35 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
                 }
             }
         }
+    }
+
+    private void updateStatsWidgets() {
+        try {
+            // Reports count (total reports for now)
+            com.s23010169.ecowastereporter.models.ReportDatabaseHelper reportDb = new com.s23010169.ecowastereporter.models.ReportDatabaseHelper(this);
+            int totalReports = reportDb.getTotalReportsCount();
+            if (homeReportsCount != null) {
+                homeReportsCount.setText(String.valueOf(totalReports));
+            }
+
+            // Level name based on user's level
+            if (userEmail != null) {
+                int level = databaseHelper.getUserLevel(userEmail);
+                String levelName;
+                switch (level) {
+                    default:
+                    case 1: levelName = getString(R.string.level_1_title); break;
+                    case 2: levelName = getString(R.string.level_2_title); break;
+                    case 3: levelName = getString(R.string.level_3_title); break;
+                    case 4: levelName = getString(R.string.level_4_title); break;
+                    case 5: levelName = getString(R.string.level_5_title); break;
+                    case 6: levelName = getString(R.string.level_6_title); break;
+                }
+                if (homeLevelName != null) {
+                    homeLevelName.setText(levelName);
+                }
+            }
+        } catch (Exception ignored) { }
     }
 
     private void setupClickListeners() {
@@ -136,6 +170,7 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         super.onResume();
         // Reload profile photo when returning from ProfilePage
         loadProfilePhoto();
+        updateStatsWidgets();
     }
 
     private void showFeatureMessage(String feature) {

@@ -13,6 +13,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.s23010169.ecowastereporter.adapters.ReportAdapter;
 import com.s23010169.ecowastereporter.models.Report;
 import com.s23010169.ecowastereporter.models.ReportDatabaseHelper;
+import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 
 import java.util.List;
 
@@ -25,6 +26,8 @@ public class PerformanceSummaryPage extends AppCompatActivity {
     private LinearProgressIndicator levelProgress;
     private RecyclerView recentActivityRecyclerView;
     private ReportDatabaseHelper reportDatabaseHelper;
+    private CitizenDatabaseHelper citizenDb;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +40,10 @@ public class PerformanceSummaryPage extends AppCompatActivity {
         // Setup toolbar
         setupToolbar();
 
-        // Initialize database helper
+        // Initialize database helpers
         reportDatabaseHelper = new ReportDatabaseHelper(this);
+        citizenDb = new CitizenDatabaseHelper(this);
+        userEmail = getIntent().getStringExtra("email");
 
         // Load performance data
         loadPerformanceData();
@@ -80,6 +85,13 @@ public class PerformanceSummaryPage extends AppCompatActivity {
 
         // Update level information
         updateLevelInfo(impact);
+
+        // If user available, show their current points
+        if (userEmail != null) {
+            int points = citizenDb.getUserPoints(userEmail);
+            // pointsCount exists only in ProfilePage, so here we enrich level text
+            pointsToNextLevel.setText(pointsToNextLevel.getText() + " • " + points + " pts");
+        }
     }
 
     private int calculateImpactScore(int totalReports, int resolvedReports) {

@@ -107,11 +107,13 @@ public class ProfilePage extends AppCompatActivity {
 
         performanceLayout.setOnClickListener(v -> {
             Intent intent = new Intent(ProfilePage.this, PerformanceSummaryPage.class);
+            intent.putExtra("email", userEmail);
             startActivity(intent);
         });
 
         rewardsLayout.setOnClickListener(v -> {
             Intent intent = new Intent(ProfilePage.this, LevelsRewardsPage.class);
+            intent.putExtra("email", userEmail);
             startActivity(intent);
         });
 
@@ -144,10 +146,22 @@ public class ProfilePage extends AppCompatActivity {
         } else {
             userName.setText("Unknown User");
         }
-        userLevel.setText("Level 3 • Eco Warrior");
-        reportsCount.setText("12");
-        resolvedCount.setText("8");
-        pointsCount.setText("350");
+        // Populate dynamic stats if available
+        try {
+            com.s23010169.ecowastereporter.models.CitizenDatabaseHelper db = new com.s23010169.ecowastereporter.models.CitizenDatabaseHelper(this);
+            int level = db.getUserLevel(userEmail);
+            int points = db.getUserPoints(userEmail);
+            userLevel.setText("Level " + level);
+            pointsCount.setText(String.valueOf(points));
+            // Reports counts
+            com.s23010169.ecowastereporter.models.ReportDatabaseHelper reportDb = new com.s23010169.ecowastereporter.models.ReportDatabaseHelper(this);
+            int totalReports = reportDb.getTotalReportsCount();
+            int resolvedReports = reportDb.getResolvedReportsCount();
+            reportsCount.setText(String.valueOf(totalReports));
+            resolvedCount.setText(String.valueOf(resolvedReports));
+        } catch (Exception ignored) {
+            userLevel.setText("Level 1");
+        }
     }
 
     private void saveImageToInternalStorage(Uri imageUri) {
