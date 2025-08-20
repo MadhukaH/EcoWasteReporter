@@ -19,6 +19,7 @@ import com.google.android.material.button.MaterialButton;
 import com.s23010169.ecowastereporter.models.Bin;
 import com.s23010169.ecowastereporter.models.DatabaseHelper;
 
+// This screen lets administrators change the status and fill level of waste bins in the system.
 public class ChangeBinValue extends AppCompatActivity {
     private Spinner binIdInput;
     private Spinner statusSpinner;

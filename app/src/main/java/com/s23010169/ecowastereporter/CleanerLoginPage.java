@@ -14,6 +14,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.s23010169.ecowastereporter.models.CleanerDatabaseHelper;
 
+// This screen lets waste collection workers log in with email and password.
 public class CleanerLoginPage extends AppCompatActivity implements View.OnClickListener {
     private TextInputLayout emailLayout, passwordLayout;
     private TextInputEditText emailInput, passwordInput;

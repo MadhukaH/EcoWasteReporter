@@ -3,6 +3,9 @@ package com.s23010169.ecowastereporter.models;
 import android.net.Uri;
 import java.util.List;
 
+// This class holds one waste report.
+// It stores what type of waste, where it is, optional description,
+// photos, time, map location, status, and a short ID.
 public class Report {
     private String wasteType;
     private String location;

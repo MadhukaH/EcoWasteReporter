@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+// This screen lets users report waste with type, photos, location, and optional notes.
 public class ReportWastePage extends AppCompatActivity {
     private CardView photoContainer;
     private Spinner wasteTypeSpinner;

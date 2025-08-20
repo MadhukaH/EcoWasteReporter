@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// This screen shows nearby waste bins on a map and in a list. Users can search and filter bins.
 public class NearbyBinsPage extends AppCompatActivity implements 
     BinAdapter.OnBinClickListener,
     OnMapReadyCallback {

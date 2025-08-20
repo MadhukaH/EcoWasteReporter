@@ -8,6 +8,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+// This screen lets users choose between citizen and cleaner roles before registration.
 public class SelectPage extends AppCompatActivity {
     private static final float SELECTED_ALPHA = 1.0f;
     private static final float UNSELECTED_ALPHA = 0.6f;

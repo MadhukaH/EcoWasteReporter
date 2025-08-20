@@ -15,6 +15,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 
+// This screen lets a citizen log in with email and password.
 public class UserLogin extends AppCompatActivity implements View.OnClickListener {
     private TextInputLayout emailLayout, passwordLayout;
     private TextInputEditText emailEditText, passwordEditText;

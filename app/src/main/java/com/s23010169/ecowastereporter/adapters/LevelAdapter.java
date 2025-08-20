@@ -13,6 +13,7 @@ import com.s23010169.ecowastereporter.R;
 import com.s23010169.ecowastereporter.models.Level;
 import java.util.List;
 
+// This adapter displays user levels with progress indicators and unlock status for the gamification system.
 public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.LevelViewHolder> {
     private List<Level> levels;
     private Context context;

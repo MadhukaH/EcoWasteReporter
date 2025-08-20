@@ -17,6 +17,7 @@ import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+// This screen shows user levels, XP progress, and lets users redeem points for rewards.
 public class LevelsRewardsPage extends AppCompatActivity {
     private View levelInfoCard;
     private RecyclerView levelProgressionRecyclerView;

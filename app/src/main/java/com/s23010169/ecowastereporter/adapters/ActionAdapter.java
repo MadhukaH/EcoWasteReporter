@@ -18,6 +18,7 @@ import com.s23010169.ecowastereporter.models.Action;
 
 import java.util.List;
 
+// This adapter displays quick action buttons for cleaners to access common functions.
 public class ActionAdapter extends RecyclerView.Adapter<ActionAdapter.ActionViewHolder> {
     private final List<Action> actions;
     private final Context context;

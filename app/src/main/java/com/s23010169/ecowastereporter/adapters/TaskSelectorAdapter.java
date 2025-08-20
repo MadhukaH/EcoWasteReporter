@@ -14,6 +14,7 @@ import com.s23010169.ecowastereporter.models.Task;
 
 import java.util.List;
 
+// This adapter displays selectable waste collection tasks for cleaners to choose from.
 public class TaskSelectorAdapter extends RecyclerView.Adapter<TaskSelectorAdapter.TaskViewHolder> {
     private final Context context;
     private final List<Task> tasks;

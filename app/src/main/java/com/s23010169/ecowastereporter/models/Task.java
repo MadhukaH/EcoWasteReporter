@@ -1,5 +1,6 @@
 package com.s23010169.ecowastereporter.models;
 
+// This class represents a waste collection task assigned to cleaners with location, priority, and timing details.
 public class Task {
     private String taskId;
     private String location;

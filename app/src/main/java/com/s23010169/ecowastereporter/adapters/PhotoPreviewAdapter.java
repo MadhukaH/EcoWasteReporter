@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.s23010169.ecowastereporter.R;
 import java.util.List;
 
+// This adapter displays photo previews in a horizontal list with delete functionality for waste reports.
 public class PhotoPreviewAdapter extends RecyclerView.Adapter<PhotoPreviewAdapter.PhotoViewHolder> {
     private List<Uri> photos;
     private OnPhotoDeleteListener deleteListener;

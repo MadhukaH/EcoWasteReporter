@@ -14,6 +14,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+// This helper creates and manages the local database table for reports.
+// It can add, read, update status, delete, and query counts.
 public class ReportDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "ReportDatabaseHelper";
     private static final String DATABASE_NAME = "Reports.db";
@@ -147,26 +149,26 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
     public List<Report> getAllReports() {
         List<Report> reports = new ArrayList<>();
         SQLiteDatabase db = null;
-        Cursor cursor = null;
+        Cursor dbSave = null;
 
         try {
             Log.d(TAG, "Fetching all reports");
             db = this.getReadableDatabase();
             String selectQuery = "SELECT * FROM " + TABLE_REPORTS + " ORDER BY " + COLUMN_TIMESTAMP + " DESC";
-            cursor = db.rawQuery(selectQuery, null);
+            dbSave = db.rawQuery(selectQuery, null);
 
-            if (cursor.moveToFirst()) {
+            if (dbSave.moveToFirst()) {
                 do {
                     Report report = new Report();
-                    report.setReportId(cursor.getString(cursor.getColumnIndex(COLUMN_REPORT_ID)));
-                    report.setWasteType(cursor.getString(cursor.getColumnIndex(COLUMN_WASTE_TYPE)));
-                    report.setLocation(cursor.getString(cursor.getColumnIndex(COLUMN_LOCATION)));
-                    report.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
-                    report.setLatitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LATITUDE)));
-                    report.setLongitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LONGITUDE)));
+                    report.setReportId(dbSave.getString(dbSave.getColumnIndex(COLUMN_REPORT_ID)));
+                    report.setWasteType(dbSave.getString(dbSave.getColumnIndex(COLUMN_WASTE_TYPE)));
+                    report.setLocation(dbSave.getString(dbSave.getColumnIndex(COLUMN_LOCATION)));
+                    report.setDescription(dbSave.getString(dbSave.getColumnIndex(COLUMN_DESCRIPTION)));
+                    report.setLatitude(dbSave.getDouble(dbSave.getColumnIndex(COLUMN_LATITUDE)));
+                    report.setLongitude(dbSave.getDouble(dbSave.getColumnIndex(COLUMN_LONGITUDE)));
                     
                     // Convert JSON string back to List<Uri>
-                    String photoUrisJson = cursor.getString(cursor.getColumnIndex(COLUMN_PHOTO_URIS));
+                    String photoUrisJson = dbSave.getString(dbSave.getColumnIndex(COLUMN_PHOTO_URIS));
                     try {
                         Type type = new TypeToken<List<Uri>>(){}.getType();
                         List<Uri> photoUris = gson.fromJson(photoUrisJson, type);
@@ -176,11 +178,11 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
                         report.setPhotoUris(new ArrayList<>()); // Set empty list on error
                     }
                     
-                    report.setTimestamp(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMESTAMP)));
-                    report.setStatus(cursor.getString(cursor.getColumnIndex(COLUMN_STATUS)));
+                    report.setTimestamp(dbSave.getLong(dbSave.getColumnIndex(COLUMN_TIMESTAMP)));
+                    report.setStatus(dbSave.getString(dbSave.getColumnIndex(COLUMN_STATUS)));
                     
                     reports.add(report);
-                } while (cursor.moveToNext());
+                } while (dbSave.moveToNext());
             }
             Log.d(TAG, "Fetched " + reports.size() + " reports");
             return reports;
@@ -188,8 +190,8 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
             Log.e(TAG, "Error fetching reports", e);
             return new ArrayList<>(); // Return empty list on error
         } finally {
-            if (cursor != null) {
-                cursor.close();
+            if (dbSave != null) {
+                dbSave.close();
             }
             if (db != null && db.isOpen()) {
                 db.close();
@@ -243,20 +245,20 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
     // Method to get total reports count
     public int getTotalReportsCount() {
         SQLiteDatabase db = null;
-        Cursor cursor = null;
+        Cursor dbSave = null;
         try {
             db = this.getReadableDatabase();
-            cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_REPORTS, null);
-            if (cursor.moveToFirst()) {
-                return cursor.getInt(0);
+            dbSave = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_REPORTS, null);
+            if (dbSave.moveToFirst()) {
+                return dbSave.getInt(0);
             }
             return 0;
         } catch (Exception e) {
             Log.e(TAG, "Error getting total reports count", e);
             return 0;
         } finally {
-            if (cursor != null) {
-                cursor.close();
+            if (dbSave != null) {
+                dbSave.close();
             }
             if (db != null && db.isOpen()) {
                 db.close();
@@ -267,22 +269,22 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
     // Method to get resolved reports count
     public int getResolvedReportsCount() {
         SQLiteDatabase db = null;
-        Cursor cursor = null;
+        Cursor dbSave = null;
         try {
             db = this.getReadableDatabase();
-            cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_REPORTS + 
+            dbSave = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_REPORTS + 
                                " WHERE " + COLUMN_STATUS + " = ?", 
                                new String[]{"Resolved"});
-            if (cursor.moveToFirst()) {
-                return cursor.getInt(0);
+            if (dbSave.moveToFirst()) {
+                return dbSave.getInt(0);
             }
             return 0;
         } catch (Exception e) {
             Log.e(TAG, "Error getting resolved reports count", e);
             return 0;
         } finally {
-            if (cursor != null) {
-                cursor.close();
+            if (dbSave != null) {
+                dbSave.close();
             }
             if (db != null && db.isOpen()) {
                 db.close();
@@ -294,26 +296,26 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
     public List<Report> getRecentReports(int limit) {
         List<Report> reports = new ArrayList<>();
         SQLiteDatabase db = null;
-        Cursor cursor = null;
+        Cursor dbSave = null;
 
         try {
             db = this.getReadableDatabase();
             String selectQuery = "SELECT * FROM " + TABLE_REPORTS + 
                                " ORDER BY " + COLUMN_TIMESTAMP + " DESC" +
                                " LIMIT " + limit;
-            cursor = db.rawQuery(selectQuery, null);
+            dbSave = db.rawQuery(selectQuery, null);
 
-            if (cursor.moveToFirst()) {
+            if (dbSave.moveToFirst()) {
                 do {
                     Report report = new Report();
-                    report.setReportId(cursor.getString(cursor.getColumnIndex(COLUMN_REPORT_ID)));
-                    report.setWasteType(cursor.getString(cursor.getColumnIndex(COLUMN_WASTE_TYPE)));
-                    report.setLocation(cursor.getString(cursor.getColumnIndex(COLUMN_LOCATION)));
-                    report.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
-                    report.setLatitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LATITUDE)));
-                    report.setLongitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LONGITUDE)));
+                    report.setReportId(dbSave.getString(dbSave.getColumnIndex(COLUMN_REPORT_ID)));
+                    report.setWasteType(dbSave.getString(dbSave.getColumnIndex(COLUMN_WASTE_TYPE)));
+                    report.setLocation(dbSave.getString(dbSave.getColumnIndex(COLUMN_LOCATION)));
+                    report.setDescription(dbSave.getString(dbSave.getColumnIndex(COLUMN_DESCRIPTION)));
+                    report.setLatitude(dbSave.getDouble(dbSave.getColumnIndex(COLUMN_LATITUDE)));
+                    report.setLongitude(dbSave.getDouble(dbSave.getColumnIndex(COLUMN_LONGITUDE)));
                     
-                    String photoUrisJson = cursor.getString(cursor.getColumnIndex(COLUMN_PHOTO_URIS));
+                    String photoUrisJson = dbSave.getString(dbSave.getColumnIndex(COLUMN_PHOTO_URIS));
                     try {
                         Type type = new TypeToken<List<Uri>>(){}.getType();
                         List<Uri> photoUris = gson.fromJson(photoUrisJson, type);
@@ -323,19 +325,19 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
                         report.setPhotoUris(new ArrayList<>());
                     }
                     
-                    report.setTimestamp(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMESTAMP)));
-                    report.setStatus(cursor.getString(cursor.getColumnIndex(COLUMN_STATUS)));
+                    report.setTimestamp(dbSave.getLong(dbSave.getColumnIndex(COLUMN_TIMESTAMP)));
+                    report.setStatus(dbSave.getString(dbSave.getColumnIndex(COLUMN_STATUS)));
                     
                     reports.add(report);
-                } while (cursor.moveToNext());
+                } while (dbSave.moveToNext());
             }
             return reports;
         } catch (Exception e) {
             Log.e(TAG, "Error fetching recent reports", e);
             return new ArrayList<>();
         } finally {
-            if (cursor != null) {
-                cursor.close();
+            if (dbSave != null) {
+                dbSave.close();
             }
             if (db != null && db.isOpen()) {
                 db.close();
@@ -346,20 +348,20 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
     // Method to get a report by its ID
     public Report getReportById(String reportId) {
         SQLiteDatabase db = null;
-        Cursor cursor = null;
+        Cursor dbSave = null;
         try {
             db = this.getReadableDatabase();
-            cursor = db.query(TABLE_REPORTS, null, COLUMN_REPORT_ID + " = ?", new String[]{reportId}, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
+            dbSave = db.query(TABLE_REPORTS, null, COLUMN_REPORT_ID + " = ?", new String[]{reportId}, null, null, null);
+            if (dbSave != null && dbSave.moveToFirst()) {
                 Report report = new Report();
-                report.setReportId(cursor.getString(cursor.getColumnIndex(COLUMN_REPORT_ID)));
-                report.setWasteType(cursor.getString(cursor.getColumnIndex(COLUMN_WASTE_TYPE)));
-                report.setLocation(cursor.getString(cursor.getColumnIndex(COLUMN_LOCATION)));
-                report.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
-                report.setLatitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LATITUDE)));
-                report.setLongitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LONGITUDE)));
+                report.setReportId(dbSave.getString(dbSave.getColumnIndex(COLUMN_REPORT_ID)));
+                report.setWasteType(dbSave.getString(dbSave.getColumnIndex(COLUMN_WASTE_TYPE)));
+                report.setLocation(dbSave.getString(dbSave.getColumnIndex(COLUMN_LOCATION)));
+                report.setDescription(dbSave.getString(dbSave.getColumnIndex(COLUMN_DESCRIPTION)));
+                report.setLatitude(dbSave.getDouble(dbSave.getColumnIndex(COLUMN_LATITUDE)));
+                report.setLongitude(dbSave.getDouble(dbSave.getColumnIndex(COLUMN_LONGITUDE)));
                 // Convert JSON string back to List<Uri>
-                String photoUrisJson = cursor.getString(cursor.getColumnIndex(COLUMN_PHOTO_URIS));
+                String photoUrisJson = dbSave.getString(dbSave.getColumnIndex(COLUMN_PHOTO_URIS));
                 try {
                     Type type = new TypeToken<List<Uri>>(){}.getType();
                     List<Uri> photoUris = gson.fromJson(photoUrisJson, type);
@@ -367,14 +369,14 @@ public class ReportDatabaseHelper extends SQLiteOpenHelper {
                 } catch (Exception e) {
                     report.setPhotoUris(new ArrayList<>());
                 }
-                report.setTimestamp(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMESTAMP)));
-                report.setStatus(cursor.getString(cursor.getColumnIndex(COLUMN_STATUS)));
+                report.setTimestamp(dbSave.getLong(dbSave.getColumnIndex(COLUMN_TIMESTAMP)));
+                report.setStatus(dbSave.getString(dbSave.getColumnIndex(COLUMN_STATUS)));
                 return report;
             }
         } catch (Exception e) {
             Log.e(TAG, "Error fetching report by ID", e);
         } finally {
-            if (cursor != null) cursor.close();
+            if (dbSave != null) dbSave.close();
             if (db != null && db.isOpen()) db.close();
         }
         return null;

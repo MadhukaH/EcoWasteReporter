@@ -1,5 +1,6 @@
 package com.s23010169.ecowastereporter.models;
 
+// This class represents a citizen user account in the app.
 public class Citizen {
     private int id;
     private String name;

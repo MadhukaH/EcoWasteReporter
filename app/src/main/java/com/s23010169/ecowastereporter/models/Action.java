@@ -1,5 +1,6 @@
 package com.s23010169.ecowastereporter.models;
 
+// This class represents a quick action button for cleaners to access common functions.
 public class Action {
     private final int iconResId;
     private final String title;

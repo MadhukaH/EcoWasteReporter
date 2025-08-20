@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+// This screen lets users enter a 4-digit verification code to reset their password.
 public class VerificationCodePage extends AppCompatActivity {
     private EditText[] otpEditTexts;
     private Button btnVerify;

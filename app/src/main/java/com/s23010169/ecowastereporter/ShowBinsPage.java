@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// This screen displays waste bins in a grid layout. Users can search bins and navigate to their routes.
 public class ShowBinsPage extends AppCompatActivity {
     private RecyclerView recyclerView;
     private BinAdapter adapter;

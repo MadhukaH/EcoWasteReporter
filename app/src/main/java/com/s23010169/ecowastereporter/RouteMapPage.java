@@ -27,6 +27,7 @@ import java.util.List;
 import com.s23010169.ecowastereporter.models.Report;
 import com.s23010169.ecowastereporter.models.ReportDatabaseHelper;
 
+// This screen shows a map with routes to waste bins or collection tasks. Users can navigate and optimize routes.
 public class RouteMapPage extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;

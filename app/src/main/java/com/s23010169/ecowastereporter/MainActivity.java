@@ -11,6 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+// This is the welcome screen. Tapping "Let's Go" opens the role selection page.
 public class MainActivity extends AppCompatActivity {
 
     @Override

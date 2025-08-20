@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import android.widget.LinearLayout;
 
+// This is the home screen for waste collection workers. They can view tasks, start routes, and see their progress.
 public class CleanerHomePage extends AppCompatActivity implements ActionAdapter.ActionClickListener {
     private TextView cleanerName;
     private MaterialCardView tasksCard, completedCard;

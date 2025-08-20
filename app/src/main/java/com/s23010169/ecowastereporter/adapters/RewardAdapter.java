@@ -12,6 +12,7 @@ import com.s23010169.ecowastereporter.R;
 import com.s23010169.ecowastereporter.models.Reward;
 import java.util.List;
 
+// This adapter displays available rewards that users can redeem with their points.
 public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardViewHolder> {
     private final Context context;
     private final List<Reward> rewards;

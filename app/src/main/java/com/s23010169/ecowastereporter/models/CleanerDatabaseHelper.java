@@ -95,11 +95,11 @@ public class CleanerDatabaseHelper extends SQLiteOpenHelper {
     // Method to check if email exists
     public boolean checkEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLEANERS, new String[]{COLUMN_ID},
+        Cursor dbSave = db.query(TABLE_CLEANERS, new String[]{COLUMN_ID},
                 COLUMN_EMAIL + "=?", new String[]{email},
                 null, null, null);
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
+        boolean exists = dbSave.getCount() > 0;
+        dbSave.close();
         db.close();
         return exists;
     }
@@ -107,12 +107,12 @@ public class CleanerDatabaseHelper extends SQLiteOpenHelper {
     // Method to validate cleaner login
     public boolean checkCleaner(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLEANERS, new String[]{COLUMN_ID},
+        Cursor dbSave = db.query(TABLE_CLEANERS, new String[]{COLUMN_ID},
                 COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=? AND " + COLUMN_STATUS + "=?",
                 new String[]{email, password, "active"},
                 null, null, null);
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
+        boolean exists = dbSave.getCount() > 0;
+        dbSave.close();
         db.close();
         return exists;
     }
@@ -120,28 +120,28 @@ public class CleanerDatabaseHelper extends SQLiteOpenHelper {
     // Method to get cleaner details
     public Cleaner getCleanerByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLEANERS,
+        Cursor dbSave = db.query(TABLE_CLEANERS,
                 null, // null means select all columns
                 COLUMN_EMAIL + "=?", new String[]{email},
                 null, null, null);
 
         Cleaner cleaner = null;
-        if (cursor != null && cursor.moveToFirst()) {
+        if (dbSave != null && dbSave.moveToFirst()) {
             cleaner = new Cleaner(
-                cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_AREA)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_EXPERIENCE)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_REGISTRATION_DATE)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_STATUS)),
-                cursor.getInt(cursor.getColumnIndex(COLUMN_TASKS_COMPLETED)),
-                cursor.getFloat(cursor.getColumnIndex(COLUMN_RATING)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_PROFILE_PHOTO)) // profilePhoto
+                dbSave.getInt(dbSave.getColumnIndex(COLUMN_ID)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_NAME)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_EMAIL)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_PASSWORD)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_PHONE)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_AREA)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_EXPERIENCE)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_REGISTRATION_DATE)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_STATUS)),
+                dbSave.getInt(dbSave.getColumnIndex(COLUMN_TASKS_COMPLETED)),
+                dbSave.getFloat(dbSave.getColumnIndex(COLUMN_RATING)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_PROFILE_PHOTO)) // profilePhoto
             );
-            cursor.close();
+            dbSave.close();
         }
         db.close();
         return cleaner;
@@ -153,28 +153,28 @@ public class CleanerDatabaseHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT * FROM " + TABLE_CLEANERS;
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor dbSave = db.rawQuery(selectQuery, null);
 
-        if (cursor.moveToFirst()) {
+        if (dbSave.moveToFirst()) {
             do {
                 Cleaner cleaner = new Cleaner(
-                    cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_AREA)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_EXPERIENCE)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_REGISTRATION_DATE)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_STATUS)),
-                    cursor.getInt(cursor.getColumnIndex(COLUMN_TASKS_COMPLETED)),
-                    cursor.getFloat(cursor.getColumnIndex(COLUMN_RATING)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_PROFILE_PHOTO)) // profilePhoto
+                    dbSave.getInt(dbSave.getColumnIndex(COLUMN_ID)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_NAME)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_EMAIL)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_PASSWORD)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_PHONE)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_AREA)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_EXPERIENCE)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_REGISTRATION_DATE)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_STATUS)),
+                    dbSave.getInt(dbSave.getColumnIndex(COLUMN_TASKS_COMPLETED)),
+                    dbSave.getFloat(dbSave.getColumnIndex(COLUMN_RATING)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_PROFILE_PHOTO)) // profilePhoto
                 );
                 cleanerList.add(cleaner);
-            } while (cursor.moveToNext());
+            } while (dbSave.moveToNext());
         }
-        cursor.close();
+        dbSave.close();
         db.close();
         return cleanerList;
     }

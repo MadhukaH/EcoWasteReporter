@@ -56,6 +56,7 @@ import com.google.android.gms.location.LocationServices;
 import androidx.core.app.ActivityCompat;
 import android.content.pm.PackageManager;
 
+// This screen lets cleaners update the status of waste collection tasks and add notes/photos.
 public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelectorAdapter.TaskSelectionListener {
     private RadioButton radioFullyCleaned;
     private EditText editTextNotes;
@@ -357,7 +358,7 @@ public class UpdateBinStatusPage extends AppCompatActivity implements TaskSelect
     private List<Task> createSampleTasks() {
         List<Task> sampleTasks = new ArrayList<>();
         
-        String[] locations = {"Main Street Corner", "Central Park", "Market Square", "Beach Front", "Downtown Plaza"};
+        String[] locations = {"Matara Fort Entrance", "Matara Bus Stand", "Matara Market Square", "Matara Beach Park", "Matara Clock Tower"};
         String[] descriptions = {"Bin cleaning and maintenance required", "Regular waste collection needed", "Bin overflow reported", "Weekly maintenance check", "Emergency cleanup needed"};
         String[] statuses = {"In Progress", "Pending", "In Progress", "Pending", "In Progress"};
         String[] distances = {"0.3 km away", "0.8 km away", "1.2 km away", "1.5 km away", "0.6 km away"};

@@ -17,6 +17,7 @@ import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 
 import java.util.List;
 
+// This screen shows performance statistics including reports count, impact score, and recent activity.
 public class PerformanceSummaryPage extends AppCompatActivity {
     private TextView totalReportsCount;
     private TextView resolvedReportsCount;

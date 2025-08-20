@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+// This screen shows cleaner profile information, stats, and lets them update their profile photo.
 public class CleanerProfilePage extends AppCompatActivity {
     private TextView cleanerName, emailText, phoneText, addressText;
     private TextView tasksCompletedCount, rating, experienceYears;

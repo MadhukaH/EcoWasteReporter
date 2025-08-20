@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import com.google.android.material.tabs.TabLayout;
 
+// This screen provides recycling tips organized by waste type categories with animated cards.
 public class RecyclingTipsPage extends AppCompatActivity {
     private TabLayout tabLayout;
     private CardView plasticCard, paperCard, metalCard, glassCard, ewasteCard, organicCard;

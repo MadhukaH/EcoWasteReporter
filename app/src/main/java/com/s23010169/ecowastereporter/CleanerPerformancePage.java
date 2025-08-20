@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+// This screen shows performance metrics for waste collection workers including tasks completed and efficiency.
 public class CleanerPerformancePage extends AppCompatActivity {
     private TextView tvCurrentDate;
     private TextView tvTasksCompleted;

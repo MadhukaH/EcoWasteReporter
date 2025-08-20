@@ -14,6 +14,7 @@ import com.s23010169.ecowastereporter.models.Task;
 
 import java.util.List;
 
+// This adapter displays waste collection tasks for cleaners with action buttons for task management.
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> tasks;
     private OnTaskActionListener listener;

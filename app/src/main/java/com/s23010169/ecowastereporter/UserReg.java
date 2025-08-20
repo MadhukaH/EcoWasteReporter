@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputLayout;
 import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 
+// This screen lets a new citizen create an account.
 public class UserReg extends AppCompatActivity {
     // UI Components
     private TextInputLayout nameInputLayout, emailInputLayout, passwordInputLayout, phoneInputLayout, addressInputLayout;

@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+// This screen lets users set a new password after verification, with confirmation validation.
 public class NewPasswordPage extends AppCompatActivity {
     private EditText etNewPassword, etConfirmPassword;
     private Button btnSubmit;

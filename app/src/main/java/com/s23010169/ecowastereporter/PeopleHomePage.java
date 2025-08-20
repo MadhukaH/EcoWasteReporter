@@ -16,6 +16,7 @@ import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
 
 import java.io.File;
 
+// This is the citizen home. From here, users can report waste, view bins, see reports, and open profile.
 public class PeopleHomePage extends AppCompatActivity implements View.OnClickListener {
     private MaterialCardView reportWasteCard, viewMapCard, myReportsCard, recyclingTipsCard;
     private ExtendedFloatingActionButton reportFab;

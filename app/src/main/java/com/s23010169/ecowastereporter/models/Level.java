@@ -1,5 +1,6 @@
 package com.s23010169.ecowastereporter.models;
 
+// This class represents a user level in the gamification system with XP requirements and unlock status.
 public class Level {
     private int levelNumber;
     private String title;

@@ -13,6 +13,7 @@ import com.s23010169.ecowastereporter.models.Bin;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import java.util.List;
 
+// This adapter displays waste bins in a list or grid with location, fill level, and distance information.
 public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
     private List<Bin> bins;
     private Context context;

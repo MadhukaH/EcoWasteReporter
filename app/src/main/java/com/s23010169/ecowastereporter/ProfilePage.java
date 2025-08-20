@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+// This screen shows user profile information, stats, and lets users change profile photo and password.
 public class ProfilePage extends AppCompatActivity {
     private TextView userName, userLevel, reportsCount, resolvedCount, pointsCount;
     private MaterialCardView changePasswordLayout, performanceLayout, rewardsLayout;

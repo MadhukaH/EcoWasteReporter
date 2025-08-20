@@ -1,5 +1,6 @@
 package com.s23010169.ecowastereporter.models;
 
+// This class represents a waste collection worker with personal details, work area, and performance metrics.
 public class Cleaner {
     private int id;
     private String name;

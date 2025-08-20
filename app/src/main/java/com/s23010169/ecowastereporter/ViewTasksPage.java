@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+// This screen shows waste collection tasks for cleaners. They can view, filter, and manage tasks.
 public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTaskActionListener {
     private RecyclerView tasksRecyclerView;
     private TaskAdapter taskAdapter;
@@ -144,7 +145,7 @@ public class ViewTasksPage extends AppCompatActivity implements TaskAdapter.OnTa
         List<Task> sampleTasks = new ArrayList<>();
         
         // Sample task data
-        String[] locations = {"Main Street Corner", "Central Park", "Market Square", "Beach Front", "Downtown Plaza", "University Campus", "Shopping Mall", "Residential Area"};
+        String[] locations = {"Matara Fort Entrance", "Matara Bus Stand", "Matara Railway Station", "Matara Beach Park", "Matara Market Square", "Matara University Campus", "Matara City Hall", "Matara Clock Tower"};
         String[] wasteTypes = {"General Waste", "Recyclables", "Organic Waste", "Hazardous Waste", "Electronic Waste"};
         String[] descriptions = {"Bin overflow reported", "Regular maintenance needed", "Cleaning required", "Waste collection overdue", "Bin damage reported"};
         

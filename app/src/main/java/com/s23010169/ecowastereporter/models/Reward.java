@@ -1,5 +1,6 @@
 package com.s23010169.ecowastereporter.models;
 
+// This class represents a reward that users can claim with their accumulated points.
 public class Reward {
     private int id;
     private String name;

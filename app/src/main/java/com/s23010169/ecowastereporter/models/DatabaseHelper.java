@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+// This helper manages a simple database with users and bins for the app.
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "EcoWasteDB";
     private static final int DATABASE_VERSION = 2;
@@ -93,11 +94,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Method to check if email exists
     public boolean checkEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_ID},
+        Cursor dbSave = db.query(TABLE_USERS, new String[]{COLUMN_ID},
                 COLUMN_EMAIL + "=?", new String[]{email},
                 null, null, null);
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
+        boolean exists = dbSave.getCount() > 0;
+        dbSave.close();
         db.close();
         return exists;
     }
@@ -105,12 +106,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Method to validate user login
     public boolean checkUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_ID},
+        Cursor dbSave = db.query(TABLE_USERS, new String[]{COLUMN_ID},
                 COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?",
                 new String[]{email, password},
                 null, null, null);
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
+        boolean exists = dbSave.getCount() > 0;
+        dbSave.close();
         db.close();
         return exists;
     }
@@ -121,31 +122,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Bin bin = null;
         
         try {
-            Cursor cursor = db.query(TABLE_BINS, null,
+            Cursor dbSave = db.query(TABLE_BINS, null,
                     COLUMN_BIN_ID + "=?", new String[]{String.valueOf(binId)},
                     null, null, null);
             
-            if (cursor != null && cursor.moveToFirst()) {
+            if (dbSave != null && dbSave.moveToFirst()) {
                 try {
-                    int idIndex = cursor.getColumnIndex(COLUMN_BIN_ID);
-                    int locationIndex = cursor.getColumnIndex(COLUMN_LOCATION);
-                    int fillIndex = cursor.getColumnIndex(COLUMN_FILL_PERCENTAGE);
-                    int distanceIndex = cursor.getColumnIndex(COLUMN_DISTANCE);
-                    int latIndex = cursor.getColumnIndex(COLUMN_LATITUDE);
-                    int lngIndex = cursor.getColumnIndex(COLUMN_LONGITUDE);
-                    int statusIndex = cursor.getColumnIndex(COLUMN_STATUS);
+                    int idIndex = dbSave.getColumnIndex(COLUMN_BIN_ID);
+                    int locationIndex = dbSave.getColumnIndex(COLUMN_LOCATION);
+                    int fillIndex = dbSave.getColumnIndex(COLUMN_FILL_PERCENTAGE);
+                    int distanceIndex = dbSave.getColumnIndex(COLUMN_DISTANCE);
+                    int latIndex = dbSave.getColumnIndex(COLUMN_LATITUDE);
+                    int lngIndex = dbSave.getColumnIndex(COLUMN_LONGITUDE);
+                    int statusIndex = dbSave.getColumnIndex(COLUMN_STATUS);
                     
                     if (idIndex >= 0 && locationIndex >= 0 && fillIndex >= 0 && 
                         distanceIndex >= 0 && latIndex >= 0 && lngIndex >= 0 && statusIndex >= 0) {
                         
                         bin = new Bin(
-                            cursor.getInt(idIndex),
-                            cursor.getString(locationIndex),
-                            cursor.getInt(fillIndex),
-                            cursor.getDouble(distanceIndex),
-                            cursor.getDouble(latIndex),
-                            cursor.getDouble(lngIndex),
-                            cursor.getString(statusIndex)
+                            dbSave.getInt(idIndex),
+                            dbSave.getString(locationIndex),
+                            dbSave.getInt(fillIndex),
+                            dbSave.getDouble(distanceIndex),
+                            dbSave.getDouble(latIndex),
+                            dbSave.getDouble(lngIndex),
+                            dbSave.getString(statusIndex)
                         );
                     }
                 } catch (Exception e) {
@@ -153,8 +154,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }
             
-            if (cursor != null) {
-                cursor.close();
+            if (dbSave != null) {
+                dbSave.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,30 +230,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         
         try {
-            Cursor cursor = db.query(TABLE_BINS, null, null, null, null, null, COLUMN_BIN_ID + " ASC");
+            Cursor dbSave = db.query(TABLE_BINS, null, null, null, null, null, COLUMN_BIN_ID + " ASC");
             
-            if (cursor != null && cursor.moveToFirst()) {
+            if (dbSave != null && dbSave.moveToFirst()) {
                 do {
                     try {
-                        int idIndex = cursor.getColumnIndex(COLUMN_BIN_ID);
-                        int locationIndex = cursor.getColumnIndex(COLUMN_LOCATION);
-                        int fillIndex = cursor.getColumnIndex(COLUMN_FILL_PERCENTAGE);
-                        int distanceIndex = cursor.getColumnIndex(COLUMN_DISTANCE);
-                        int latIndex = cursor.getColumnIndex(COLUMN_LATITUDE);
-                        int lngIndex = cursor.getColumnIndex(COLUMN_LONGITUDE);
-                        int statusIndex = cursor.getColumnIndex(COLUMN_STATUS);
+                        int idIndex = dbSave.getColumnIndex(COLUMN_BIN_ID);
+                        int locationIndex = dbSave.getColumnIndex(COLUMN_LOCATION);
+                        int fillIndex = dbSave.getColumnIndex(COLUMN_FILL_PERCENTAGE);
+                        int distanceIndex = dbSave.getColumnIndex(COLUMN_DISTANCE);
+                        int latIndex = dbSave.getColumnIndex(COLUMN_LATITUDE);
+                        int lngIndex = dbSave.getColumnIndex(COLUMN_LONGITUDE);
+                        int statusIndex = dbSave.getColumnIndex(COLUMN_STATUS);
                         
                         if (idIndex >= 0 && locationIndex >= 0 && fillIndex >= 0 && 
                             distanceIndex >= 0 && latIndex >= 0 && lngIndex >= 0 && statusIndex >= 0) {
                             
                             Bin bin = new Bin(
-                                cursor.getInt(idIndex),
-                                cursor.getString(locationIndex),
-                                cursor.getInt(fillIndex),
-                                cursor.getDouble(distanceIndex),
-                                cursor.getDouble(latIndex),
-                                cursor.getDouble(lngIndex),
-                                cursor.getString(statusIndex)
+                                dbSave.getInt(idIndex),
+                                dbSave.getString(locationIndex),
+                                dbSave.getInt(fillIndex),
+                                dbSave.getDouble(distanceIndex),
+                                dbSave.getDouble(latIndex),
+                                dbSave.getDouble(lngIndex),
+                                dbSave.getString(statusIndex)
                             );
                             bins.add(bin);
                         }
@@ -260,11 +261,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         // Skip this bin if there's an error
                         e.printStackTrace();
                     }
-                } while (cursor.moveToNext());
+                } while (dbSave.moveToNext());
             }
             
-            if (cursor != null) {
-                cursor.close();
+            if (dbSave != null) {
+                dbSave.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -285,22 +286,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 return; // Bins already exist
             }
 
-            // Add sample bins with realistic locations and statuses
-            addBin("Central Park Main Gate", 25, 0.5, 40.7829, -73.9654, "Empty");
-            addBin("Shopping Mall Entrance", 75, 1.2, 40.7589, -73.9851, "Half Full");
-            addBin("Bus Station Platform", 90, 0.8, 40.7505, -73.9934, "Full");
-            addBin("Public Library", 100, 1.5, 40.7527, -73.9772, "Overflowing");
-            addBin("University Campus Center", 15, 2.1, 40.8075, -73.9626, "Empty");
-            addBin("Hospital Emergency", 60, 1.8, 40.7589, -73.9851, "Half Full");
-            addBin("Restaurant District", 85, 0.9, 40.7505, -73.9934, "Full");
-            addBin("Office Building Lobby", 45, 1.3, 40.7527, -73.9772, "Half Full");
-            addBin("Residential Complex", 30, 2.5, 40.8075, -73.9626, "Empty");
-            addBin("Train Station Exit", 95, 0.7, 40.7589, -73.9851, "Overflowing");
-            addBin("City Hall Plaza", 40, 1.0, 40.7505, -73.9934, "Half Full");
-            addBin("Sports Stadium", 70, 1.8, 40.7527, -73.9772, "Half Full");
-            addBin("Market Square", 80, 0.6, 40.8075, -73.9626, "Full");
-            addBin("Parking Garage", 35, 2.2, 40.7829, -73.9654, "Empty");
-            addBin("Community Center", 55, 1.4, 40.7589, -73.9851, "Half Full");
+            // Add sample bins with realistic locations around Matara Town, Sri Lanka
+            addBin("Matara Fort Entrance", 25, 0.3, 5.9483, 80.5353, "Empty");
+            addBin("Matara Bus Stand", 75, 0.8, 5.9490, 80.5360, "Half Full");
+            addBin("Matara Railway Station", 90, 0.5, 5.9475, 80.5345, "Full");
+            addBin("Matara Public Library", 100, 0.7, 5.9495, 80.5370, "Overflowing");
+            addBin("Matara University Campus", 15, 1.2, 5.9460, 80.5330, "Empty");
+            addBin("Matara General Hospital", 60, 0.9, 5.9500, 80.5380, "Half Full");
+            addBin("Matara Market Square", 85, 0.4, 5.9488, 80.5358, "Full");
+            addBin("Matara City Hall", 45, 0.6, 5.9485, 80.5355, "Half Full");
+            addBin("Matara Beach Park", 30, 0.8, 5.9470, 80.5340, "Empty");
+            addBin("Matara Clock Tower", 95, 0.3, 5.9480, 80.5350, "Overflowing");
+            addBin("Matara Post Office", 40, 0.5, 5.9492, 80.5365, "Half Full");
+            addBin("Matara Police Station", 70, 0.7, 5.9478, 80.5348, "Half Full");
+            addBin("Matara Temple Road", 80, 0.4, 5.9482, 80.5352, "Full");
+            addBin("Matara Beach Road", 35, 0.9, 5.9465, 80.5335, "Empty");
+            addBin("Matara Central Junction", 55, 0.6, 5.9487, 80.5357, "Half Full");
         } catch (Exception e) {
             e.printStackTrace();
         }

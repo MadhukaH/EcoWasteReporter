@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+// This screen shows a list of waste reports submitted by the user. Users can filter and search reports.
 public class MyReportPage extends AppCompatActivity {
     private RecyclerView reportsRecyclerView;
     private TabLayout tabLayout;

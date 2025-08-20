@@ -1,5 +1,6 @@
 package com.s23010169.ecowastereporter.models;
 
+// This class represents a nearby trash bin shown in lists and on the map.
 public class Bin {
     private int id;
     private String location;

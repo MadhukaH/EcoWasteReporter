@@ -21,6 +21,7 @@ import com.s23010169.ecowastereporter.models.Report;
 import com.s23010169.ecowastereporter.models.ReportDatabaseHelper;
 import java.util.List;
 
+// This adapter displays waste reports in a list with edit, delete, and photo preview functionality.
 public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ViewHolder> {
     private List<Report> reports;
     private final Context context;

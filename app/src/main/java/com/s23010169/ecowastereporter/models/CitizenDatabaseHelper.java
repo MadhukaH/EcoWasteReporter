@@ -137,11 +137,11 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     // Method to check if email exists
     public boolean checkEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_ID},
+        Cursor dbSave = db.query(TABLE_CITIZENS, new String[]{COLUMN_ID},
                 COLUMN_EMAIL + "=?", new String[]{email},
                 null, null, null);
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
+        boolean exists = dbSave.getCount() > 0;
+        dbSave.close();
         db.close();
         return exists;
     }
@@ -149,12 +149,12 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     // Method to validate citizen login
     public boolean checkCitizen(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_ID},
+        Cursor dbSave = db.query(TABLE_CITIZENS, new String[]{COLUMN_ID},
                 COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?",
                 new String[]{email, password},
                 null, null, null);
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
+        boolean exists = dbSave.getCount() > 0;
+        dbSave.close();
         db.close();
         return exists;
     }
@@ -162,24 +162,24 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     // Method to get citizen details
     public Citizen getCitizenByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CITIZENS,
+        Cursor dbSave = db.query(TABLE_CITIZENS,
                 new String[]{COLUMN_ID, COLUMN_NAME, COLUMN_EMAIL, COLUMN_PASSWORD, COLUMN_PHONE, COLUMN_ADDRESS, COLUMN_REGISTRATION_DATE, COLUMN_PROFILE_PHOTO},
                 COLUMN_EMAIL + "=?", new String[]{email},
                 null, null, null);
 
         Citizen citizen = null;
-        if (cursor != null && cursor.moveToFirst()) {
+        if (dbSave != null && dbSave.moveToFirst()) {
             citizen = new Citizen(
-                cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_REGISTRATION_DATE)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_PROFILE_PHOTO))
+                dbSave.getInt(dbSave.getColumnIndex(COLUMN_ID)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_NAME)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_EMAIL)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_PASSWORD)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_PHONE)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_ADDRESS)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_REGISTRATION_DATE)),
+                dbSave.getString(dbSave.getColumnIndex(COLUMN_PROFILE_PHOTO))
             );
-            cursor.close();
+            dbSave.close();
         }
         db.close();
         return citizen;
@@ -188,11 +188,11 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     // Stats getters and updaters
     public int getUserPoints(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_POINTS}, COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
+        Cursor dbSave = db.query(TABLE_CITIZENS, new String[]{COLUMN_POINTS}, COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
         int points = 0;
-        if (cursor != null && cursor.moveToFirst()) {
-            points = cursor.getInt(cursor.getColumnIndex(COLUMN_POINTS));
-            cursor.close();
+        if (dbSave != null && dbSave.moveToFirst()) {
+            points = dbSave.getInt(dbSave.getColumnIndex(COLUMN_POINTS));
+            dbSave.close();
         }
         db.close();
         return points;
@@ -201,11 +201,11 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     // Phone-based getters
     public int getUserPointsByPhone(String phone) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_POINTS}, COLUMN_PHONE + "=?", new String[]{phone}, null, null, null);
+        Cursor dbSave = db.query(TABLE_CITIZENS, new String[]{COLUMN_POINTS}, COLUMN_PHONE + "=?", new String[]{phone}, null, null, null);
         int points = 0;
-        if (cursor != null && cursor.moveToFirst()) {
-            points = cursor.getInt(cursor.getColumnIndex(COLUMN_POINTS));
-            cursor.close();
+        if (dbSave != null && dbSave.moveToFirst()) {
+            points = dbSave.getInt(dbSave.getColumnIndex(COLUMN_POINTS));
+            dbSave.close();
         }
         db.close();
         return points;
@@ -213,11 +213,11 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
 
     public int getUserLevelByPhone(String phone) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_LEVEL}, COLUMN_PHONE + "=?", new String[]{phone}, null, null, null);
+        Cursor dbSave = db.query(TABLE_CITIZENS, new String[]{COLUMN_LEVEL}, COLUMN_PHONE + "=?", new String[]{phone}, null, null, null);
         int level = 1;
-        if (cursor != null && cursor.moveToFirst()) {
-            level = cursor.getInt(cursor.getColumnIndex(COLUMN_LEVEL));
-            cursor.close();
+        if (dbSave != null && dbSave.moveToFirst()) {
+            level = dbSave.getInt(dbSave.getColumnIndex(COLUMN_LEVEL));
+            dbSave.close();
         }
         db.close();
         return level;
@@ -225,11 +225,11 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
 
     public int getUserCurrentXpByPhone(String phone) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_CURRENT_XP}, COLUMN_PHONE + "=?", new String[]{phone}, null, null, null);
+        Cursor dbSave = db.query(TABLE_CITIZENS, new String[]{COLUMN_CURRENT_XP}, COLUMN_PHONE + "=?", new String[]{phone}, null, null, null);
         int xp = 0;
-        if (cursor != null && cursor.moveToFirst()) {
-            xp = cursor.getInt(cursor.getColumnIndex(COLUMN_CURRENT_XP));
-            cursor.close();
+        if (dbSave != null && dbSave.moveToFirst()) {
+            xp = dbSave.getInt(dbSave.getColumnIndex(COLUMN_CURRENT_XP));
+            dbSave.close();
         }
         db.close();
         return xp;
@@ -237,11 +237,11 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
 
     public int getUserLevel(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_LEVEL}, COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
+        Cursor dbSave = db.query(TABLE_CITIZENS, new String[]{COLUMN_LEVEL}, COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
         int level = 1;
-        if (cursor != null && cursor.moveToFirst()) {
-            level = cursor.getInt(cursor.getColumnIndex(COLUMN_LEVEL));
-            cursor.close();
+        if (dbSave != null && dbSave.moveToFirst()) {
+            level = dbSave.getInt(dbSave.getColumnIndex(COLUMN_LEVEL));
+            dbSave.close();
         }
         db.close();
         return level;
@@ -249,11 +249,11 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
 
     public int getUserStreak(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_STREAK}, COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
+        Cursor dbSave = db.query(TABLE_CITIZENS, new String[]{COLUMN_STREAK}, COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
         int streak = 0;
-        if (cursor != null && cursor.moveToFirst()) {
-            streak = cursor.getInt(cursor.getColumnIndex(COLUMN_STREAK));
-            cursor.close();
+        if (dbSave != null && dbSave.moveToFirst()) {
+            streak = dbSave.getInt(dbSave.getColumnIndex(COLUMN_STREAK));
+            dbSave.close();
         }
         db.close();
         return streak;
@@ -261,11 +261,11 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
 
     public int getUserCurrentXp(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CITIZENS, new String[]{COLUMN_CURRENT_XP}, COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
+        Cursor dbSave = db.query(TABLE_CITIZENS, new String[]{COLUMN_CURRENT_XP}, COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
         int xp = 0;
-        if (cursor != null && cursor.moveToFirst()) {
-            xp = cursor.getInt(cursor.getColumnIndex(COLUMN_CURRENT_XP));
-            cursor.close();
+        if (dbSave != null && dbSave.moveToFirst()) {
+            xp = dbSave.getInt(dbSave.getColumnIndex(COLUMN_CURRENT_XP));
+            dbSave.close();
         }
         db.close();
         return xp;
@@ -308,11 +308,11 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     // Rewards helpers
     public void seedRewardsIfEmpty() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_REWARDS, null);
+        Cursor dbSave = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_REWARDS, null);
         int count = 0;
-        if (cursor != null && cursor.moveToFirst()) {
-            count = cursor.getInt(0);
-            cursor.close();
+        if (dbSave != null && dbSave.moveToFirst()) {
+            count = dbSave.getInt(0);
+            dbSave.close();
         }
         if (count > 0) {
             db.close();
@@ -334,20 +334,20 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     public List<Reward> getAllRewards() {
         List<Reward> rewards = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_REWARDS, null, null, null, null, null, COLUMN_REWARD_POINTS + " ASC");
-        if (cursor != null && cursor.moveToFirst()) {
+        Cursor dbSave = db.query(TABLE_REWARDS, null, null, null, null, null, COLUMN_REWARD_POINTS + " ASC");
+        if (dbSave != null && dbSave.moveToFirst()) {
             do {
                 Reward reward = new Reward(
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_REWARD_ID)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_REWARD_NAME)),
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_REWARD_POINTS)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_REWARD_TYPE)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_REWARD_ICON)),
+                        dbSave.getInt(dbSave.getColumnIndex(COLUMN_REWARD_ID)),
+                        dbSave.getString(dbSave.getColumnIndex(COLUMN_REWARD_NAME)),
+                        dbSave.getInt(dbSave.getColumnIndex(COLUMN_REWARD_POINTS)),
+                        dbSave.getString(dbSave.getColumnIndex(COLUMN_REWARD_TYPE)),
+                        dbSave.getString(dbSave.getColumnIndex(COLUMN_REWARD_ICON)),
                         false
                 );
                 rewards.add(reward);
-            } while (cursor.moveToNext());
-            cursor.close();
+            } while (dbSave.moveToNext());
+            dbSave.close();
         }
         db.close();
         return rewards;
@@ -356,12 +356,12 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
     public List<Integer> getClaimedRewardIdsForUser(String email) {
         List<Integer> ids = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLAIMED_REWARDS, new String[]{COLUMN_CLAIM_REWARD_ID}, COLUMN_CLAIM_USER_EMAIL + "=?", new String[]{email}, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
+        Cursor dbSave = db.query(TABLE_CLAIMED_REWARDS, new String[]{COLUMN_CLAIM_REWARD_ID}, COLUMN_CLAIM_USER_EMAIL + "=?", new String[]{email}, null, null, null);
+        if (dbSave != null && dbSave.moveToFirst()) {
             do {
-                ids.add(cursor.getInt(cursor.getColumnIndex(COLUMN_CLAIM_REWARD_ID)));
-            } while (cursor.moveToNext());
-            cursor.close();
+                ids.add(dbSave.getInt(dbSave.getColumnIndex(COLUMN_CLAIM_REWARD_ID)));
+            } while (dbSave.moveToNext());
+            dbSave.close();
         }
         db.close();
         return ids;
@@ -384,24 +384,24 @@ public class CitizenDatabaseHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT * FROM " + TABLE_CITIZENS;
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor dbSave = db.rawQuery(selectQuery, null);
 
-        if (cursor.moveToFirst()) {
+        if (dbSave.moveToFirst()) {
             do {
                 Citizen citizen = new Citizen(
-                    cursor.getInt(cursor.getColumnIndex(COLUMN_ID)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_REGISTRATION_DATE)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_PROFILE_PHOTO))
+                    dbSave.getInt(dbSave.getColumnIndex(COLUMN_ID)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_NAME)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_EMAIL)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_PASSWORD)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_PHONE)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_ADDRESS)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_REGISTRATION_DATE)),
+                    dbSave.getString(dbSave.getColumnIndex(COLUMN_PROFILE_PHOTO))
                 );
                 citizenList.add(citizen);
-            } while (cursor.moveToNext());
+            } while (dbSave.moveToNext());
         }
-        cursor.close();
+        dbSave.close();
         db.close();
         return citizenList;
     }

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+// This screen lets users request a password reset by entering their email address.
 public class ForgotPasswordPage extends AppCompatActivity {
     private TextInputLayout emailInputLayout;
     private TextInputEditText emailInput;

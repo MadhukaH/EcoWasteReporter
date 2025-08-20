@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputLayout;
 import com.s23010169.ecowastereporter.models.CleanerDatabaseHelper;
 
+// This screen lets new waste collection workers create an account with personal and work details.
 public class CleanerReg extends AppCompatActivity {
     // UI Components
     private TextInputLayout nameInputLayout, emailInputLayout, areaInputLayout, experienceInputLayout, passwordInputLayout, phoneInputLayout;
