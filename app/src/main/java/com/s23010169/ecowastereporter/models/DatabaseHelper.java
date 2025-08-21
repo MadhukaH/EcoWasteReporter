@@ -302,6 +302,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             addBin("Matara Temple Road", 80, 0.4, 5.9482, 80.5352, "Full");
             addBin("Matara Beach Road", 35, 0.9, 5.9465, 80.5335, "Empty");
             addBin("Matara Central Junction", 55, 0.6, 5.9487, 80.5357, "Half Full");
+            
+            // Add bins near Nawala, Sri Lanka (Colombo area)
+            addBin("Nawala Junction", 45, 0.2, 6.8968, 79.9185, "Half Full");
+            addBin("Nawala Road Market", 80, 0.4, 6.8972, 79.9188, "Full");
+            addBin("Nawala Bus Stop", 65, 0.3, 6.8965, 79.9182, "Half Full");
         } catch (Exception e) {
             e.printStackTrace();
         }
