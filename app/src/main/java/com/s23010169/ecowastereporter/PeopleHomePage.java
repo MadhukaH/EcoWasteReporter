@@ -9,7 +9,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.s23010169.ecowastereporter.models.Citizen;
 import com.s23010169.ecowastereporter.models.CitizenDatabaseHelper;
@@ -19,7 +18,6 @@ import java.io.File;
 // This is the citizen home. From here, users can report waste, view bins, see reports, and open profile.
 public class PeopleHomePage extends AppCompatActivity implements View.OnClickListener {
     private MaterialCardView reportWasteCard, viewMapCard, myReportsCard, recyclingTipsCard;
-    private ExtendedFloatingActionButton reportFab;
     private NestedScrollView scrollView;
     private ShapeableImageView profileImage;
     private TextView welcomeText;
@@ -58,7 +56,6 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         viewMapCard = findViewById(R.id.viewMapCard);
         myReportsCard = findViewById(R.id.myReportsCard);
         recyclingTipsCard = findViewById(R.id.recyclingTipsCard);
-        reportFab = findViewById(R.id.reportFab);
         scrollView = findViewById(R.id.scrollView);
         profileImage = findViewById(R.id.profileImage);
         welcomeText = findViewById(R.id.welcomeText);
@@ -124,7 +121,6 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
         viewMapCard.setOnClickListener(this);
         myReportsCard.setOnClickListener(this);
         recyclingTipsCard.setOnClickListener(this);
-        reportFab.setOnClickListener(this);
         
         profileImage.setOnClickListener(v -> {
             Intent intent = new Intent(PeopleHomePage.this, ProfilePage.class);
@@ -134,24 +130,13 @@ public class PeopleHomePage extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setupScrollBehavior() {
-        scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) 
-            (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-                if (scrollY > oldScrollY && reportFab.isExtended()) {
-                    reportFab.shrink();
-                }
-                if (scrollY < oldScrollY && !reportFab.isExtended()) {
-                    reportFab.extend();
-                }
-                if (scrollY == 0) {
-                    reportFab.extend();
-                }
-        });
+        // Scroll behavior removed since FAB is no longer present
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.reportWasteCard || id == R.id.reportFab) {
+        if (id == R.id.reportWasteCard) {
             Intent intent = new Intent(PeopleHomePage.this, ReportWastePage.class);
             startActivity(intent);
         } else if (id == R.id.viewMapCard) {

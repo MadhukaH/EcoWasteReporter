@@ -410,16 +410,4 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/reportFab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:text="Report Waste"
-        android:textColor="@color/white"
-        app:icon="@android:drawable/ic_menu_camera"
-        app:iconTint="@color/white"
-        app:backgroundTint="@color/green_500" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout> 
